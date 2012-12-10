@@ -1,0 +1,295 @@
+diff --git pxdvik.orig/dvi-draw.c pxdvik/dvi-draw.c
+index f973888..01b4153 100644
+--- pxdvik.orig/dvi-draw.c
++++ pxdvik/dvi-draw.c
+@@ -970,8 +970,8 @@ print_char(ubyte ch, struct glyph *g)
+ }
+ 
+ static const char *dvi_table1[] = {
+-    "SET1", "SET2", NULL, NULL, "SETRULE", "PUT1", "PUT2", NULL,
+-    NULL, "PUTRULE", "NOP", "BOP", "EOP", "PUSH", "POP", "RIGHT1",
++    "SET1", "SET2", "SET3", "SET4", "SETRULE", "PUT1", "PUT2", "PUT3",
++    "PUT4", "PUTRULE", "NOP", "BOP", "EOP", "PUSH", "POP", "RIGHT1",
+     "RIGHT2", "RIGHT3", "RIGHT4", "W0", "W1", "W2", "W3", "W4",
+     "X0", "X1", "X2", "X3", "X4", "DOWN1", "DOWN2", "DOWN3",
+     "DOWN4", "Y0", "Y1", "Y2", "Y3", "Y4", "Z0", "Z1",
+@@ -1950,9 +1950,9 @@ static ubyte scantable[256] = {
+     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+-    1, 2,	/* SET1,SET2 (128,129) */
+-    /* -,-,SETRULE,PUT1,PUT2,-,-,PUTRULE,NOP,BOP (130-139) */
+-    M4, M4, 8, 1, 2, M4, M4, 8, 0, 44,
++    1, 2, 3, 4,	/* SET1,SET2,SET3,SET4 (128,129,130,131) */
++    /* SETRULE,PUT1,PUT2,PUT3,PUT4,PUTRULE,NOP,BOP (132-139) */
++    8, 1, 2, 3, 4, 8, 0, 44,
+     M1, 0, 0, 1, 2, 3, 4, 0, 1, 2,	/* EOP,PUSH,POP,RIGHT1-4,W0M2 (140-149) */
+     3, 4, 0, 1, 2, 3, 4, 1, 2, 3,	/* W3-4,X0-4,DOWN1-3 (150-159) */
+     4, 0, 1, 2, 3, 4, 0, 1, 2, 3,	/* DOWN4,Y0-4,Z0-3 (160-169) */
+@@ -2316,8 +2316,8 @@ set_char2(
+ {
+     struct glyph *g;
+ 
+-    g = currinf.fontp->kglyph[ch];
+-    if (g == NULL || g->bitmap.bits == NULL) {
++    if (ch > currinf.fontp->maxchar ||
++	(g = currinf.fontp->kglyph[ch]) == NULL || g->bitmap.bits == NULL) {
+ 	(*currinf.fontp->read_char)(currinf.fontp, ch);
+ 	g = currinf.fontp->kglyph[ch];
+ 	free_bitmap2(g);
+@@ -2602,6 +2602,38 @@ draw_part(FILE *fp, struct frame *minframe, double current_dimconv)
+ 		}
+ 		break;
+ 
++	    case SET3:
++	    case PUT3:
++		if (!resource.omega)
++		    dvi_fmt_error("%s:%d: draw_part: op-code %d only works with the \"-omega\" option",
++				  __FILE__, __LINE__, ch);
++		else {
++#ifdef TEXXET
++		    (*currinf.set_char_p) (ch, xnum(fp, 3));
++#else
++		    a = (*currinf.set_char_p) (xnum(fp, 3));
++		    if (ch != PUT3)
++			moveH(1, a);
++#endif
++		}
++		break;
++
++	    case SET4:
++	    case PUT4:
++		if (!resource.omega)
++		    dvi_fmt_error("%s:%d: draw_part: op-code %d only works with the \"-omega\" option",
++				  __FILE__, __LINE__, ch);
++		else {
++#ifdef TEXXET
++		    (*currinf.set_char_p) (ch, xnum(fp, 4));
++#else
++		    a = (*currinf.set_char_p) (xnum(fp, 4));
++		    if (ch != PUT4)
++			moveH(1, a);
++#endif
++		}
++		break;
++
+ 	    case SETRULE:
+ 		/* Be careful, dvicopy outputs rules with
+ 		   height = 0x80000000.  We don't want any
+@@ -4092,6 +4124,38 @@ geom_scan_part(long(*char_proc)(FILE *, struct scan_info *, wide_ubyte),
+ 		}
+ 		break;
+ 
++	    case SET3:
++	    case PUT3:
++		if (!resource.omega)
++		    dvi_fmt_error("%s:%d: draw_part: op-code %d only works with the \"-omega\" option",
++				  __FILE__, __LINE__, ch);
++		else {
++#ifdef TEXXET
++		    char_proc(fp, info, xnum(fp, 3));
++#else
++		    a = char_proc(fp, info, xnum(fp, 3));
++		    if (ch != PUT3)
++			xmoveH(1, a);
++#endif
++		}
++		break;
++
++	    case SET4:
++	    case PUT4:
++		if (!resource.omega)
++		    dvi_fmt_error("%s:%d: draw_part: op-code %d only works with the \"-omega\" option",
++				  __FILE__, __LINE__, ch);
++		else {
++#ifdef TEXXET
++		    char_proc(fp, info, xnum(fp, 4));
++#else
++		    a = char_proc(fp, info, xnum(fp, 4));
++		    if (ch != PUT4)
++			xmoveH(1, a);
++#endif
++		}
++		break;
++
+ 	    case SETRULE:
+ 		/* Be careful, dvicopy outputs rules with
+ 		   height = 0x80000000.  We don't want any
+diff --git pxdvik.orig/dvi-init.c pxdvik/dvi-init.c
+index 58953b7..c87ad02 100644
+--- pxdvik.orig/dvi-init.c
++++ pxdvik/dvi-init.c
+@@ -186,7 +186,7 @@ delete_glyphs(struct font *fontp)
+ #ifdef PTEX
+     int n, maxchar;
+ 
+-    maxchar = (fontp->flags & FONT_KANJI) ? KTABLESIZE : fontp->maxchar + 1;
++    maxchar = fontp->maxchar + 1;
+     for (n = 0; n < maxchar; ++n) {
+ 	g = (fontp->flags & FONT_KANJI) ? fontp->kglyph[n] : &fontp->glyph[n];
+ 	if (g == NULL) continue;
+@@ -274,7 +274,7 @@ free_unused_fonts(void)
+ #ifdef PTEX
+ 		    if (fontp->flags & FONT_KANJI) {
+ 			int n;
+-			for (n = 0; n < KTABLESIZE; ++n) {
++			for (n = 0; n < (int)fontp->maxchar + 1; ++n) {
+ 			    if (fontp->kglyph[n] != NULL) {
+ 				free(fontp->kglyph[n]);
+ 			    }
+diff --git pxdvik.orig/dvi.h pxdvik/dvi.h
+index 17694dc..bd4a9da 100644
+--- pxdvik.orig/dvi.h
++++ pxdvik/dvi.h
+@@ -5,9 +5,13 @@
+ #define	SETCHAR0	0
+ #define	SET1		128
+ #define	SET2		129
++#define	SET3		130
++#define	SET4		131
+ #define	SETRULE		132
+ #define	PUT1		133
+ #define	PUT2		134
++#define	PUT3		135
++#define	PUT4		136
+ #define	PUTRULE		137
+ #define	NOP		138
+ #define	BOP		139
+diff --git pxdvik.orig/dvisel.c pxdvik/dvisel.c
+index e1b5051..92159fb 100644
+--- pxdvik.orig/dvisel.c
++++ pxdvik/dvisel.c
+@@ -511,6 +511,12 @@ WriteDVI(FILE *fin, FILE *fout, long *fout_pos, int c)
+ 	    n += 4;
+ 	    /* fall through */
+ 	    
++	case SET4:
++	case PUT4: 
++	    if (!resource.omega) {
++		dvi_fmt_error("%s:%d: WriteDVI: op-code %d only works with the \"-omega\" option",
++			      __FILE__, __LINE__, c);
++	    }
+ 	case RIGHT4:
+ 	case W4:
+ 	case X4:
+@@ -520,6 +526,12 @@ WriteDVI(FILE *fin, FILE *fout, long *fout_pos, int c)
+ 	    n++;
+ 	    /* fall through */
+ 
++	case SET3:
++	case PUT3: 
++	    if (!resource.omega) {
++		dvi_fmt_error("%s:%d: WriteDVI: op-code %d only works with the \"-omega\" option",
++			      __FILE__, __LINE__, c);
++	    }
+ 	case RIGHT3:
+ 	case W3:
+ 	case X3:
+diff --git pxdvik.orig/ft2.c pxdvik/ft2.c
+index aadef72..fa807a6 100644
+--- pxdvik.orig/ft2.c
++++ pxdvik/ft2.c
+@@ -54,11 +54,15 @@ static struct jisv_st {
+ 
+ Boolean is_jis_vertical(int jis)
+ {
+-    size_t i;
++    size_t l,r,m;
+ 
+-    for (i=0; i<sizeof(jisv)/sizeof(*jisv); i++) {
+-	if (jisv[i].low <= jis && jis <= jisv[i].hi) return True;
++    l=0; r=sizeof(jisv)/sizeof(*jisv)-1;
++    while (l<r) {
++      m=(l+r)/2;
++      if   (jisv[m].hi < jis) l=m+1;
++      else r=m;
+     }
++    if (jisv[l].low <= jis && jis <= jisv[l].hi) return True;
+     return False;
+ }
+ 
+@@ -215,7 +219,7 @@ static void glyph_to_bitmap(struct bitmap *bm, FT_GlyphSlot g, int ascend)
+     assert((char*)dst <= (char*)bm->bits + bm->bytes_wide * bm->h);
+ }
+ 
+-int ft2_get_bitmap(int char_code, int ft2_index, struct bitmap *bm)
++int ft2_get_bitmap(long char_code, int ft2_index, struct bitmap *bm)
+ {
+     struct ft_font *font = &ft_fonts[ft2_index];
+     FT_Face face = font->face;
+diff --git pxdvik.orig/ft2.h pxdvik/ft2.h
+index ebccbeb..8a5f350 100644
+--- pxdvik.orig/ft2.h
++++ pxdvik/ft2.h
+@@ -3,4 +3,4 @@ struct ptexmap;	/* forward declaration */
+ struct bitmap;	/* forward declaration */
+ 
+ int ft2_open_font(struct ptexmap *map);
+-int ft2_get_bitmap(int char_code, int ft2_index, struct bitmap *bm);
++int ft2_get_bitmap(long char_code, int ft2_index, struct bitmap *bm);
+diff --git pxdvik.orig/vf.c pxdvik/vf.c
+index b5ab6ac..8e8ca52 100644
+--- pxdvik.orig/vf.c
++++ pxdvik/vf.c
+@@ -126,7 +126,7 @@ read_VF_index(struct font *fontp, wide_bool hushcs)
+ 	    len = get_bytes(VF_file, 4);
+ 	    cc = get_bytes(VF_file, 4);
+ 	    width = get_bytes(VF_file, 4);
+-	    if ((resource.omega && cc >= 65536)
++	    if ((resource.omega && cc >= 0x110000)
+ 		|| (!resource.omega && cc >= 256)) {
+ 		XDVI_WARNING((stderr, "Virtual character %lu in font %s ignored.",
+ 			      cc, fontp->fontname));
+@@ -141,6 +141,13 @@ read_VF_index(struct font *fontp, wide_bool hushcs)
+ 	}
+ 	if (resource.omega) {
+ 	    maxcc = (cc > maxcc) ? cc : maxcc;
++	    if (cc > fontp->maxchar) {
++		int i = 65536 * ((int)(cc / 65536)+1);
++		fontp->macro = xrealloc(fontp->macro, sizeof(struct macro) * i);
++		memset((char *)&fontp->macro[fontp->maxchar+1], 0,
++			(i-fontp->maxchar-1) * sizeof(struct macro));
++		fontp->maxchar = i-1;
++	    }
+ 	}
+ 	m = &fontp->macro[cc];
+ 	m->dvi_adv = width * fontp->dimconv;
+diff --git pxdvik.orig/zeit.c pxdvik/zeit.c
+index ad48f57..8fdc5cb 100644
+--- pxdvik.orig/zeit.c
++++ pxdvik/zeit.c
+@@ -24,6 +24,15 @@ static void read_ZEIT_char(struct font *fontp, wide_ubyte ch)
+     struct glyph *g;
+     int ascend;
+ 
++    if (ch > fontp->maxchar) {
++	int j;
++	int i = KTABLESIZE * ((int)(ch / KTABLESIZE)+1);
++	fontp->kglyph = xrealloc(fontp->kglyph, sizeof(struct glyph *) * i);
++	for (j=fontp->maxchar+1; j<i; j++) {
++	    fontp->kglyph[j] = NULL;
++	}
++	fontp->maxchar = i-1;
++    }
+     g = fontp->kglyph[ch];
+     if (g == NULL) {
+ 	struct glyph *orig = fontp->kglyph[0];
+@@ -59,6 +68,7 @@ int read_ZEIT_index(struct font *fontp)
+ 
+     fontp->read_char = read_ZEIT_char;
+     fontp->kglyph = xcalloc(KTABLESIZE, sizeof(struct glyph *));
++    fontp->maxchar = KTABLESIZE - 1;
+ 
+     jfm = read_jfm(fontp->file, fontp->fontname);
+     if (jfm == NULL) return -1;
+@@ -76,8 +86,10 @@ int read_ZEIT_index(struct font *fontp)
+ 	g->bitmap.w = (int)(dimconv * width) >> 16;
+ 	g->bitmap.h = (int)(dimconv * (height + depth)) >> 16;
+ 	if (g->bitmap.w != g->bitmap.h) {
++	  if (code<0xFF60)
+ 	    fprintf(stderr, "Warning: '%s' (code=0x%X) is not square.\n",
+ 		    fontp->fontname, code);
++	    g->bitmap.w = g->bitmap.h; /* FIX-ME */
+ 	}
+ 	g->bitmap.bits = NULL;
+ 	g->x = 0;

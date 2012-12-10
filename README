@@ -1,0 +1,38 @@
+building binaries for tlptexlive
+--------------------------------
+
+patches are from various people, if I have
+not forgotten anyone:
+  Kitagawa-san
+  Tanaka-san
+  Kakuto-san
+
+Please configure in the script
+  build-ptexlive-binaries
+the first few lines, or set one of the 
+following env variables:
+  BUILD_SOURCE
+    the directory where the sources are saved to
+    does not need to exist
+  BUILD_TARGET
+    where the resulting zip file of binaries is places
+  BUILD_PATCHES
+    the location of this file and the patches
+  BUILD_VERBOSE
+    if you run rsync, this is passed as additional arg
+  BUILD_NORSYNC
+    do not rsync, assume already up2date source
+    (I use this to build in my svn checkout)
+  BUILD_MAKEFLAGS
+    additional flags passed to make, for example -j2 for dual core processors
+Then run
+  bash build-ptexlive-binaries
+and send me the generated binaries.zip
+
+For Apple MacOSX, you can run the script with
+  bash build-ptexlive-binaries --macosx
+to get (hopefully) working compilation (code thanks to Munehiro Yamamoto).
+
+Norbert Preining
+2012-02-06
+
