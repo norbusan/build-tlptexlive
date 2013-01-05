@@ -1,0 +1,201 @@
+#!/usr/bin/env bash
+
+#
+# Changelog
+# 2012-11-07 update from HK fro pmpost and fixes for current svn sources
+#
+# on Debian, needs:
+# libx11-dev, libxaw7-dev, libfontconfig1-dev, bison, flex
+# automake autoconf zip
+# maybe gettext ???
+
+
+set -e
+
+DO_APPLE=0
+DO_NOX=0
+DO_NOPREP=0
+while [ "${1+defined}" ]; do
+  case "$1" in
+  "--macosx") DO_APPLE=1;;
+  "--nox") DO_NOX=1;;
+  "--noprep") DO_NOPREP=1;;
+  *) echo "unsupported argument $1, exit."; exit 1 ;;
+  esac
+  shift
+done
+
+#
+# the place where you have already the sources, or you want to place them!
+SOURCE=${BUILD_SOURCE:-/tmp/build-place/source}
+#
+# where the zip of the binaries are placed
+TARGET=${BUILD_TARGET:-/tmp}
+#
+# location of the patches
+PATCHES=${BUILD_PATCHES:-`pwd`}
+#
+# verbose rsync
+VERBOSE=${BUILD_VERBOSE:-}
+#
+# don't run rsync
+NORSYNC=${BUILD_NORSYNC:-0}
+
+#
+# make flags
+MAKEFLAGS=${BUILD_MAKEFLAGS:-}
+
+# auto detect gpatch and gmake (for non-Linux system)
+PATCH=patch
+gpatch  --version > /dev/null 2>&1 && PATCH=gpatch ||:
+MAKE=make
+gmake   --version > /dev/null 2>&1 && MAKE=gmake ||:
+
+if [ $DO_APPLE == 1 ] ; then
+  #
+  # set build arch
+  U_ARCH=${BUILD_ARCH:-x86_64}
+  U_RELEASE=`uname -r`
+  case $U_ARCH in 
+      x86_64)
+         ;;
+      i686)
+         U_SDK=10.6
+         SDK=/Developer/SDKs/MacOSX${U_SDK}.sdk
+  
+         CFLAGS="-isysroot ${SDK} -arch i386 -mmacosx-version-min=10.4"
+         LDFLAGS="-isysroot ${SDK} -Wl,-syslibroot,${SDK} -arch i386 -mmacosx-version-min=10.4"
+         CXXFLAGS=$CFLAGS
+         ;;
+      ppc)
+         U_SDK=10.6
+         SDK=/Developer/SDKs/MacOSX${U_SDK}.sdk
+  
+         CFLAGS="-isysroot ${SDK} -arch ppc -mmacosx-version-min=10.4"
+         LDFLAGS="-isysroot ${SDK} -Wl,-syslibroot,${SDK} -arch ppc -mmacosx-version-min=10.4"
+         CXXFLAGS=$CFLAGS
+         ;;
+      *)
+         exit 1
+         ;;
+  esac
+  export CC CXX CFLAGS CXXFLAGS LDFLAGS
+  cat<<EOF
+  CC:            $CC
+  CXX:           $CXX
+  CFLAGS:                $CFLAGS
+  LDFLAGS:       $LDFLAGS
+EOF
+  sleep 3
+fi
+
+if [ $DO_NOPREP = 0 ] ; then
+  # get current TL sources
+  if [ "$NORSYNC" != "1" ] ; then
+    mkdir -p $SOURCE
+    echo "fetching/updating the sources of TL, that may take some time! ... "
+    rsync -az $VERBOSE --delete --exclude=.svn tug.org::tldevsrc/Build/source/ $SOURCE
+  fi
+  cd $SOURCE
+
+  # pxdvi
+  echo "creating pxdvi folder"
+  cp -pR texk/xdvik texk/pxdvik
+
+
+  echo "applying patches"
+  if which quilt >/dev/null ; then
+    QUILT_PATCHES="$PATCHES/quilt" quilt push -a
+  else
+    cat "$PATCHES/quilt/series" | while read p r ; do
+      $PATCH $r $p
+    done
+  fi
+
+  echo "running reautoconf"
+  ./reautoconf
+fi	# of $DO_NOPREP = 0
+
+
+TL_CONFIGURE_ARGS="	\
+	--enable-texlive	\
+	--disable-all-pkgs	\
+	--disable-xdvipdfmx	\
+	--disable-xetex		\
+	--enable-ptex		\
+	--enable-eptex		\
+	--enable-uptex		\
+	--enable-euptex		\
+	--enable-omfonts	\
+	--enable-pmp		\
+	--enable-makejvf	\
+	--enable-dvipdfmx	\
+	--enable-tetex		\
+	--enable-texk		\
+	--enable-web2c		\
+	--enable-mendexk	\
+	--enable-dvi2tty	\
+	"
+
+if [ $DO_NOX = 1 ] ; then
+  TL_CONFIGURE_ARGS="$TL_CONFIGURE_ARGS		\
+  	--without-mf-x-toolkit	\
+	--without-x"
+else
+  TL_CONFIGURE_ARGS="$TL_CONFIGURE_ARGS		
+  	--enable-pxdvik"
+fi
+
+if [ $DO_APPLE == 1 ] ; then
+  TL_CONFIGURE_ARGS="		\
+    --host=${U_ARCH}-apple-darwin${U_RELEASE} \
+    --build=x86_64-apple-darwin${U_RELEASE} \
+    $TL_CONFIGURE_ARGS"
+fi
+
+TL_MAKE_FLAGS=$MAKEFLAGS
+
+export TL_CONFIGURE_ARGS TL_MAKE_FLAGS
+
+# in case we haven't prepared the sources, make sure we are really there
+cd $SOURCE
+TL_MAKE=$MAKE ./Build
+
+EXT=
+case `uname` in
+  *CYGWIN*|*cygwin*) EXT='*' ;;
+  *) EXT= ;;
+esac
+
+cd inst/bin
+arch=`/bin/ls`
+zip -r $TARGET/binaries.zip 	\
+	*/dvi2tty$EXT		\
+	*/dvipdfmx$EXT		\
+	*/eptex$EXT		\
+	*/euptex$EXT		\
+	*/makejvf$EXT		\
+	*/mendex$EXT		\
+	*/pbibtex$EXT		\
+	*/pdvitype$EXT		\
+	*/pmpost$EXT		\
+	*/ppltotf$EXT		\
+	*/ptex$EXT		\
+	*/ptftopl$EXT		\
+	*/pxdvi$EXT		\
+	*/pxdvi-xaw$EXT		\
+	*/upbibtex$EXT		\
+	*/updvitype$EXT		\
+	*/uppltotf$EXT		\
+	*/uptex$EXT		\
+	*/uptftopl$EXT		\
+	*/wovp2ovf$EXT		\
+
+
+echo ""
+echo "Please send $TARGET/binaries.zip to Preining Norbert!"
+echo ""
+echo "Finished."
+
+
+
