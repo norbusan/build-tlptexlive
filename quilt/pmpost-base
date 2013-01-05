@@ -45,7 +45,7 @@
  m4_foreach([Kpse_Prog], [kpse_tex_progs],
 --- source.orig/texk/web2c/configure.ac
 +++ source/texk/web2c/configure.ac
-@@ -194,6 +194,7 @@
+@@ -199,6 +199,7 @@
                       [KPSE_MFWIN_DEFINE(Kpse_Win)])])[]dnl
  
  AM_CONDITIONAL([MP], [test "x$enable_mp" != xno])
