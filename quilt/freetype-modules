@@ -1,0 +1,15 @@
+---
+ libs/freetype2/freetype-2.4.11/modules.cfg |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- source.orig/libs/freetype2/freetype-2.4.11/modules.cfg
++++ source/libs/freetype2/freetype-2.4.11/modules.cfg
+@@ -129,7 +129,7 @@
+ 
+ # OpenType table validation.  Needs ftotval.c below.
+ #
+-# AUX_MODULES += otvalid
++AUX_MODULES += otvalid
+ 
+ # Auxiliary PostScript driver component to share common code.
+ #

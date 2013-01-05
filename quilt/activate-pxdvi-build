@@ -1,0 +1,14 @@
+---
+ m4/kpse-pkgs.m4 |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- source.orig/m4/kpse-pkgs.m4
++++ source/m4/kpse-pkgs.m4
+@@ -126,6 +126,7 @@
+ ttfdump
+ xdv2pdf
+ xdvik
++pxdvik
+ xdvipdfmx
+ texlive
+ ])]) # KPSE_TEXK_PKGS

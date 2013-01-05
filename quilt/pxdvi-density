@@ -1,0 +1,110 @@
+---
+ texk/pxdvik/dvi-draw.c   |    8 ++++----
+ texk/pxdvik/dvi-init.c   |   20 ++++++++++++++------
+ texk/pxdvik/util.c       |    1 +
+ texk/pxdvik/xdvi-debug.h |    1 +
+ 4 files changed, 20 insertions(+), 10 deletions(-)
+
+--- source.orig/texk/pxdvik/dvi-draw.c
++++ source/texk/pxdvik/dvi-draw.c
+@@ -729,7 +729,7 @@
+    image) for the given shrink factor. E.g. at shrink level 2, the
+    size of the pixel table is 4; in other words, 1 pixel in the shrunk
+    image corresponds to 4 pixels in the unshrunk image. Thus, the possible
+-   values for shink level 2 are: black, 1/4 (0x404040), 1/2 (0x808080),
++   values for shrink level 2 are: black, 1/4 (0x404040), 1/2 (0x808080),
+    3/4 (0xc0c0c0) and white (0xffffff).
+ */
+ static Pixel *pixeltbl;
+@@ -1336,7 +1336,7 @@
+     }
+     g->y2 = g->y / currwin.shrinkfactor;
+     if (globals.debug & DBG_BITMAP)
+-	print_bitmap(&g->bitmap2);
++        print_bitmap(&g->bitmap2);
+ }
+ 
+ #ifdef PTEX
+@@ -2250,7 +2250,7 @@
+ 	    if (resource.use_grey) {
+ 		if (g->pixmap2 == NULL) {
+ #ifdef DBG_AA
+-		    fprintf(stderr, "shinking the bitmap!\n");
++		    fprintf(stderr, "shrinking the bitmap!\n");
+ #endif /* DBG_AA */
+ 		    /*  		    print_bitmap(&g->bitmap); */
+ 		    shrink_glyph_grey(g);
+@@ -2321,7 +2321,7 @@
+ 	free_bitmap2(g);
+ 	g->tdir = currinf.fontp->dir;
+ 	if (globals.debug & DBG_BITMAP) print_char((ubyte) ch, g);
+-    }
++   }
+     set_char_rotate_glyph(g);
+ #ifdef TEXXET
+     common_set_char(cmd, g);
+--- source.orig/texk/pxdvik/dvi-init.c
++++ source/texk/pxdvik/dvi-init.c
+@@ -229,7 +229,7 @@
+     struct font *f;
+ 
+     for (f = font_head; f != NULL; f = f->next) {
+-	if ((f->flags & FONT_LOADED) && !(f->flags & FONT_VIRTUAL)) {
++	if ((f->flags & FONT_LOADED) && !(f->flags & FONT_VIRTUAL)){
+ 	    delete_glyphs(f);
+ 	}
+     }
+@@ -305,6 +305,9 @@
+ void
+ reset_colors(void)
+ {
++#ifdef PTEX
++  int n, maxchar;
++#endif
+     if (color_list_len != 0) {
+ 	XFreeColors(DISP, G_colormap, color_list, color_list_len, 0);
+ 	color_list_len = 0;
+@@ -328,13 +331,18 @@
+ 	struct glyph *g;
+ 
+ 	for (f = font_head; f != NULL; f = f->next)
+-	    if ((f->flags & FONT_LOADED) && !(f->flags & FONT_VIRTUAL)
++	  if ((f->flags & FONT_LOADED) && !(f->flags & FONT_VIRTUAL)) {
+ #ifdef PTEX
+-		&& !(f->flags & FONT_KANJI)
++	    maxchar = (f->flags & FONT_KANJI) ? KTABLESIZE : f->maxchar + 1;
++	    for (n = 0; n < maxchar; ++n) {
++	      g = (f->flags & FONT_KANJI) ? f->kglyph[n] : &f->glyph[n];
++	      if (g == NULL) continue;
++#else
++	      for (g = f->glyph; g <= f->glyph + f->maxchar; ++g) {
+ #endif /* PTEX */
+-		)
+-		for (g = f->glyph; g <= f->glyph + f->maxchar; ++g)
+-		    g->fg = NULL;
++		g->fg = NULL;
++	      }
++	  }
+     }
+ #endif /* GREY */
+     bg_current = NULL;
+--- source.orig/texk/pxdvik/util.c
++++ source/texk/pxdvik/util.c
+@@ -212,6 +212,7 @@
+     {  DBG_FIND,	"find",		", " },
+     {  DBG_FILES,	"files",	", " },
+     {  DBG_PTEXFNT,	"ptexfnt",	", " },
++    /* {  DBG_AA,		"aa",		", " }, */
+     {  DBG_ALL,		"all",		"\n" },
+     /* end marker */
+     {  0,		NULL,		NULL }
+--- source.orig/texk/pxdvik/xdvi-debug.h
++++ source/texk/pxdvik/xdvi-debug.h
+@@ -102,6 +102,7 @@
+ #define DBG_FIND		262144
+ #define DBG_FILES		524288
+ #define DBG_PTEXFNT             1048576
++/* #define DBG_AA                  2097152 */
+ #define	DBG_ALL			(~DBG_BATCH)
+ 
+ /* a mapping of numerical options to descriptive strings, defined in util.c */

@@ -1,0 +1,89 @@
+---
+ texk/web2c/pmplibdir/am/pmpost.am |    4 +-
+ texk/web2c/pmplibdir/psvgout.ch   |   66 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 68 insertions(+), 2 deletions(-)
+
+--- source.orig/texk/web2c/pmplibdir/am/pmpost.am
++++ source/texk/web2c/pmplibdir/am/pmpost.am
+@@ -55,10 +55,10 @@
+ 	@$(pmp_ctangle_sh) pmpxout pdvitomp.ch
+ 
+ $(psvgout_c_h): psvgout-tangle
+-	@$(pmp_ctangle_sh) psvgout
++	@$(pmp_ctangle_sh) psvgout.w psvgout.ch
+ psvgout-tangle: ctangle$(EXEEXT) mplibdir/svgout.w tangle-sh
+ 	cat $(srcdir)/mplibdir/svgout.w | sed $(pmp_sed) > psvgout.w
+-	@$(pmp_ctangle_sh) psvgout
++	@$(pmp_ctangle_sh) psvgout.w psvgout.ch
+ $(pmpmath_c_h): pmpmath-tangle
+ 	@$(pmp_ctangle_sh) pmpmath
+ pmpmath-tangle: ctangle$(EXEEXT) mplibdir/mpmath.w tangle-sh
+--- /dev/null
++++ source/texk/web2c/pmplibdir/psvgout.ch
+@@ -0,0 +1,66 @@
++@x
++#include <stdio.h>
++@y
++#include <ptexenc/ptexenc.h>
++#include <stdio.h>
++@z
++
++@x 
++@<Character |k| is not allowed in SVG output@>=
++ (k=='&')||(k=='>')||(k=='<')
++@y
++@<Character |k| is not allowed in SVG output@>=
++ (k=='&')||(k=='>')||(k=='<')||(k>=0x7F)
++@z
++
++@x
++@ Now for outputting the actual graphic objects. 
++@y
++@ Now for outputting the actual graphic objects. 
++
++@d yoko_jfm_id   11 /* `yoko-kumi' fonts */
++@d tate_jfm_id   9  /* `tate-kumi' fonts */
++@d font_jfm_p(A) (mp->font_id[(A)]!=0)
++@z
++@x Even if prologues=3, Japanese texts are not converted into paths.
++  if (prologues == 3 ) {
++@y
++  if (prologues == 3 && mp->font_id[gr_font_n(p)]==0) {
++@z
++
++@x To realise vertical Japanese texts ...
++    mp_svg_attribute(mp, "font-size", mp->svg->buf);
++@y
++    mp_svg_attribute(mp, "font-size", mp->svg->buf);
++    if ( mp->font_id[gr_font_n(p)]==tate_jfm_id ) {
++      mp_svg_reset_buf(mp);
++      append_string("tb-rl");
++      mp_svg_attribute(mp, "writing-mode", mp->svg->buf);
++    }
++@z
++
++@x
++    while (l-->0) {
++      k=(int)*s++;
++      if (@<Character |k| is illegal in SVG output@>) {
++@y
++    if ( mp->font_id[gr_font_n(p)]!=0 ) {
++    l >>= 1;
++    while (l-->0) {
++         k =((int)*s++)*0x100; k += (int)*s++;
++ 	 fprintf(stderr, "\n>>> %d\n", k); 
++         append_string("&#");
++         mp_svg_store_int(mp,toUCS(k));
++         append_char(';');
++       }
++    } else
++    while (l-->0) {
++      k=(int)*s++;
++      if (@<Character |k| is illegal in SVG output@>) {
++@z
++
++@x
++    mp_svg_print(mp, "<?xml version=\"1.0\"?>");
++@y
++    mp_svg_print(mp, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
++@z
