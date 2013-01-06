@@ -3,6 +3,8 @@
 #
 # Changelog
 # 2012-11-07 update from HK fro pmpost and fixes for current svn sources
+# 2013-01-06 move patches to quilt, include reautoconf patch so that
+#            call to reautoconf is not necessary anymore
 #
 # on Debian, needs:
 # libx11-dev, libxaw7-dev, libfontconfig1-dev, bison, flex
@@ -15,11 +17,13 @@ set -e
 DO_APPLE=0
 DO_NOX=0
 DO_NOPREP=0
+DO_MAINT=0
 while [ "${1+defined}" ]; do
   case "$1" in
   "--macosx") DO_APPLE=1;;
   "--nox") DO_NOX=1;;
   "--noprep") DO_NOPREP=1;;
+  "--maintainer") DO_MAINT=1;;
   *) echo "unsupported argument $1, exit."; exit 1 ;;
   esac
   shift
@@ -105,15 +109,41 @@ if [ $DO_NOPREP = 0 ] ; then
 
   echo "applying patches"
   if which quilt >/dev/null ; then
-    QUILT_PATCHES="$PATCHES/quilt" quilt push -a
+    if  $DO_MAINT = 1 ] ; then
+      export QUILT_PATCHES="$PATCHES/quilt"
+      while [ $(quilt next) ne "reautoconf-stuff" ] ; do
+        quilt push
+      done
+      tempdir=$(mktemp -d)
+      echo "Copying source for reautoconf diff"
+      cp -a "$SOURCE" $tempdir/source-reautoconf
+      cd $tempdir/source-reautoconf
+      echo "Running reautoconf"
+      TL_AUTOMAKE=automake-1.13 TL_ACLOCAL=aclocal-1.13 ./reautoconf
+      echo "Updating reautoconf-stuff patch"
+      diff -urN -x 'autom4te.cache' "$SOURCE" $tempdir/source-reautoconf > $PATCHES/quilt/reautoconf-stuff
+      cd "$SOURCE"
+      rm -rf $tempdir
+      echo "Pushing new changes ... please verify it worked!"
+      quilt push
+      exit $?
+      # update the reautoconf patch!
+    else
+      QUILT_PATCHES="$PATCHES/quilt" quilt push -a
+    fi
   else
+    if [ $DO_MAINT = 1 ] ; then
+      echo "Cannot work without quilt in maintainer mode, exiting here."
+      echo "Please clean up yourself."
+      exit 1
+    fi
     cat "$PATCHES/quilt/series" | while read p r ; do
       $PATCH $r $p
     done
   fi
 
-  echo "running reautoconf"
-  ./reautoconf
+  #echo "running reautoconf"
+  #TL_AUTOMAKE=automake-1.13 TL_ACLOCAL=aclocal-1.13 ./reautoconf
 fi	# of $DO_NOPREP = 0
 
 

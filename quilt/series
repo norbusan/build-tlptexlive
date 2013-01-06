@@ -5,3 +5,4 @@ freetype-modules
 activate-pxdvi-build
 pmpost-base
 pmpost-svg
+reautoconf-stuff
