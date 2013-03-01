@@ -1,6 +1,18 @@
-diff -urN -x autom4te.cache source/configure source-postreautoconf/configure
---- source/configure	2013-01-06 13:15:09.000000000 +0900
-+++ source-postreautoconf/configure	2013-01-06 13:24:55.000000000 +0900
+diff -urN -x autom4te.cache source.orig/Makefile.in source/source-reautoconf/Makefile.in
+--- source.orig/Makefile.in	2013-01-27 23:26:20.000000000 +0900
++++ source/source-reautoconf/Makefile.in	2013-03-02 08:24:14.998412469 +0900
+@@ -141,6 +141,8 @@
+ 	$(top_srcdir)/texk/xdv2pdf/ac/withenable.ac \
+ 	$(top_srcdir)/texk/xdvik/ac/withenable.ac \
+ 	$(top_srcdir)/texk/xdvik/ac/xdvik.ac \
++	$(top_srcdir)/texk/pxdvik/ac/withenable.ac \
++	$(top_srcdir)/texk/pxdvik/ac/xdvik.ac \
+ 	$(top_srcdir)/texk/xdvipdfmx/ac/withenable.ac \
+ 	$(top_srcdir)/texk/texlive/ac/withenable.ac \
+ 	$(top_srcdir)/libs/harfbuzz/ac/withenable.ac \
+diff -urN -x autom4te.cache source.orig/configure source/source-reautoconf/configure
+--- source.orig/configure	2013-02-22 23:06:03.000000000 +0900
++++ source/source-reautoconf/configure	2013-03-02 08:24:14.134408185 +0900
 @@ -823,6 +823,7 @@
  enable_pdftex_synctex
  enable_luatex
@@ -27,7 +39,7 @@ diff -urN -x autom4te.cache source/configure source-postreautoconf/configure
    --disable-mf              do not build METAFONT
 @@ -1689,6 +1692,7 @@
    --disable-ttfdump       do not build the ttfdump package
-   --disable-xdv2pdf       do not build the xdv2pdf package
+   --enable-xdv2pdf        build the xdv2pdf package
    --disable-xdvik         do not build the xdvik package
 +  --disable-pxdvik        do not build the pxdvik package
    --disable-xdvipdfmx     do not build the xdvipdfmx package
@@ -109,9 +121,21 @@ diff -urN -x autom4te.cache source/configure source-postreautoconf/configure
  ## configure options for xdvik
  
  # Check whether --with-xdvi-x-toolkit was given.
-diff -urN -x autom4te.cache source/libs/configure source-postreautoconf/libs/configure
---- source/libs/configure	2013-01-06 13:15:09.000000000 +0900
-+++ source-postreautoconf/libs/configure	2013-01-06 13:25:08.000000000 +0900
+diff -urN -x autom4te.cache source.orig/libs/Makefile.in source/source-reautoconf/libs/Makefile.in
+--- source.orig/libs/Makefile.in	2013-01-06 15:24:44.000000000 +0900
++++ source/source-reautoconf/libs/Makefile.in	2013-03-02 08:24:22.982452060 +0900
+@@ -138,6 +138,8 @@
+ 	$(top_srcdir)/../texk/xdv2pdf/ac/withenable.ac \
+ 	$(top_srcdir)/../texk/xdvik/ac/withenable.ac \
+ 	$(top_srcdir)/../texk/xdvik/ac/xdvik.ac \
++	$(top_srcdir)/../texk/pxdvik/ac/withenable.ac \
++	$(top_srcdir)/../texk/pxdvik/ac/xdvik.ac \
+ 	$(top_srcdir)/../texk/xdvipdfmx/ac/withenable.ac \
+ 	$(top_srcdir)/../texk/texlive/ac/withenable.ac \
+ 	$(top_srcdir)/../libs/harfbuzz/ac/withenable.ac \
+diff -urN -x autom4te.cache source.orig/libs/configure source/source-reautoconf/libs/configure
+--- source.orig/libs/configure	2013-02-22 23:06:03.000000000 +0900
++++ source/source-reautoconf/libs/configure	2013-03-02 08:24:22.422449283 +0900
 @@ -735,6 +735,7 @@
  enable_pdftex_synctex
  enable_luatex
@@ -138,7 +162,7 @@ diff -urN -x autom4te.cache source/libs/configure source-postreautoconf/libs/con
    --disable-mf              do not build METAFONT
 @@ -1593,6 +1596,7 @@
    --disable-ttfdump       do not build the ttfdump package
-   --disable-xdv2pdf       do not build the xdv2pdf package
+   --enable-xdv2pdf        build the xdv2pdf package
    --disable-xdvik         do not build the xdvik package
 +  --disable-pxdvik        do not build the pxdvik package
    --disable-xdvipdfmx     do not build the xdvipdfmx package
@@ -220,9 +244,9 @@ diff -urN -x autom4te.cache source/libs/configure source-postreautoconf/libs/con
  ## configure options for xdvik
  
  # Check whether --with-xdvi-x-toolkit was given.
-diff -urN -x autom4te.cache source/libs/Makefile.in source-postreautoconf/libs/Makefile.in
---- source/libs/Makefile.in	2013-01-06 13:15:09.000000000 +0900
-+++ source-postreautoconf/libs/Makefile.in	2013-01-06 13:25:09.000000000 +0900
+diff -urN -x autom4te.cache source.orig/texk/Makefile.in source/source-reautoconf/texk/Makefile.in
+--- source.orig/texk/Makefile.in	2013-01-06 15:24:46.000000000 +0900
++++ source/source-reautoconf/texk/Makefile.in	2013-03-02 08:24:34.430508828 +0900
 @@ -138,6 +138,8 @@
  	$(top_srcdir)/../texk/xdv2pdf/ac/withenable.ac \
  	$(top_srcdir)/../texk/xdvik/ac/withenable.ac \
@@ -232,21 +256,9 @@ diff -urN -x autom4te.cache source/libs/Makefile.in source-postreautoconf/libs/M
  	$(top_srcdir)/../texk/xdvipdfmx/ac/withenable.ac \
  	$(top_srcdir)/../texk/texlive/ac/withenable.ac \
  	$(top_srcdir)/../libs/harfbuzz/ac/withenable.ac \
-diff -urN -x autom4te.cache source/Makefile.in source-postreautoconf/Makefile.in
---- source/Makefile.in	2013-01-06 13:15:09.000000000 +0900
-+++ source-postreautoconf/Makefile.in	2013-01-06 13:24:56.000000000 +0900
-@@ -141,6 +141,8 @@
- 	$(top_srcdir)/texk/xdv2pdf/ac/withenable.ac \
- 	$(top_srcdir)/texk/xdvik/ac/withenable.ac \
- 	$(top_srcdir)/texk/xdvik/ac/xdvik.ac \
-+	$(top_srcdir)/texk/pxdvik/ac/withenable.ac \
-+	$(top_srcdir)/texk/pxdvik/ac/xdvik.ac \
- 	$(top_srcdir)/texk/xdvipdfmx/ac/withenable.ac \
- 	$(top_srcdir)/texk/texlive/ac/withenable.ac \
- 	$(top_srcdir)/libs/harfbuzz/ac/withenable.ac \
-diff -urN -x autom4te.cache source/texk/configure source-postreautoconf/texk/configure
---- source/texk/configure	2013-01-06 13:15:09.000000000 +0900
-+++ source-postreautoconf/texk/configure	2013-01-06 13:25:23.000000000 +0900
+diff -urN -x autom4te.cache source.orig/texk/configure source/source-reautoconf/texk/configure
+--- source.orig/texk/configure	2013-02-22 23:06:12.000000000 +0900
++++ source/source-reautoconf/texk/configure	2013-03-02 08:24:33.822505813 +0900
 @@ -735,6 +735,7 @@
  enable_pdftex_synctex
  enable_luatex
@@ -281,7 +293,7 @@ diff -urN -x autom4te.cache source/texk/configure source-postreautoconf/texk/con
    --disable-mf              do not build METAFONT
 @@ -1611,6 +1615,7 @@
    --disable-ttfdump       do not build the ttfdump package
-   --disable-xdv2pdf       do not build the xdv2pdf package
+   --enable-xdv2pdf        build the xdv2pdf package
    --disable-xdvik         do not build the xdvik package
 +  --disable-pxdvik        do not build the pxdvik package
    --disable-xdvipdfmx     do not build the xdvipdfmx package
@@ -380,21 +392,201 @@ diff -urN -x autom4te.cache source/texk/configure source-postreautoconf/texk/con
  
  
  if test -x $srcdir/xdvipdfmx/configure; then
-diff -urN -x autom4te.cache source/texk/Makefile.in source-postreautoconf/texk/Makefile.in
---- source/texk/Makefile.in	2013-01-06 13:15:09.000000000 +0900
-+++ source-postreautoconf/texk/Makefile.in	2013-01-06 13:25:24.000000000 +0900
-@@ -138,6 +138,8 @@
- 	$(top_srcdir)/../texk/xdv2pdf/ac/withenable.ac \
- 	$(top_srcdir)/../texk/xdvik/ac/withenable.ac \
- 	$(top_srcdir)/../texk/xdvik/ac/xdvik.ac \
-+	$(top_srcdir)/../texk/pxdvik/ac/withenable.ac \
-+	$(top_srcdir)/../texk/pxdvik/ac/xdvik.ac \
- 	$(top_srcdir)/../texk/xdvipdfmx/ac/withenable.ac \
- 	$(top_srcdir)/../texk/texlive/ac/withenable.ac \
- 	$(top_srcdir)/../libs/harfbuzz/ac/withenable.ac \
-diff -urN -x autom4te.cache source/texk/pxdvik/configure source-postreautoconf/texk/pxdvik/configure
---- source/texk/pxdvik/configure	2013-01-06 13:02:09.000000000 +0900
-+++ source-postreautoconf/texk/pxdvik/configure	2013-01-06 13:29:10.000000000 +0900
+diff -urN -x autom4te.cache source.orig/texk/pxdvik/Makefile.in source/source-reautoconf/texk/pxdvik/Makefile.in
+--- source.orig/texk/pxdvik/Makefile.in	2013-02-22 23:06:12.000000000 +0900
++++ source/source-reautoconf/texk/pxdvik/Makefile.in	2013-03-02 08:30:49.960370980 +0900
+@@ -84,9 +84,11 @@
+ 	$(top_srcdir)/m4/xdvi-sys-old-linux.m4 \
+ 	$(top_srcdir)/m4/xdvi-sys-streams.m4 \
+ 	$(top_srcdir)/../../m4/kpse-common.m4 \
++	$(top_srcdir)/../../m4/kpse-freetype2-flags.m4 \
+ 	$(top_srcdir)/../../m4/kpse-kpathsea-flags.m4 \
+ 	$(top_srcdir)/../../m4/kpse-t1lib-flags.m4 \
+ 	$(top_srcdir)/../../m4/kpse-warnings.m4 \
++	$(top_srcdir)/../../m4/kpse-zlib-flags.m4 \
+ 	$(top_srcdir)/../../m4/libtool.m4 \
+ 	$(top_srcdir)/../../m4/ltoptions.m4 \
+ 	$(top_srcdir)/../../m4/ltsugar.m4 \
+@@ -121,13 +123,15 @@
+ 	read-mapfile.$(OBJEXT) search-internal.$(OBJEXT) \
+ 	special.$(OBJEXT) string-utils.$(OBJEXT) string_list.$(OBJEXT) \
+ 	tfmload.$(OBJEXT) util.$(OBJEXT) vf.$(OBJEXT) x_util.$(OBJEXT) \
+-	xdvi.$(OBJEXT) xserver-info.$(OBJEXT) gui/Panner.$(OBJEXT) \
+-	gui/Tip.$(OBJEXT) gui/help-window.$(OBJEXT) gui/mag.$(OBJEXT) \
+-	gui/menu.$(OBJEXT) gui/message-window.$(OBJEXT) \
+-	gui/pagesel.$(OBJEXT) gui/print-dialog.$(OBJEXT) \
+-	gui/print-log.$(OBJEXT) gui/search-dialog.$(OBJEXT) \
+-	gui/selection.$(OBJEXT) gui/sfDir.$(OBJEXT) \
+-	gui/sfDraw.$(OBJEXT) gui/sfPath.$(OBJEXT) \
++	xdvi.$(OBJEXT) xserver-info.$(OBJEXT) zeit.$(OBJEXT) \
++	ptexmap.$(OBJEXT) ft2.$(OBJEXT) jisx0208.$(OBJEXT) \
++	jfm.$(OBJEXT) fontconfig.$(OBJEXT) ft2vert.$(OBJEXT) \
++	gui/Panner.$(OBJEXT) gui/Tip.$(OBJEXT) \
++	gui/help-window.$(OBJEXT) gui/mag.$(OBJEXT) gui/menu.$(OBJEXT) \
++	gui/message-window.$(OBJEXT) gui/pagesel.$(OBJEXT) \
++	gui/print-dialog.$(OBJEXT) gui/print-log.$(OBJEXT) \
++	gui/search-dialog.$(OBJEXT) gui/selection.$(OBJEXT) \
++	gui/sfDir.$(OBJEXT) gui/sfDraw.$(OBJEXT) gui/sfPath.$(OBJEXT) \
+ 	gui/sfSelFile.$(OBJEXT) gui/statusline.$(OBJEXT) \
+ 	gui/topic-window.$(OBJEXT) gui/xaw_bitmaps.$(OBJEXT) \
+ 	gui/xaw_menu.$(OBJEXT) gui/xicon.$(OBJEXT) \
+@@ -157,7 +161,8 @@
+ 	$(am__DEPENDENCIES_3)
+ am__DEPENDENCIES_5 = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+ 	$(am__DEPENDENCIES_4)
+-xdvi_bin_DEPENDENCIES = libxdvi.a $(am__DEPENDENCIES_5)
++xdvi_bin_DEPENDENCIES = libxdvi.a $(am__DEPENDENCIES_5) \
++	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+ AM_V_lt = $(am__v_lt_@AM_V@)
+ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+ am__v_lt_0 = --silent
+@@ -343,6 +348,11 @@
+ EGREP = @EGREP@
+ EXEEXT = @EXEEXT@
+ FGREP = @FGREP@
++FONTCONFIGCPPFLAGS = @FONTCONFIGCPPFLAGS@
++FREETYPE2_DEPEND = @FREETYPE2_DEPEND@
++FREETYPE2_INCLUDES = @FREETYPE2_INCLUDES@
++FREETYPE2_LIBS = @FREETYPE2_LIBS@
++FT2_CONFIG = @FT2_CONFIG@
+ GREP = @GREP@
+ INSTALL = @INSTALL@
+ INSTALL_DATA = @INSTALL_DATA@
+@@ -395,6 +405,9 @@
+ X_EXTRA_LIBS = @X_EXTRA_LIBS@
+ X_LIBS = @X_LIBS@
+ X_PRE_LIBS = @X_PRE_LIBS@
++ZLIB_DEPEND = @ZLIB_DEPEND@
++ZLIB_INCLUDES = @ZLIB_INCLUDES@
++ZLIB_LIBS = @ZLIB_LIBS@
+ abs_builddir = @abs_builddir@
+ abs_srcdir = @abs_srcdir@
+ abs_top_builddir = @abs_top_builddir@
+@@ -469,7 +482,7 @@
+ common_ldadd = $(KPATHSEA_LIBS) $(T1LIB_LIBS) $(xdvi_x_libs)
+ common_dependencies = $(KPATHSEA_DEPEND) $(T1LIB_DEPEND)
+ libxdvi_dependencies = ${top_srcdir}/*.[ch] ${top_srcdir}/gui/*.[ch] ${top_builddir}/psheader.c
+-AM_CPPFLAGS = -I$(srcdir)/gui $(common_includes)
++AM_CPPFLAGS = -I$(srcdir)/gui $(common_includes) $(FREETYPE2_INCLUDES) $(ZLIB_INCLUDES)
+ noinst_LIBRARIES = libxdvi.a
+ nodist_libxdvi_a_SOURCES = psheader.c
+ libxdvi_a_SOURCES = alloc-debug.h browser.c browser.h c-openmx.h \
+@@ -485,10 +498,12 @@
+ 	special.h string-utils.c string-utils.h string_list.c \
+ 	string_list.h tfmload.c tfmload.h translations.h util.c util.h \
+ 	version.h vf.c x_util.c x_util.h xdvi.c xdvi-config.h \
+-	xdvi-debug.h xserver-info.c xdvi.h xserver-info.h gui/Panner.c \
+-	gui/Panner.h gui/PannerP.h gui/Tip.c gui/Tip.h gui/TipP.h \
+-	gui/help-window.c gui/help-window.h gui/mag.c gui/mag.h \
+-	gui/menu.c gui/menu.h gui/message-window.c \
++	xdvi-debug.h xserver-info.c xdvi.h zeit.c zeit.h ptexmap.c \
++	ptexmap.h ft2.c ft2.h jisx0208.c jisx0208.h jfm.c jfm.h \
++	fontconfig.c fontconfig.h ft2vert.c ft2vert.h xserver-info.h \
++	gui/Panner.c gui/Panner.h gui/PannerP.h gui/Tip.c gui/Tip.h \
++	gui/TipP.h gui/help-window.c gui/help-window.h gui/mag.c \
++	gui/mag.h gui/menu.c gui/menu.h gui/message-window.c \
+ 	gui/message-window.h gui/pagesel.c gui/pagesel.h \
+ 	gui/print-dialog.c gui/print-dialog.h gui/print-log.c \
+ 	gui/print-log.h gui/search-dialog.c gui/search-dialog.h \
+@@ -510,7 +525,7 @@
+ DISTCLEANFILES = config.force
+ bin_SCRIPTS = xdvi
+ xdvi_bin_SOURCES = main.c
+-LDADD = libxdvi.a $(common_ldadd)
++LDADD = libxdvi.a $(common_ldadd) $(FREETYPE2_LIBS) $(ZLIB_LIBS)
+ EXTRA_DIST = psheader.txt mksedscript xdvi.1.in BUGS CHANGES \
+ 	ChangeLog.TL FAQ LESSTIF-BUGS README.t1fonts README.t1mapper \
+ 	pixmaps/drag_horiz.xbm pixmaps/drag_horiz_mask.xbm \
+@@ -524,14 +539,14 @@
+ 	t1mapper.1 texmf-alt/README texmf-alt/charter2.map \
+ 	texmf-alt/lucida.map texmf-alt/marvosym.map texmf-alt/xdvi.cfg \
+ 	texmf-alt/xdvifont.map texmf-alt/xypic.map xdvi-search.el \
+-	xdvi.icon xdvizilla xdvizilla.1
++	xdvi.icon pxdvizilla xdvizilla.1
+ CLEANFILES = psheader.c sedscript xdvi.1
+ nodist_man1_MANS = xdvi.1
+ xdvidir = $(datarootdir)/texmf-dist/xdvi
+ dist_xdvi_DATA = texmf/XDvi
+ pixmapdir = $(datarootdir)/texmf-dist/xdvi/pixmap
+ dist_pixmap_DATA = pixmaps/toolbar.xpm pixmaps/toolbar2.xpm
+-dist_noinst_DATA = texmf/xdvi.cfg
++dist_noinst_DATA = texmf/pxdvi.cfg xdvi-ptex.sample
+ all: c-auto.h
+ 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
+ 
+@@ -764,9 +779,14 @@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exit-handlers.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filehist.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/font-open.Po@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fontconfig.Po@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ft2.Po@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ft2vert.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gf.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hypertex.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/image-magick.Po@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jfm.Po@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jisx0208.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mime.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/my-snprintf.Po@am__quote@
+@@ -778,6 +798,7 @@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/psgs.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/psheader.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/psnews.Po@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ptexmap.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/read-mapfile.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/search-internal.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/special.Po@am__quote@
+@@ -789,6 +810,7 @@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/x_util.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xdvi.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xserver-info.Po@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeit.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@gui/$(DEPDIR)/Panner.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@gui/$(DEPDIR)/Tip.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@gui/$(DEPDIR)/help-window.Po@am__quote@
+@@ -1385,7 +1407,10 @@
+ 	echo timestamp >config.force
+ 	$(SHELL) ./config.status --recheck
+ 
+-$(xdvi_bin_OBJECTS): libxdvi.a $(common_dependencies)
++$(xdvi_bin_OBJECTS): libxdvi.a $(common_dependencies) $(FREETYPE2_DEPEND) $(ZLIB_DEPEND)
++
++@FREETYPE2_RULE@
++@ZLIB_RULE@
+ 
+ # When cross-compiling, EXEEXT for the build and host systems may differ.
+ # Thus we depend on the auxiliary file squeeze/stamp-squeeze.
+@@ -1402,17 +1427,18 @@
+ 	$(AM_V_GEN)$(SHELL) $(srcdir)/mksedscript $(srcdir) $(DEFS) $(PS_DEF) >$@
+ 
+ install-data-hook:
+-	@if grep "original xdvi.cfg --" "$(DESTDIR)$(xdvidir)/xdvi.cfg" >/dev/null 2>&1 \
+-	    || test ! -r "$(DESTDIR)$(xdvidir)/xdvi.cfg"; then \
+-	  echo " $(INSTALL_DATA) '$(srcdir)/texmf/xdvi.cfg' '$(DESTDIR)$(xdvidir)/xdvi.cfg'"; \
+-	  $(INSTALL_DATA) "$(srcdir)/texmf/xdvi.cfg" "$(DESTDIR)$(xdvidir)/xdvi.cfg"; \
++	@if grep "original pxdvi.cfg --" "$(DESTDIR)$(xdvidir)/pxdvi.cfg" >/dev/null 2>&1 \
++	    || test ! -r "$(DESTDIR)$(xdvidir)/pxdvi.cfg"; then \
++	  echo " $(INSTALL_DATA) '$(srcdir)/texmf/pxdvi.cfg' '$(DESTDIR)$(xdvidir)/pxdvi.cfg'"; \
++	  $(INSTALL_DATA) "$(srcdir)/texmf/pxdvi.cfg" "$(DESTDIR)$(xdvidir)/pxdvi.cfg"; \
+ 	else :; fi
++	$(INSTALL_DATA) "$(srcdir)/xdvi-ptex.sample" "$(DESTDIR)$(xdvidir)/"
+ 
+ uninstall-hook:
+-	@if grep "original xdvi.cfg --" "$(DESTDIR)$(xdvidir)/xdvi.cfg" >/dev/null 2>&1 \
+-	    || test ! -r "$(DESTDIR)$(xdvidir)/xdvi.cfg"; then \
+-	  echo " rm -f '$(DESTDIR)$(xdvidir)/xdvi.cfg'"; \
+-	  rm -f "$(DESTDIR)$(xdvidir)/xdvi.cfg"; \
++	@if grep "original pxdvi.cfg --" "$(DESTDIR)$(xdvidir)/pxdvi.cfg" >/dev/null 2>&1 \
++	    || test ! -r "$(DESTDIR)$(xdvidir)/pxdvi.cfg"; then \
++	  echo " rm -f '$(DESTDIR)$(xdvidir)/pxdvi.cfg'"; \
++	  rm -f "$(DESTDIR)$(xdvidir)/pxdvi.cfg"; \
+ 	else :; fi
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+diff -urN -x autom4te.cache source.orig/texk/pxdvik/configure source/source-reautoconf/texk/pxdvik/configure
+--- source.orig/texk/pxdvik/configure	2013-01-02 11:28:08.000000000 +0900
++++ source/source-reautoconf/texk/pxdvik/configure	2013-03-02 08:30:48.888365664 +0900
 @@ -638,6 +638,15 @@
  LTLIBOBJS
  subdirs
@@ -667,196 +859,9 @@ diff -urN -x autom4te.cache source/texk/pxdvik/configure source-postreautoconf/t
  
  eval CPPFLAGS=\"$KPATHSEA_INCLUDES \$CPPFLAGS\"
  eval LIBS=\"$KPATHSEA_LIBS \$LIBS\"
-diff -urN -x autom4te.cache source/texk/pxdvik/Makefile.in source-postreautoconf/texk/pxdvik/Makefile.in
---- source/texk/pxdvik/Makefile.in	2013-01-06 13:02:11.000000000 +0900
-+++ source-postreautoconf/texk/pxdvik/Makefile.in	2013-01-06 13:29:12.000000000 +0900
-@@ -84,9 +84,11 @@
- 	$(top_srcdir)/m4/xdvi-sys-old-linux.m4 \
- 	$(top_srcdir)/m4/xdvi-sys-streams.m4 \
- 	$(top_srcdir)/../../m4/kpse-common.m4 \
-+	$(top_srcdir)/../../m4/kpse-freetype2-flags.m4 \
- 	$(top_srcdir)/../../m4/kpse-kpathsea-flags.m4 \
- 	$(top_srcdir)/../../m4/kpse-t1lib-flags.m4 \
- 	$(top_srcdir)/../../m4/kpse-warnings.m4 \
-+	$(top_srcdir)/../../m4/kpse-zlib-flags.m4 \
- 	$(top_srcdir)/../../m4/libtool.m4 \
- 	$(top_srcdir)/../../m4/ltoptions.m4 \
- 	$(top_srcdir)/../../m4/ltsugar.m4 \
-@@ -120,10 +122,12 @@
- 	read-mapfile.$(OBJEXT) search-internal.$(OBJEXT) \
- 	special.$(OBJEXT) string-utils.$(OBJEXT) string_list.$(OBJEXT) \
- 	tfmload.$(OBJEXT) util.$(OBJEXT) vf.$(OBJEXT) x_util.$(OBJEXT) \
--	xdvi.$(OBJEXT) xserver-info.$(OBJEXT) Panner.$(OBJEXT) \
--	Tip.$(OBJEXT) help-window.$(OBJEXT) mag.$(OBJEXT) \
--	menu.$(OBJEXT) message-window.$(OBJEXT) pagesel.$(OBJEXT) \
--	print-dialog.$(OBJEXT) print-log.$(OBJEXT) \
-+	xdvi.$(OBJEXT) xserver-info.$(OBJEXT) zeit.$(OBJEXT) \
-+	ptexmap.$(OBJEXT) ft2.$(OBJEXT) jisx0208.$(OBJEXT) \
-+	jfm.$(OBJEXT) fontconfig.$(OBJEXT) ft2vert.$(OBJEXT) \
-+	Panner.$(OBJEXT) Tip.$(OBJEXT) help-window.$(OBJEXT) \
-+	mag.$(OBJEXT) menu.$(OBJEXT) message-window.$(OBJEXT) \
-+	pagesel.$(OBJEXT) print-dialog.$(OBJEXT) print-log.$(OBJEXT) \
- 	search-dialog.$(OBJEXT) selection.$(OBJEXT) sfDir.$(OBJEXT) \
- 	sfDraw.$(OBJEXT) sfPath.$(OBJEXT) sfSelFile.$(OBJEXT) \
- 	statusline.$(OBJEXT) topic-window.$(OBJEXT) \
-@@ -153,7 +157,8 @@
- 	$(am__DEPENDENCIES_3)
- am__DEPENDENCIES_5 = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
- 	$(am__DEPENDENCIES_4)
--xdvi_bin_DEPENDENCIES = libxdvi.a $(am__DEPENDENCIES_5)
-+xdvi_bin_DEPENDENCIES = libxdvi.a $(am__DEPENDENCIES_5) \
-+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
- AM_V_lt = $(am__v_lt_@AM_V@)
- am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
- am__v_lt_0 = --silent
-@@ -339,6 +344,11 @@
- EGREP = @EGREP@
- EXEEXT = @EXEEXT@
- FGREP = @FGREP@
-+FONTCONFIGCPPFLAGS = @FONTCONFIGCPPFLAGS@
-+FREETYPE2_DEPEND = @FREETYPE2_DEPEND@
-+FREETYPE2_INCLUDES = @FREETYPE2_INCLUDES@
-+FREETYPE2_LIBS = @FREETYPE2_LIBS@
-+FT2_CONFIG = @FT2_CONFIG@
- GREP = @GREP@
- INSTALL = @INSTALL@
- INSTALL_DATA = @INSTALL_DATA@
-@@ -391,6 +401,9 @@
- X_EXTRA_LIBS = @X_EXTRA_LIBS@
- X_LIBS = @X_LIBS@
- X_PRE_LIBS = @X_PRE_LIBS@
-+ZLIB_DEPEND = @ZLIB_DEPEND@
-+ZLIB_INCLUDES = @ZLIB_INCLUDES@
-+ZLIB_LIBS = @ZLIB_LIBS@
- abs_builddir = @abs_builddir@
- abs_srcdir = @abs_srcdir@
- abs_top_builddir = @abs_top_builddir@
-@@ -465,7 +478,7 @@
- common_ldadd = $(KPATHSEA_LIBS) $(T1LIB_LIBS) $(xdvi_x_libs)
- common_dependencies = $(KPATHSEA_DEPEND) $(T1LIB_DEPEND)
- libxdvi_dependencies = ${top_srcdir}/*.[ch] ${top_srcdir}/gui/*.[ch] ${top_builddir}/psheader.c
--AM_CPPFLAGS = -I$(srcdir)/gui $(common_includes)
-+AM_CPPFLAGS = -I$(srcdir)/gui $(common_includes) $(FREETYPE2_INCLUDES) $(ZLIB_INCLUDES)
- noinst_LIBRARIES = libxdvi.a
- nodist_libxdvi_a_SOURCES = psheader.c
- libxdvi_a_SOURCES = alloc-debug.h browser.c browser.h c-openmx.h \
-@@ -481,10 +494,12 @@
- 	special.h string-utils.c string-utils.h string_list.c \
- 	string_list.h tfmload.c tfmload.h translations.h util.c util.h \
- 	version.h vf.c x_util.c x_util.h xdvi.c xdvi-config.h \
--	xdvi-debug.h xserver-info.c xdvi.h xserver-info.h gui/Panner.c \
--	gui/Panner.h gui/PannerP.h gui/Tip.c gui/Tip.h gui/TipP.h \
--	gui/help-window.c gui/help-window.h gui/mag.c gui/mag.h \
--	gui/menu.c gui/menu.h gui/message-window.c \
-+	xdvi-debug.h xserver-info.c xdvi.h zeit.c zeit.h ptexmap.c \
-+	ptexmap.h ft2.c ft2.h jisx0208.c jisx0208.h jfm.c jfm.h \
-+	fontconfig.c fontconfig.h ft2vert.c ft2vert.h xserver-info.h \
-+	gui/Panner.c gui/Panner.h gui/PannerP.h gui/Tip.c gui/Tip.h \
-+	gui/TipP.h gui/help-window.c gui/help-window.h gui/mag.c \
-+	gui/mag.h gui/menu.c gui/menu.h gui/message-window.c \
- 	gui/message-window.h gui/pagesel.c gui/pagesel.h \
- 	gui/print-dialog.c gui/print-dialog.h gui/print-log.c \
- 	gui/print-log.h gui/search-dialog.c gui/search-dialog.h \
-@@ -506,7 +521,7 @@
- DISTCLEANFILES = config.force
- bin_SCRIPTS = xdvi
- xdvi_bin_SOURCES = main.c
--LDADD = libxdvi.a $(common_ldadd)
-+LDADD = libxdvi.a $(common_ldadd) $(FREETYPE2_LIBS) $(ZLIB_LIBS)
- EXTRA_DIST = psheader.txt mksedscript xdvi.1.in BUGS CHANGES \
- 	ChangeLog.TL FAQ LESSTIF-BUGS README.t1fonts README.t1mapper \
- 	pixmaps/drag_horiz.xbm pixmaps/drag_horiz_mask.xbm \
-@@ -520,14 +535,14 @@
- 	t1mapper.1 texmf-alt/README texmf-alt/charter2.map \
- 	texmf-alt/lucida.map texmf-alt/marvosym.map texmf-alt/xdvi.cfg \
- 	texmf-alt/xdvifont.map texmf-alt/xypic.map xdvi-search.el \
--	xdvi.icon xdvizilla xdvizilla.1
-+	xdvi.icon pxdvizilla xdvizilla.1
- CLEANFILES = psheader.c sedscript xdvi.1
- nodist_man1_MANS = xdvi.1
- xdvidir = $(datarootdir)/texmf/xdvi
- dist_xdvi_DATA = texmf/XDvi
- pixmapdir = $(datarootdir)/texmf/xdvi/pixmap
- dist_pixmap_DATA = pixmaps/toolbar.xpm pixmaps/toolbar2.xpm
--dist_noinst_DATA = texmf/xdvi.cfg
-+dist_noinst_DATA = texmf/pxdvi.cfg xdvi-ptex.sample
- all: c-auto.h
- 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
- 
-@@ -698,10 +713,15 @@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exit-handlers.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filehist.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/font-open.Po@am__quote@
-+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fontconfig.Po@am__quote@
-+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ft2.Po@am__quote@
-+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ft2vert.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gf.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/help-window.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hypertex.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/image-magick.Po@am__quote@
-+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jfm.Po@am__quote@
-+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jisx0208.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mag.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/menu.Po@am__quote@
-@@ -719,6 +739,7 @@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/psgs.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/psheader.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/psnews.Po@am__quote@
-+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ptexmap.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/read-mapfile.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/search-dialog.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/search-internal.Po@am__quote@
-@@ -752,6 +773,7 @@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xm_prefs_scroll.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xm_toolbar.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xserver-info.Po@am__quote@
-+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeit.Po@am__quote@
- 
- .c.o:
- @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@@ -1746,7 +1768,10 @@
- 	echo timestamp >config.force
- 	$(SHELL) ./config.status --recheck
- 
--$(xdvi_bin_OBJECTS): libxdvi.a $(common_dependencies)
-+$(xdvi_bin_OBJECTS): libxdvi.a $(common_dependencies) $(FREETYPE2_DEPEND) $(ZLIB_DEPEND)
-+
-+@FREETYPE2_RULE@
-+@ZLIB_RULE@
- 
- # When cross-compiling, EXEEXT for the build and host systems may differ.
- # Thus we depend on the auxiliary file squeeze/stamp-squeeze.
-@@ -1763,17 +1788,18 @@
- 	$(AM_V_GEN)$(SHELL) $(srcdir)/mksedscript $(srcdir) $(DEFS) $(PS_DEF) >$@
- 
- install-data-hook:
--	@if grep "original xdvi.cfg --" "$(DESTDIR)$(xdvidir)/xdvi.cfg" >/dev/null 2>&1 \
--	    || test ! -r "$(DESTDIR)$(xdvidir)/xdvi.cfg"; then \
--	  echo " $(INSTALL_DATA) '$(srcdir)/texmf/xdvi.cfg' '$(DESTDIR)$(xdvidir)/xdvi.cfg'"; \
--	  $(INSTALL_DATA) "$(srcdir)/texmf/xdvi.cfg" "$(DESTDIR)$(xdvidir)/xdvi.cfg"; \
-+	@if grep "original pxdvi.cfg --" "$(DESTDIR)$(xdvidir)/pxdvi.cfg" >/dev/null 2>&1 \
-+	    || test ! -r "$(DESTDIR)$(xdvidir)/pxdvi.cfg"; then \
-+	  echo " $(INSTALL_DATA) '$(srcdir)/texmf/pxdvi.cfg' '$(DESTDIR)$(xdvidir)/pxdvi.cfg'"; \
-+	  $(INSTALL_DATA) "$(srcdir)/texmf/pxdvi.cfg" "$(DESTDIR)$(xdvidir)/pxdvi.cfg"; \
- 	else :; fi
-+	$(INSTALL_DATA) "$(srcdir)/xdvi-ptex.sample" "$(DESTDIR)$(xdvidir)/"
- 
- uninstall-hook:
--	@if grep "original xdvi.cfg --" "$(DESTDIR)$(xdvidir)/xdvi.cfg" >/dev/null 2>&1 \
--	    || test ! -r "$(DESTDIR)$(xdvidir)/xdvi.cfg"; then \
--	  echo " rm -f '$(DESTDIR)$(xdvidir)/xdvi.cfg'"; \
--	  rm -f "$(DESTDIR)$(xdvidir)/xdvi.cfg"; \
-+	@if grep "original pxdvi.cfg --" "$(DESTDIR)$(xdvidir)/pxdvi.cfg" >/dev/null 2>&1 \
-+	    || test ! -r "$(DESTDIR)$(xdvidir)/pxdvi.cfg"; then \
-+	  echo " rm -f '$(DESTDIR)$(xdvidir)/pxdvi.cfg'"; \
-+	  rm -f "$(DESTDIR)$(xdvidir)/pxdvi.cfg"; \
- 	else :; fi
- 
- # Tell versions [3.59,3.63) of GNU make to not export all variables.
-diff -urN -x autom4te.cache source/texk/pxdvik/tests/Makefile.in source-postreautoconf/texk/pxdvik/tests/Makefile.in
---- source/texk/pxdvik/tests/Makefile.in	2013-01-06 13:02:11.000000000 +0900
-+++ source-postreautoconf/texk/pxdvik/tests/Makefile.in	2013-01-06 13:29:12.000000000 +0900
+diff -urN -x autom4te.cache source.orig/texk/pxdvik/tests/Makefile.in source/source-reautoconf/texk/pxdvik/tests/Makefile.in
+--- source.orig/texk/pxdvik/tests/Makefile.in	2013-01-31 10:19:18.000000000 +0900
++++ source/source-reautoconf/texk/pxdvik/tests/Makefile.in	2013-03-02 08:30:50.008371218 +0900
 @@ -69,9 +69,11 @@
  	$(top_srcdir)/m4/xdvi-sys-old-linux.m4 \
  	$(top_srcdir)/m4/xdvi-sys-streams.m4 \
@@ -919,7 +924,7 @@ diff -urN -x autom4te.cache source/texk/pxdvik/tests/Makefile.in source-postreau
  EXTRA_DIST = test1.c
  all: all-am
  
-@@ -999,6 +1010,10 @@
+@@ -1002,6 +1013,10 @@
  ../libxdvi.a: $(libxdvi_dependencies)
  	cd .. && $(MAKE) $(AM_MAKEFLAGS) libxdvi.a
  
@@ -930,109 +935,9 @@ diff -urN -x autom4te.cache source/texk/pxdvik/tests/Makefile.in source-postreau
  # Tell versions [3.59,3.63) of GNU make to not export all variables.
  # Otherwise a system limit (for SysV at least) may be exceeded.
  .NOEXPORT:
-diff -urN -x autom4te.cache source/texk/web2c/configure source-postreautoconf/texk/web2c/configure
---- source/texk/web2c/configure	2013-01-06 13:15:08.000000000 +0900
-+++ source-postreautoconf/texk/web2c/configure	2013-01-06 13:31:33.000000000 +0900
-@@ -736,6 +736,8 @@
- XETEX_SYNCTEX_TRUE
- XETEX_FALSE
- XETEX_TRUE
-+PMP_FALSE
-+PMP_TRUE
- MP_FALSE
- MP_TRUE
- LUATEX_FALSE
-@@ -958,6 +960,7 @@
- enable_pdftex_synctex
- enable_luatex
- enable_mp
-+enable_pmp
- enable_xetex
- enable_xetex_synctex
- enable_mf
-@@ -1681,6 +1684,7 @@
-   --disable-pdftex-synctex  build pdfTeX without SyncTeX support
-   --disable-luatex        do not compile and install luaTeX
-   --disable-mp            do not compile and install MetaPost
-+  --disable-pmp           do not compile and install pMetaPost
-   --disable-xetex         do not compile and install XeTeX
-   --disable-xetex-synctex   build XeTeX without SyncTeX support
-   --disable-mf            do not build METAFONT
-@@ -18002,6 +18006,20 @@
- test "x$enable_web2c:$enable_mp" = xyes:yes && {
-   need_libpng=yes
- }
-+# Check whether --enable-pmp was given.
-+if test "${enable_pmp+set}" = set; then :
-+  enableval=$enable_pmp;
-+fi
-+case $enable_pmp in #(
-+  yes | no) :
-+     ;; #(
-+  *) :
-+    enable_pmp=yes ;;
-+esac
-+
-+test "x$enable_web2c:$enable_pmp" = xyes:yes && {
-+  need_libpng=yes
-+}
- # Check whether --enable-xetex was given.
- if test "${enable_xetex+set}" = set; then :
-   enableval=$enable_xetex;
-@@ -19223,6 +19241,13 @@
-   MP_TRUE='#'
-   MP_FALSE=
- fi
-+ if test "x$enable_pmp" = xyes; then
-+  PMP_TRUE=
-+  PMP_FALSE='#'
-+else
-+  PMP_TRUE='#'
-+  PMP_FALSE=
-+fi
-  if test "x$enable_xetex" = xyes; then
-   XETEX_TRUE=
-   XETEX_FALSE='#'
-@@ -20111,6 +20136,14 @@
-   MP_FALSE=
- fi
- 
-+ if test "x$enable_pmp" != xno; then
-+  PMP_TRUE=
-+  PMP_FALSE='#'
-+else
-+  PMP_TRUE='#'
-+  PMP_FALSE=
-+fi
-+
- 
-  if test "x$enable_web_progs" != xno; then
-   WEB_TRUE=
-@@ -24005,6 +24038,10 @@
-   as_fn_error $? "conditional \"MP\" was never defined.
- Usually this means the macro was only invoked conditionally." "$LINENO" 5
- fi
-+if test -z "${PMP_TRUE}" && test -z "${PMP_FALSE}"; then
-+  as_fn_error $? "conditional \"PMP\" was never defined.
-+Usually this means the macro was only invoked conditionally." "$LINENO" 5
-+fi
- if test -z "${XETEX_TRUE}" && test -z "${XETEX_FALSE}"; then
-   as_fn_error $? "conditional \"XETEX\" was never defined.
- Usually this means the macro was only invoked conditionally." "$LINENO" 5
-@@ -24037,6 +24074,10 @@
-   as_fn_error $? "conditional \"MP\" was never defined.
- Usually this means the macro was only invoked conditionally." "$LINENO" 5
- fi
-+if test -z "${PMP_TRUE}" && test -z "${PMP_FALSE}"; then
-+  as_fn_error $? "conditional \"PMP\" was never defined.
-+Usually this means the macro was only invoked conditionally." "$LINENO" 5
-+fi
- if test -z "${WEB_TRUE}" && test -z "${WEB_FALSE}"; then
-   as_fn_error $? "conditional \"WEB\" was never defined.
- Usually this means the macro was only invoked conditionally." "$LINENO" 5
-diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/texk/web2c/Makefile.in
---- source/texk/web2c/Makefile.in	2013-01-06 13:15:08.000000000 +0900
-+++ source-postreautoconf/texk/web2c/Makefile.in	2013-01-06 13:31:37.000000000 +0900
+diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/source-reautoconf/texk/web2c/Makefile.in
+--- source.orig/texk/web2c/Makefile.in	2013-03-01 15:37:09.000000000 +0900
++++ source/source-reautoconf/texk/web2c/Makefile.in	2013-03-02 08:29:06.979860327 +0900
 @@ -51,11 +51,12 @@
  build_triplet = @build@
  host_triplet = @host@
@@ -1088,7 +993,7 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  	$(srcdir)/mplibdir/am/libmplib.am $(srcdir)/etexdir/am/etex.am \
  	$(srcdir)/ptexdir/am/ptex.am $(srcdir)/eptexdir/am/eptex.am \
  	$(srcdir)/uptexdir/am/uptex.am \
-@@ -144,63 +146,65 @@
+@@ -146,63 +148,65 @@
  @MP_TRUE@am__append_24 = pltotf tftopl
  @MP_TRUE@am__append_25 = mptrap.diffs
  @MP_TRUE@am__append_26 = mptrap-clean
@@ -1201,7 +1106,7 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  @XETEX_MACOSX_FALSE@	xetexdir/XeTeXFontMgr_FC.cpp \
  @XETEX_MACOSX_FALSE@	xetexdir/XeTeXFontMgr_FC.h \
  @XETEX_MACOSX_FALSE@	xetexdir/XeTeX_pic.c \
-@@ -213,93 +217,93 @@
+@@ -215,93 +219,93 @@
  @XETEX_MACOSX_FALSE@	xetexdir/pngimage.c \
  @XETEX_MACOSX_FALSE@	xetexdir/pngimage.h
  
@@ -1331,7 +1236,7 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  @XETEX_SYNCTEX_TRUE@	synctexdir/synctex.c \
  @XETEX_SYNCTEX_TRUE@	synctexdir/synctex.h \
  @XETEX_SYNCTEX_TRUE@	synctexdir/synctex-common.h \
-@@ -625,40 +629,41 @@
+@@ -698,40 +702,41 @@
  @MFN_TRUE@@MF_TRUE@am__EXEEXT_11 = mf-nowin$(EXEEXT)
  @MF_TRUE@@WIN32_TRUE@am__EXEEXT_12 = inimf$(EXEEXT)
  @MP_TRUE@am__EXEEXT_13 = mpost$(EXEEXT)
@@ -1396,13 +1301,13 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
 +@LUATEX_TRUE@@WIN32_TRUE@am__EXEEXT_38 = call_luatex$(EXEEXT)
 +@LUATEX_TRUE@@cross_FALSE@am__EXEEXT_39 = txt2zlib$(EXEEXT)
  PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
- dist_aleph_OBJECTS = aleph-aleph.$(OBJEXT) aleph-alephbis.$(OBJEXT) \
- 	aleph-alephextra.$(OBJEXT)
-@@ -857,6 +862,17 @@
+ dist_aleph_OBJECTS = alephdir/aleph-aleph.$(OBJEXT) \
+ 	alephdir/aleph-alephbis.$(OBJEXT) \
+@@ -938,6 +943,17 @@
  pltotf_OBJECTS = $(nodist_pltotf_OBJECTS)
  pltotf_LDADD = $(LDADD)
  pltotf_DEPENDENCIES = $(proglib) $(am__DEPENDENCIES_1)
-+am_pmpost_OBJECTS = pmpost-avl.$(OBJEXT)
++am_pmpost_OBJECTS = mplibdir/pmpost-avl.$(OBJEXT)
 +am__objects_19 = pmpost-pmpxout.$(OBJEXT)
 +am__objects_20 = pmpost-pmp.$(OBJEXT)
 +am__objects_21 = pmpost-pmpmath.$(OBJEXT)
@@ -1416,67 +1321,71 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  nodist_pooltype_OBJECTS = pooltype.$(OBJEXT)
  pooltype_OBJECTS = $(nodist_pooltype_OBJECTS)
  pooltype_LDADD = $(LDADD)
-@@ -868,10 +884,10 @@
+@@ -949,10 +965,10 @@
  	ptexdir/ptex_version.h synctexdir/synctex.c \
  	synctexdir/synctex.h synctexdir/synctex-common.h \
  	synctexdir/synctex-ptex.h
--@PTEX_SYNCTEX_TRUE@am__objects_19 = ptex-synctex.$(OBJEXT)
--dist_ptex_OBJECTS = ptex-ptexextra.$(OBJEXT) $(am__objects_19)
+-@PTEX_SYNCTEX_TRUE@am__objects_19 = synctexdir/ptex-synctex.$(OBJEXT)
+-dist_ptex_OBJECTS = ptexdir/ptex-ptexextra.$(OBJEXT) $(am__objects_19)
 -am__objects_20 = ptex-ptexini.$(OBJEXT) ptex-ptex0.$(OBJEXT)
 -nodist_ptex_OBJECTS = $(am__objects_20) ptex-ptex-pool.$(OBJEXT)
-+@PTEX_SYNCTEX_TRUE@am__objects_24 = ptex-synctex.$(OBJEXT)
-+dist_ptex_OBJECTS = ptex-ptexextra.$(OBJEXT) $(am__objects_24)
++@PTEX_SYNCTEX_TRUE@am__objects_24 = synctexdir/ptex-synctex.$(OBJEXT)
++dist_ptex_OBJECTS = ptexdir/ptex-ptexextra.$(OBJEXT) $(am__objects_24)
 +am__objects_25 = ptex-ptexini.$(OBJEXT) ptex-ptex0.$(OBJEXT)
 +nodist_ptex_OBJECTS = $(am__objects_25) ptex-ptex-pool.$(OBJEXT)
  ptex_OBJECTS = $(dist_ptex_OBJECTS) $(nodist_ptex_OBJECTS)
  @PTEX_SYNCTEX_TRUE@am__DEPENDENCIES_10 = $(am__DEPENDENCIES_1)
  am_ptftopl_OBJECTS =
-@@ -892,10 +908,10 @@
+@@ -973,10 +989,10 @@
  am__dist_tex_SOURCES_DIST = texextra.c synctexdir/synctex.c \
  	synctexdir/synctex.h synctexdir/synctex-common.h \
  	synctexdir/synctex-tex.h
--@TEX_SYNCTEX_TRUE@am__objects_21 = tex-synctex.$(OBJEXT)
+-@TEX_SYNCTEX_TRUE@am__objects_21 = synctexdir/tex-synctex.$(OBJEXT)
 -dist_tex_OBJECTS = tex-texextra.$(OBJEXT) $(am__objects_21)
 -am__objects_22 = tex-texini.$(OBJEXT) tex-tex0.$(OBJEXT)
 -nodist_tex_OBJECTS = $(am__objects_22) tex-tex-pool.$(OBJEXT)
-+@TEX_SYNCTEX_TRUE@am__objects_26 = tex-synctex.$(OBJEXT)
++@TEX_SYNCTEX_TRUE@am__objects_26 = synctexdir/tex-synctex.$(OBJEXT)
 +dist_tex_OBJECTS = tex-texextra.$(OBJEXT) $(am__objects_26)
 +am__objects_27 = tex-texini.$(OBJEXT) tex-tex0.$(OBJEXT)
 +nodist_tex_OBJECTS = $(am__objects_27) tex-tex-pool.$(OBJEXT)
  tex_OBJECTS = $(dist_tex_OBJECTS) $(nodist_tex_OBJECTS)
  @TEX_SYNCTEX_TRUE@am__DEPENDENCIES_11 = $(am__DEPENDENCIES_1)
  tex_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
-@@ -929,10 +945,10 @@
+@@ -1010,12 +1026,12 @@
  	uptexdir/uptexextra.h uptexdir/uptex_version.h \
  	synctexdir/synctex.c synctexdir/synctex.h \
  	synctexdir/synctex-common.h synctexdir/synctex-uptex.h
--@UPTEX_SYNCTEX_TRUE@am__objects_23 = uptex-synctex.$(OBJEXT)
--dist_uptex_OBJECTS = uptex-uptexextra.$(OBJEXT) $(am__objects_23)
+-@UPTEX_SYNCTEX_TRUE@am__objects_23 =  \
++@UPTEX_SYNCTEX_TRUE@am__objects_28 =  \
+ @UPTEX_SYNCTEX_TRUE@	synctexdir/uptex-synctex.$(OBJEXT)
+ dist_uptex_OBJECTS = uptexdir/uptex-uptexextra.$(OBJEXT) \
+-	$(am__objects_23)
 -am__objects_24 = uptex-uptexini.$(OBJEXT) uptex-uptex0.$(OBJEXT)
 -nodist_uptex_OBJECTS = $(am__objects_24) uptex-uptex-pool.$(OBJEXT)
-+@UPTEX_SYNCTEX_TRUE@am__objects_28 = uptex-synctex.$(OBJEXT)
-+dist_uptex_OBJECTS = uptex-uptexextra.$(OBJEXT) $(am__objects_28)
++	$(am__objects_28)
 +am__objects_29 = uptex-uptexini.$(OBJEXT) uptex-uptex0.$(OBJEXT)
 +nodist_uptex_OBJECTS = $(am__objects_29) uptex-uptex-pool.$(OBJEXT)
  uptex_OBJECTS = $(dist_uptex_OBJECTS) $(nodist_uptex_OBJECTS)
  @UPTEX_SYNCTEX_TRUE@am__DEPENDENCIES_13 = $(am__DEPENDENCIES_1)
  am_uptftopl_OBJECTS =
-@@ -958,10 +974,10 @@
- 	xetexdir/xetexextra.h xetexdir/xetex_version.h \
- 	synctexdir/synctex.c synctexdir/synctex.h \
- 	synctexdir/synctex-common.h synctexdir/synctex-xetex.h
--@XETEX_SYNCTEX_TRUE@am__objects_25 = xetex-synctex.$(OBJEXT)
--dist_xetex_OBJECTS = xetex-xetexextra.$(OBJEXT) $(am__objects_25)
+@@ -1042,12 +1058,12 @@
+ 	xetexdir/xetex_version.h synctexdir/synctex.c \
+ 	synctexdir/synctex.h synctexdir/synctex-common.h \
+ 	synctexdir/synctex-xetex.h
+-@XETEX_SYNCTEX_TRUE@am__objects_25 =  \
++@XETEX_SYNCTEX_TRUE@am__objects_30 =  \
+ @XETEX_SYNCTEX_TRUE@	synctexdir/xetex-synctex.$(OBJEXT)
+ dist_xetex_OBJECTS = xetexdir/xetex-xetexextra.$(OBJEXT) \
+-	$(am__objects_25)
 -am__objects_26 = xetex-xetexini.$(OBJEXT) xetex-xetex0.$(OBJEXT)
 -nodist_xetex_OBJECTS = $(am__objects_26) xetex-xetex-pool.$(OBJEXT)
-+@XETEX_SYNCTEX_TRUE@am__objects_30 = xetex-synctex.$(OBJEXT)
-+dist_xetex_OBJECTS = xetex-xetexextra.$(OBJEXT) $(am__objects_30)
++	$(am__objects_30)
 +am__objects_31 = xetex-xetexini.$(OBJEXT) xetex-xetex0.$(OBJEXT)
 +nodist_xetex_OBJECTS = $(am__objects_31) xetex-xetex-pool.$(OBJEXT)
  xetex_OBJECTS = $(dist_xetex_OBJECTS) $(nodist_xetex_OBJECTS)
  @XETEX_MACOSX_FALSE@am__DEPENDENCIES_14 = $(am__DEPENDENCIES_1) \
  @XETEX_MACOSX_FALSE@	$(am__DEPENDENCIES_1) \
-@@ -1076,6 +1092,7 @@
+@@ -1163,6 +1179,7 @@
  	$(nodist_EXTRA_pdftosrc_SOURCES) $(pdvitype_SOURCES) \
  	$(nodist_pdvitype_SOURCES) $(nodist_pktogf_SOURCES) \
  	$(nodist_pktype_SOURCES) $(nodist_pltotf_SOURCES) \
@@ -1484,28 +1393,19 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  	$(nodist_pooltype_SOURCES) $(ppltotf_SOURCES) \
  	$(nodist_ppltotf_SOURCES) $(dist_ptex_SOURCES) \
  	$(nodist_ptex_SOURCES) $(ptftopl_SOURCES) \
-@@ -1106,11 +1123,12 @@
- 	$(inimf_SOURCES) $(initex_SOURCES) $(luatex_SOURCES) \
- 	$(md5main_SOURCES) $(dist_mf_SOURCES) $(dist_mf_nowin_SOURCES) \
- 	$(pbibtex_SOURCES) $(am__dist_pdftex_SOURCES_DIST) \
--	$(pdftosrc_SOURCES) $(pdvitype_SOURCES) $(ppltotf_SOURCES) \
--	$(am__dist_ptex_SOURCES_DIST) $(ptftopl_SOURCES) \
--	$(synctex_SOURCES) $(am__dist_tex_SOURCES_DIST) \
--	$(ttf2afm_SOURCES) $(EXTRA_ttf2afm_SOURCES) \
--	$(upbibtex_SOURCES) $(updvitype_SOURCES) $(uppltotf_SOURCES) \
-+	$(pdftosrc_SOURCES) $(pdvitype_SOURCES) $(pmpost_SOURCES) \
-+	$(ppltotf_SOURCES) $(am__dist_ptex_SOURCES_DIST) \
-+	$(ptftopl_SOURCES) $(synctex_SOURCES) \
-+	$(am__dist_tex_SOURCES_DIST) $(ttf2afm_SOURCES) \
-+	$(EXTRA_ttf2afm_SOURCES) $(upbibtex_SOURCES) \
-+	$(updvitype_SOURCES) $(uppltotf_SOURCES) \
- 	$(am__dist_uptex_SOURCES_DIST) $(uptftopl_SOURCES) \
- 	$(am__dist_xetex_SOURCES_DIST)
- RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
-@@ -1208,13 +1226,13 @@
-     std='[m'; \
-   fi; \
- }
+@@ -1192,7 +1209,7 @@
+ 	$(luatex_SOURCES) $(md5main_SOURCES) $(dist_mf_SOURCES) \
+ 	$(dist_mf_nowin_SOURCES) $(pbibtex_SOURCES) \
+ 	$(am__dist_pdftex_SOURCES_DIST) $(pdftosrc_SOURCES) \
+-	$(pdvitype_SOURCES) $(ppltotf_SOURCES) \
++	$(pdvitype_SOURCES) $(pmpost_SOURCES) $(ppltotf_SOURCES) \
+ 	$(am__dist_ptex_SOURCES_DIST) $(ptftopl_SOURCES) \
+ 	$(synctex_SOURCES) $(am__dist_tex_SOURCES_DIST) \
+ 	$(ttf2afm_SOURCES) $(EXTRA_ttf2afm_SOURCES) \
+@@ -1428,13 +1445,13 @@
+   bases=`for i in $$bases; do echo $$i; done | sed 's/\.log$$//'`; \
+   bases=`echo $$bases`
+ RECHECK_LOGS = $(TEST_LOGS)
 -am__EXEEXT_39 = bibtex.test dvicopy.test dvitype.test gftodvi.test \
 +am__EXEEXT_40 = bibtex.test dvicopy.test dvitype.test gftodvi.test \
  	gftopk.test gftype.test mft.test patgen.test pktogf.test \
@@ -1516,64 +1416,27 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  	tests/bibtex-longline-test.pl tests/bibtex-mem.test
 -@WEB_TRUE@am__EXEEXT_41 = $(am__EXEEXT_40)
 +@WEB_TRUE@am__EXEEXT_42 = $(am__EXEEXT_41)
- DIST_SUBDIRS = $(SUBDIRS)
- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
- distdir = $(PACKAGE)-$(VERSION)
-@@ -1727,30 +1745,30 @@
+ TEST_SUITE_LOG = test-suite.log
+ TEST_EXTENSIONS = @EXEEXT@ .test
+ LOG_DRIVER = $(SHELL) $(top_srcdir)/../../build-aux/test-driver
+@@ -1965,11 +1982,11 @@
  	mftrap.diffs $(nodist_libmf_a_SOURCES) mf-final.ch mf-web2c \
  	mf.p mf.pool mf-tangle $(nodist_mpost_SOURCES) mpxout-tangle \
  	mptrap.diffs ptmr.mpx tests/xptmr.mpx tests/xstory.mpx \
 -	$(nodist_libmplib_a_SOURCES) mp-tangle mpmath-tangle \
 -	psout-tangle svgout-tangle $(nodist_etex_SOURCES) etex.web \
 -	etex.ch etex-web2c etex.p etex.pool etex-tangle etrip.diffs \
--	wprob.log wprob.tex $(pweb_programs:=.c) $(pweb_programs:=.h) \
--	$(pweb_programs:=.p) $(pweb_programs:=-web2c) \
--	$(pweb_programs:=.web) $(nodist_ptex_SOURCES) ptex.web ptex.ch \
--	ptex-web2c ptex.p ptex.pool ptex-tangle tests/nissya_bib.* \
+-	ewprob.log ewprob.tex $(pweb_programs:=.c) \
+-	$(pweb_programs:=.h) $(pweb_programs:=.p) \
 +	$(nodist_pmpost_SOURCES) $(nodist_libmplib_a_SOURCES) \
 +	mp-tangle mpmath-tangle psout-tangle svgout-tangle \
 +	$(nodist_etex_SOURCES) etex.web etex.ch etex-web2c etex.p \
-+	etex.pool etex-tangle etrip.diffs wprob.log wprob.tex \
++	etex.pool etex-tangle etrip.diffs ewprob.log ewprob.tex \
 +	$(pweb_programs:=.c) $(pweb_programs:=.h) $(pweb_programs:=.p) \
-+	$(pweb_programs:=-web2c) $(pweb_programs:=.web) \
-+	$(nodist_ptex_SOURCES) ptex.web ptex.ch ptex-web2c ptex.p \
-+	ptex.pool ptex-tangle tests/nissya_bib.* tests/xexampl.aux \
-+	tests/xexampl.bbl tests/xexampl.blg tests/memtest.bib \
-+	tests/memtest?.* tests/xstory.dvityp tests/xpagenum.typ \
-+	tests/xcmr10.tfm tests/xcmr10.pl tests/xsample.typ \
-+	tests/x*min10.* ptrip.diffs $(nodist_eptex_SOURCES) eptex.web \
-+	eptex.ch eptex-web2c eptex.p eptex.pool eptex-tangle \
-+	eptrip.diffs $(upweb_programs:=.c) $(upweb_programs:=.h) \
-+	$(upweb_programs:=.p) $(upweb_programs:=-web2c) \
-+	$(upweb_programs:=.web) $(nodist_uptex_SOURCES) uptex.web \
-+	uptex.ch uptex-web2c uptex.p uptex.pool uptex-tangle \
- 	tests/xexampl.aux tests/xexampl.bbl tests/xexampl.blg \
--	tests/memtest.bib tests/memtest?.* tests/xstory.dvityp \
--	tests/xpagenum.typ tests/xcmr10.tfm tests/xcmr10.pl \
--	tests/xsample.typ tests/x*min10.* ptrip.diffs \
--	$(nodist_eptex_SOURCES) eptex.web eptex.ch eptex-web2c eptex.p \
--	eptex.pool eptex-tangle eptrip.diffs $(upweb_programs:=.c) \
--	$(upweb_programs:=.h) $(upweb_programs:=.p) \
--	$(upweb_programs:=-web2c) $(upweb_programs:=.web) \
--	$(nodist_uptex_SOURCES) uptex.web uptex.ch uptex-web2c uptex.p \
--	uptex.pool uptex-tangle tests/xexampl.aux tests/xexampl.bbl \
--	tests/xexampl.blg tests/xstory.dvityp tests/xpagenum.typ \
--	tests/xcmr10.tfm tests/xcmr10.pl uptrip.diffs \
--	$(nodist_euptex_SOURCES) euptex.web euptex.ch euptex-web2c \
--	euptex.p euptex.pool euptex-tangle euptrip.diffs \
--	$(nodist_pdftex_SOURCES) pdftex.ch pdftex-web2c pdftex.p \
--	pdftex.pool pdftex-tangle wprob.log wprob.tex test-13.pdf \
--	test-13.xref test-15.pdf test-15.xref \
-+	tests/xstory.dvityp tests/xpagenum.typ tests/xcmr10.tfm \
-+	tests/xcmr10.pl uptrip.diffs $(nodist_euptex_SOURCES) \
-+	euptex.web euptex.ch euptex-web2c euptex.p euptex.pool \
-+	euptex-tangle euptrip.diffs $(nodist_pdftex_SOURCES) pdftex.ch \
-+	pdftex-web2c pdftex.p pdftex.pool pdftex-tangle wprob.log \
-+	wprob.tex test-13.pdf test-13.xref test-15.pdf test-15.xref \
- 	$(nodist_libluatex_a_SOURCES) txt2zlib.c \
- 	$(nodist_xetex_SOURCES) xetex.web xetex.ch xetex-web2c xetex.p \
- 	xetex.pool xetex-tangle $(omegaware_programs:=.c) \
-@@ -1770,15 +1788,15 @@
+ 	$(pweb_programs:=-web2c) $(pweb_programs:=.web) \
+ 	$(nodist_ptex_SOURCES) ptex.web ptex.ch ptex-web2c ptex.p \
+ 	ptex.pool ptex-tangle ptests/nissya_bib.* ptests/xexampl.aux \
+@@ -2008,15 +2025,15 @@
  	aleph.pool aleph-tangle
  CLEANFILES = 
  TRIPTRAP_CLEAN = $(am__append_9) $(am__append_17) $(am__append_26) \
@@ -1596,9 +1459,9 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  NEVER_DIST = `find . -name .svn` cwebdir/cweave.log cwebdir/cweave.trs \
  	ctiedir/ctie.log ctiedir/ctie.trs tiedir/tie.log \
  	tiedir/tie.trs
-@@ -1881,18 +1899,18 @@
+@@ -2119,18 +2136,18 @@
  initex_CPPFLAGS = -DEXEPROG=\"tex.exe\"
- initex_SOURCES = $(srcdir)/../texlive/w32_wrapper/callexe.c
+ nodist_initex_SOURCES = callexe.c
  initex_LDADD = 
 -tex_CPPFLAGS = $(AM_CPPFLAGS) $(am__append_82)
 +tex_CPPFLAGS = $(AM_CPPFLAGS) $(am__append_84)
@@ -1619,7 +1482,7 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  tex_ch_srcs = \
  	tex.web \
  	tex.ch \
-@@ -1951,6 +1969,24 @@
+@@ -2189,6 +2206,24 @@
  mpxout_c_h = mpxout.c mpxout.h
  mpost_web = mplibdir/mpost.w mplibdir/mpxout.w
  mp_tests = mplibdir/dvitomp.test mplibdir/mptrap.test
@@ -1644,7 +1507,7 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  libmplib_a_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/mplibdir
  libmplib_a_SOURCES = mplibdir/avl.h mplibdir/avl.c
  nodist_libmplib_a_SOURCES = tfmin.c $(mp_c_h) $(mpmath_c_h) $(psout_c_h) $(svgout_c_h)
-@@ -1960,19 +1996,19 @@
+@@ -2198,19 +2233,19 @@
  svgout_c_h = mplibsvg.h mpsvgout.h svgout.c
  libmplib_web = mplibdir/mp.w mplibdir/psout.w mplibdir/svgout.w \
  	mplibdir/mpmath.w mplibdir/tfmin.w
@@ -1668,7 +1531,7 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  etex_web_srcs = \
  	tex.web \
  	etexdir/etex.ch
-@@ -2007,20 +2043,20 @@
+@@ -2245,20 +2280,20 @@
  pproglib = lib/libp.a
  libkanji_a_SOURCES = ptexdir/kanji.c ptexdir/kanji.h
  libkanji_a_CPPFLAGS = $(ptex_cppflags)
@@ -1693,7 +1556,7 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  ptex_web_srcs = \
  	tex.web \
  	tex.ch
-@@ -2054,22 +2090,22 @@
+@@ -2292,22 +2327,22 @@
  # e-pTeX Tests
  #
  eptex_tests = eptexdir/eptrip.test
@@ -1720,7 +1583,7 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  eptex_web_srcs = \
  	tex.web \
  	etexdir/etex.ch \
-@@ -2105,21 +2141,21 @@
+@@ -2343,21 +2378,21 @@
  
  libukanji_a_SOURCES = uptexdir/kanji.c uptexdir/kanji.h uptexdir/kanji_dump.c
  libukanji_a_CPPFLAGS = $(uptex_cppflags)
@@ -1746,7 +1609,7 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  uptex_web_srcs = \
  	tex.web \
  	tex.ch
-@@ -2154,23 +2190,23 @@
+@@ -2392,23 +2427,23 @@
  # e-upTeX Tests
  #
  euptex_tests = euptexdir/euptrip.test
@@ -1774,7 +1637,7 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  euptex_web_srcs = \
  	tex.web \
  	etexdir/etex.ch \
-@@ -2205,7 +2241,7 @@
+@@ -2443,7 +2478,7 @@
  # Force Automake to use CXXLD for linking
  nodist_EXTRA_pdftex_SOURCES = dummy.cxx
  pdf_tangle = WEBINPUTS=.:$(srcdir)/pdftexdir AM_V_P=$(AM_V_P) $(SHELL) ./tangle-sh $@ $(TANGLE)
@@ -1783,16 +1646,16 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  pdftex_CXXFLAGS = $(WARNING_CXXFLAGS)
  
  # With --enable-ipc, pdfTeX may need to link with -lsocket.
-@@ -2217,7 +2253,7 @@
- pdftex_c_h = pdftexini.c pdftex0.c pdftexcoerce.h pdftexd.h
+@@ -2456,7 +2491,7 @@
  nodist_pdftex_SOURCES = $(pdftex_c_h) pdftex-pool.c
  dist_pdftex_SOURCES = pdftexdir/pdftexextra.c pdftexdir/pdftexextra.h \
--	pdftexdir/pdftex_version.h $(am__append_107)
-+	pdftexdir/pdftex_version.h $(am__append_109)
+ 	pdftexdir/pdftex_version.h pdftexdir/etex_version.h \
+-	$(am__append_107)
++	$(am__append_109)
  pdftex_ch_srcs = \
  	pdftexdir/pdftex.web \
  	pdftexdir/tex.ch0 \
-@@ -2244,7 +2280,7 @@
+@@ -2483,7 +2518,7 @@
  	pdftexdir/writejbig2.c pdftexdir/writejpg.c \
  	pdftexdir/writepng.c pdftexdir/writet1.c pdftexdir/writet3.c \
  	pdftexdir/writettf.c pdftexdir/writettf.h pdftexdir/writezip.c \
@@ -1801,7 +1664,7 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  @MINGW32_TRUE@REGEX_INCLUDES = -I$(srcdir)/pdftexdir/regex
  EXTRA_libpdftex_a_SOURCES = pdftexdir/macnames.c \
  	pdftexdir/regex/regcomp.c pdftexdir/regex/regex_internal.c \
-@@ -2287,7 +2323,7 @@
+@@ -2526,7 +2561,7 @@
  # luaTeX Tests
  #
  luatex_tests = luatexdir/luatex.test
@@ -1810,9 +1673,9 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  liblua51_a_CFLAGS = # $(WARNING_CFLAGS)
  liblua51_a_SOURCES = \
  	luatexdir/lua51/lapi.c \
-@@ -2669,16 +2705,16 @@
- libxetex = libxetex.a
- xetex_cppflags = $(AM_CPPFLAGS) -I$(srcdir)/xetexdir $(ICU_INCLUDES) \
+@@ -2909,16 +2944,16 @@
+ xetex_cppflags = $(AM_CPPFLAGS) -I$(srcdir)/xetexdir \
+ 	-DXETEX_BUILD_DATE="\"`date +%Y%m%d%H`\"" $(ICU_INCLUDES) \
  	$(FREETYPE2_INCLUDES) $(TECKIT_INCLUDES) $(HARFBUZZ_INCLUDES) \
 -	$(GRAPHITE2_INCLUDES) $(am__append_68) $(am__append_69) \
 +	$(GRAPHITE2_INCLUDES) $(am__append_70) $(am__append_71) \
@@ -1825,22 +1688,22 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  	$(TECKIT_DEPEND) $(HARFBUZZ_DEPEND) $(GRAPHITE2_DEPEND) \
 -	$(am__append_71) $(FREETYPE2_DEPEND) $(ZLIB_DEPEND)
 +	$(am__append_73) $(FREETYPE2_DEPEND) $(ZLIB_DEPEND)
- @XETEX_MACOSX_TRUE@xetex_LDFLAGS = -framework Carbon -framework Cocoa -framework QuickTime
+ @XETEX_MACOSX_TRUE@xetex_LDFLAGS = -framework ApplicationServices -framework Cocoa
 -xetex_CPPFLAGS = $(xetex_cppflags) $(am__append_108)
 +xetex_CPPFLAGS = $(xetex_cppflags) $(am__append_110)
  xetex_CFLAGS = # $(WARNING_CFLAGS)
  xetex_CXXFLAGS = # $(WARNING_CXXFLAGS)
  xetex_LDADD = $(xetex_ldadd) $(LDADD) $(ipc_socketlibs)
-@@ -2688,7 +2724,7 @@
- xetex_c_h = xetexini.c xetex0.c xetexcoerce.h xetexd.h
+@@ -2929,7 +2964,7 @@
  nodist_xetex_SOURCES = $(xetex_c_h) xetex-pool.c
  dist_xetex_SOURCES = xetexdir/xetexextra.c xetexdir/xetexextra.h \
--	xetexdir/xetex_version.h $(am__append_109)
-+	xetexdir/xetex_version.h $(am__append_111)
+ 	xetexdir/etex_version.h xetexdir/xetex_version.h \
+-	$(am__append_109)
++	$(am__append_111)
  xetex_ch_srcs = \
  	xetexdir/xetex.web \
  	xetexdir/tex.ch0 \
-@@ -2711,7 +2747,7 @@
+@@ -2952,7 +2987,7 @@
  	xetexdir/XeTeXOTMath.h xetexdir/XeTeX_ext.c \
  	xetexdir/XeTeX_ext.h xetexdir/XeTeXswap.h xetexdir/sfnt.h \
  	xetexdir/trans.c xetexdir/trans.h xetexdir/hz.cpp \
@@ -1849,8 +1712,8 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  
  # We must create xetexd.h etc. before building the libxetex_a_OBJECTS.
  libxetex_prereq = xetexd.h $(xetex_dependencies)
-@@ -2918,7 +2954,7 @@
- .SUFFIXES: .c .cc .cin .cpp .cxx .h .hin .lo .mm .o .obj .p .pin
+@@ -3154,7 +3189,7 @@
+ .SUFFIXES: .c .cc .cin .cpp .cxx .h .hin .lo .log .mm .o .obj .p .pin .test .test$(EXEEXT) .trs
  am--refresh: Makefile
  	@:
 -$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/am/bootstrap.am $(srcdir)/am/web.am $(srcdir)/am/cweb.am $(srcdir)/am/texmf.am $(srcdir)/mplibdir/am/mplib.am $(srcdir)/mplibdir/am/libmplib.am $(srcdir)/etexdir/am/etex.am $(srcdir)/ptexdir/am/ptex.am $(srcdir)/eptexdir/am/eptex.am $(srcdir)/uptexdir/am/uptex.am $(srcdir)/euptexdir/am/euptex.am $(srcdir)/pdftexdir/am/pdftex.am $(srcdir)/pdftexdir/am/libpdftex.am $(srcdir)/pdftexdir/am/ttf2afm.am $(srcdir)/pdftexdir/am/pdftosrc.am $(srcdir)/luatexdir/am/luatex.am $(srcdir)/luatexdir/am/liblua51.am $(srcdir)/luatexdir/am/luasocket.am $(srcdir)/luatexdir/am/luamisc.am $(srcdir)/luatexdir/am/luafontforge.am $(srcdir)/luatexdir/am/libluatex.am $(srcdir)/luatexdir/am/txt2zlib.am $(srcdir)/xetexdir/am/xetex.am $(srcdir)/omegaware/am/omegaware.am $(srcdir)/alephdir/am/aleph.am $(srcdir)/synctexdir/am/synctex.am $(srcdir)/libmd5/am/md5.am $(srcdir)/../am/bin_links.am $(am__configure_deps)
@@ -1858,7 +1721,7 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  	@for dep in $?; do \
  	  case '$(am__configure_deps)' in \
  	    *$$dep*) \
-@@ -2940,7 +2976,7 @@
+@@ -3176,7 +3211,7 @@
  	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)'; \
  	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe);; \
  	esac;
@@ -1867,21 +1730,22 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  
  $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
  	$(SHELL) ./config.status --recheck
-@@ -3213,6 +3249,9 @@
+@@ -4148,6 +4183,11 @@
  pltotf$(EXEEXT): $(pltotf_OBJECTS) $(pltotf_DEPENDENCIES) $(EXTRA_pltotf_DEPENDENCIES) 
  	@rm -f pltotf$(EXEEXT)
  	$(AM_V_CCLD)$(LINK) $(pltotf_OBJECTS) $(pltotf_LDADD) $(LIBS)
++mplibdir/pmpost-avl.$(OBJEXT): mplibdir/$(am__dirstamp) \
++	mplibdir/$(DEPDIR)/$(am__dirstamp)
 +pmpost$(EXEEXT): $(pmpost_OBJECTS) $(pmpost_DEPENDENCIES) $(EXTRA_pmpost_DEPENDENCIES) 
 +	@rm -f pmpost$(EXEEXT)
 +	$(AM_V_CCLD)$(LINK) $(pmpost_OBJECTS) $(pmpost_LDADD) $(LIBS)
  pooltype$(EXEEXT): $(pooltype_OBJECTS) $(pooltype_DEPENDENCIES) $(EXTRA_pooltype_DEPENDENCIES) 
  	@rm -f pooltype$(EXEEXT)
  	$(AM_V_CCLD)$(LINK) $(pooltype_OBJECTS) $(pooltype_LDADD) $(LIBS)
-@@ -3636,6 +3675,14 @@
+@@ -4431,6 +4471,13 @@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pktogf.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pktype.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pltotf.Po@am__quote@
-+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pmpost-avl.Po@am__quote@
 +@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pmpost-pmp.Po@am__quote@
 +@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pmpost-pmpmath.Po@am__quote@
 +@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pmpost-pmpost.Po@am__quote@
@@ -1892,23 +1756,31 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pooltype.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ppltotf-ppltotf.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ptex-ptex-pool.Po@am__quote@
-@@ -7969,6 +8016,118 @@
+@@ -4602,6 +4649,7 @@
+ @AMDEP_TRUE@@am__include@ @am__quote@luatexdir/utils/$(DEPDIR)/libluatex_a-avl.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@mplibdir/$(DEPDIR)/libluatex_a-lmplib.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@mplibdir/$(DEPDIR)/libmplib_a-avl.Po@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@mplibdir/$(DEPDIR)/pmpost-avl.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@pdftexdir/$(DEPDIR)/libpdftex_a-avl.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@pdftexdir/$(DEPDIR)/libpdftex_a-avlstuff.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@pdftexdir/$(DEPDIR)/libpdftex_a-epdf.Po@am__quote@
+@@ -8962,6 +9010,118 @@
  @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
  @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pdvitype_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o pdvitype-pdvitype.obj `if test -f 'pdvitype.c'; then $(CYGPATH_W) 'pdvitype.c'; else $(CYGPATH_W) '$(srcdir)/pdvitype.c'; fi`
  
-+pmpost-avl.o: mplibdir/avl.c
-+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pmpost_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT pmpost-avl.o -MD -MP -MF $(DEPDIR)/pmpost-avl.Tpo -c -o pmpost-avl.o `test -f 'mplibdir/avl.c' || echo '$(srcdir)/'`mplibdir/avl.c
-+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pmpost-avl.Tpo $(DEPDIR)/pmpost-avl.Po
-+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mplibdir/avl.c' object='pmpost-avl.o' libtool=no @AMDEPBACKSLASH@
++mplibdir/pmpost-avl.o: mplibdir/avl.c
++@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pmpost_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT mplibdir/pmpost-avl.o -MD -MP -MF mplibdir/$(DEPDIR)/pmpost-avl.Tpo -c -o mplibdir/pmpost-avl.o `test -f 'mplibdir/avl.c' || echo '$(srcdir)/'`mplibdir/avl.c
++@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mplibdir/$(DEPDIR)/pmpost-avl.Tpo mplibdir/$(DEPDIR)/pmpost-avl.Po
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mplibdir/avl.c' object='mplibdir/pmpost-avl.o' libtool=no @AMDEPBACKSLASH@
 +@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pmpost_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o pmpost-avl.o `test -f 'mplibdir/avl.c' || echo '$(srcdir)/'`mplibdir/avl.c
++@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pmpost_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o mplibdir/pmpost-avl.o `test -f 'mplibdir/avl.c' || echo '$(srcdir)/'`mplibdir/avl.c
 +
-+pmpost-avl.obj: mplibdir/avl.c
-+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pmpost_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT pmpost-avl.obj -MD -MP -MF $(DEPDIR)/pmpost-avl.Tpo -c -o pmpost-avl.obj `if test -f 'mplibdir/avl.c'; then $(CYGPATH_W) 'mplibdir/avl.c'; else $(CYGPATH_W) '$(srcdir)/mplibdir/avl.c'; fi`
-+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pmpost-avl.Tpo $(DEPDIR)/pmpost-avl.Po
-+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mplibdir/avl.c' object='pmpost-avl.obj' libtool=no @AMDEPBACKSLASH@
++mplibdir/pmpost-avl.obj: mplibdir/avl.c
++@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pmpost_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT mplibdir/pmpost-avl.obj -MD -MP -MF mplibdir/$(DEPDIR)/pmpost-avl.Tpo -c -o mplibdir/pmpost-avl.obj `if test -f 'mplibdir/avl.c'; then $(CYGPATH_W) 'mplibdir/avl.c'; else $(CYGPATH_W) '$(srcdir)/mplibdir/avl.c'; fi`
++@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mplibdir/$(DEPDIR)/pmpost-avl.Tpo mplibdir/$(DEPDIR)/pmpost-avl.Po
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mplibdir/avl.c' object='mplibdir/pmpost-avl.obj' libtool=no @AMDEPBACKSLASH@
 +@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pmpost_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o pmpost-avl.obj `if test -f 'mplibdir/avl.c'; then $(CYGPATH_W) 'mplibdir/avl.c'; else $(CYGPATH_W) '$(srcdir)/mplibdir/avl.c'; fi`
++@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pmpost_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o mplibdir/pmpost-avl.obj `if test -f 'mplibdir/avl.c'; then $(CYGPATH_W) 'mplibdir/avl.c'; else $(CYGPATH_W) '$(srcdir)/mplibdir/avl.c'; fi`
 +
 +pmpost-pmpost.o: pmpost.c
 +@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pmpost_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT pmpost-pmpost.o -MD -MP -MF $(DEPDIR)/pmpost-pmpost.Tpo -c -o pmpost-pmpost.o `test -f 'pmpost.c' || echo '$(srcdir)/'`pmpost.c
@@ -2011,9 +1883,9 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  ppltotf-ppltotf.o: ppltotf.c
  @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ppltotf_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ppltotf-ppltotf.o -MD -MP -MF $(DEPDIR)/ppltotf-ppltotf.Tpo -c -o ppltotf-ppltotf.o `test -f 'ppltotf.c' || echo '$(srcdir)/'`ppltotf.c
  @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ppltotf-ppltotf.Tpo $(DEPDIR)/ppltotf-ppltotf.Po
-@@ -9691,6 +9850,43 @@
- 	rm -f trap.149 trap.150 trap.151 trap.197 trap.200
- 	rm -f mptrap.pl
+@@ -10843,6 +11003,43 @@
+ mptrap-clean:
+ 	rm -rf mptrapdir
  
 +.PHONY: install-pmpost-links uninstall-pmpost-links
 +
@@ -2055,9 +1927,121 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-postreautoconf/
  # Creating one file: just one rule
  tfmin.c: ctangle$(EXEEXT) mplibdir/tfmin.w
  	$(mp_ctangle) tfmin.w
-diff -urN -x autom4te.cache source/utils/configure source-postreautoconf/utils/configure
---- source/utils/configure	2013-01-06 13:15:10.000000000 +0900
-+++ source-postreautoconf/utils/configure	2013-01-06 13:25:15.000000000 +0900
+diff -urN -x autom4te.cache source.orig/texk/web2c/configure source/source-reautoconf/texk/web2c/configure
+--- source.orig/texk/web2c/configure	2013-02-22 23:06:13.000000000 +0900
++++ source/source-reautoconf/texk/web2c/configure	2013-03-02 08:29:04.739849220 +0900
+@@ -736,6 +736,8 @@
+ XETEX_SYNCTEX_TRUE
+ XETEX_FALSE
+ XETEX_TRUE
++PMP_FALSE
++PMP_TRUE
+ MP_FALSE
+ MP_TRUE
+ LUATEX_FALSE
+@@ -960,6 +962,7 @@
+ enable_pdftex_synctex
+ enable_luatex
+ enable_mp
++enable_pmp
+ enable_xetex
+ enable_xetex_synctex
+ enable_mf
+@@ -1683,6 +1686,7 @@
+   --disable-pdftex-synctex  build pdfTeX without SyncTeX support
+   --disable-luatex        do not compile and install luaTeX
+   --disable-mp            do not compile and install MetaPost
++  --disable-pmp           do not compile and install pMetaPost
+   --disable-xetex         do not compile and install XeTeX
+   --disable-xetex-synctex   build XeTeX without SyncTeX support
+   --disable-mf            do not build METAFONT
+@@ -18004,6 +18008,20 @@
+ test "x$enable_web2c:$enable_mp" = xyes:yes && {
+   need_libpng=yes
+ }
++# Check whether --enable-pmp was given.
++if test "${enable_pmp+set}" = set; then :
++  enableval=$enable_pmp;
++fi
++case $enable_pmp in #(
++  yes | no) :
++     ;; #(
++  *) :
++    enable_pmp=yes ;;
++esac
++
++test "x$enable_web2c:$enable_pmp" = xyes:yes && {
++  need_libpng=yes
++}
+ # Check whether --enable-xetex was given.
+ if test "${enable_xetex+set}" = set; then :
+   enableval=$enable_xetex;
+@@ -19239,6 +19257,13 @@
+   MP_TRUE='#'
+   MP_FALSE=
+ fi
++ if test "x$enable_pmp" = xyes; then
++  PMP_TRUE=
++  PMP_FALSE='#'
++else
++  PMP_TRUE='#'
++  PMP_FALSE=
++fi
+  if test "x$enable_xetex" = xyes; then
+   XETEX_TRUE=
+   XETEX_FALSE='#'
+@@ -20127,6 +20152,14 @@
+   MP_FALSE=
+ fi
+ 
++ if test "x$enable_pmp" != xno; then
++  PMP_TRUE=
++  PMP_FALSE='#'
++else
++  PMP_TRUE='#'
++  PMP_FALSE=
++fi
++
+ 
+  if test "x$enable_web_progs" != xno; then
+   WEB_TRUE=
+@@ -24001,6 +24034,10 @@
+   as_fn_error $? "conditional \"MP\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
++if test -z "${PMP_TRUE}" && test -z "${PMP_FALSE}"; then
++  as_fn_error $? "conditional \"PMP\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
+ if test -z "${XETEX_TRUE}" && test -z "${XETEX_FALSE}"; then
+   as_fn_error $? "conditional \"XETEX\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+@@ -24033,6 +24070,10 @@
+   as_fn_error $? "conditional \"MP\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
++if test -z "${PMP_TRUE}" && test -z "${PMP_FALSE}"; then
++  as_fn_error $? "conditional \"PMP\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
+ if test -z "${WEB_TRUE}" && test -z "${WEB_FALSE}"; then
+   as_fn_error $? "conditional \"WEB\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+diff -urN -x autom4te.cache source.orig/utils/Makefile.in source/source-reautoconf/utils/Makefile.in
+--- source.orig/utils/Makefile.in	2013-01-06 15:24:45.000000000 +0900
++++ source/source-reautoconf/utils/Makefile.in	2013-03-02 08:24:28.694480385 +0900
+@@ -138,6 +138,8 @@
+ 	$(top_srcdir)/../texk/xdv2pdf/ac/withenable.ac \
+ 	$(top_srcdir)/../texk/xdvik/ac/withenable.ac \
+ 	$(top_srcdir)/../texk/xdvik/ac/xdvik.ac \
++	$(top_srcdir)/../texk/pxdvik/ac/withenable.ac \
++	$(top_srcdir)/../texk/pxdvik/ac/xdvik.ac \
+ 	$(top_srcdir)/../texk/xdvipdfmx/ac/withenable.ac \
+ 	$(top_srcdir)/../texk/texlive/ac/withenable.ac \
+ 	$(top_srcdir)/../libs/harfbuzz/ac/withenable.ac \
+diff -urN -x autom4te.cache source.orig/utils/configure source/source-reautoconf/utils/configure
+--- source.orig/utils/configure	2013-02-22 23:06:12.000000000 +0900
++++ source/source-reautoconf/utils/configure	2013-03-02 08:24:28.102477449 +0900
 @@ -735,6 +735,7 @@
  enable_pdftex_synctex
  enable_luatex
@@ -2084,7 +2068,7 @@ diff -urN -x autom4te.cache source/utils/configure source-postreautoconf/utils/c
    --disable-mf              do not build METAFONT
 @@ -1589,6 +1592,7 @@
    --disable-ttfdump       do not build the ttfdump package
-   --disable-xdv2pdf       do not build the xdv2pdf package
+   --enable-xdv2pdf        build the xdv2pdf package
    --disable-xdvik         do not build the xdvik package
 +  --disable-pxdvik        do not build the pxdvik package
    --disable-xdvipdfmx     do not build the xdvipdfmx package
@@ -2166,15 +2150,3 @@ diff -urN -x autom4te.cache source/utils/configure source-postreautoconf/utils/c
  ## configure options for xdvik
  
  # Check whether --with-xdvi-x-toolkit was given.
-diff -urN -x autom4te.cache source/utils/Makefile.in source-postreautoconf/utils/Makefile.in
---- source/utils/Makefile.in	2013-01-06 13:15:10.000000000 +0900
-+++ source-postreautoconf/utils/Makefile.in	2013-01-06 13:25:16.000000000 +0900
-@@ -138,6 +138,8 @@
- 	$(top_srcdir)/../texk/xdv2pdf/ac/withenable.ac \
- 	$(top_srcdir)/../texk/xdvik/ac/withenable.ac \
- 	$(top_srcdir)/../texk/xdvik/ac/xdvik.ac \
-+	$(top_srcdir)/../texk/pxdvik/ac/withenable.ac \
-+	$(top_srcdir)/../texk/pxdvik/ac/xdvik.ac \
- 	$(top_srcdir)/../texk/xdvipdfmx/ac/withenable.ac \
- 	$(top_srcdir)/../texk/texlive/ac/withenable.ac \
- 	$(top_srcdir)/../libs/harfbuzz/ac/withenable.ac \

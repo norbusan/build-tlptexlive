@@ -62,31 +62,26 @@ if [ $DO_APPLE == 1 ] ; then
   U_RELEASE=`uname -r`
   case $U_ARCH in 
       x86_64)
-          SDK=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
-	  
-          CFLAGS="-m64 -isysroot ${SDK} -arch x86_64 -mmacosx-version-min=10.6"
-          LDFLAGS="-m64 -isysroot ${SDK} -Wl,-syslibroot,${SDK} -Wl,-framework,CoreServices -Wl,-framework,ApplicationServices -mmacosx-version-min=10.6"
-          CXXFLAGS=$CFLAGS
-          ;;
-      i386|i686|ix86)
-	  U_ARCH=i686
-          SDK=/Xcode3/SDKs/MacOSX10.6.sdk
-	  
-          CFLAGS="-m32 -isysroot ${SDK} -arch i686 -mmacosx-version-min=10.4"
-          LDFLAGS="-m32 -isysroot ${SDK} -Wl,-syslibroot,${SDK} -Wl,-framework,CoreServices -Wl,-framework,ApplicationServices -arch i686 -mmacosx-version-min=10.4"
-          CXXFLAGS=$CFLAGS
-          ;;
-      ppc|powerpc)
-	  U_ARCH=powerpc
-          SDK=/Xcode3/SDKs/MacOSX10.6.sdk
-	  
-          CFLAGS="-m32 -isysroot ${SDK} -arch ppc -mmacosx-version-min=10.4"
-          LDFLAGS="-m32 -isysroot ${SDK} -Wl,-syslibroot,${SDK} -Wl,-framework,CoreServices -Wl,-framework,ApplicationServices -arch ppc -mmacosx-version-min=10.4"
-          CXXFLAGS=$CFLAGS
-          ;;
+         ;;
+      i686)
+         U_SDK=10.6
+         SDK=/Developer/SDKs/MacOSX${U_SDK}.sdk
+  
+         CFLAGS="-isysroot ${SDK} -arch i386 -mmacosx-version-min=10.4"
+         LDFLAGS="-isysroot ${SDK} -Wl,-syslibroot,${SDK} -arch i386 -mmacosx-version-min=10.4"
+         CXXFLAGS=$CFLAGS
+         ;;
+      ppc)
+         U_SDK=10.6
+         SDK=/Developer/SDKs/MacOSX${U_SDK}.sdk
+  
+         CFLAGS="-isysroot ${SDK} -arch ppc -mmacosx-version-min=10.4"
+         LDFLAGS="-isysroot ${SDK} -Wl,-syslibroot,${SDK} -arch ppc -mmacosx-version-min=10.4"
+         CXXFLAGS=$CFLAGS
+         ;;
       *)
-          exit 1
-          ;;
+         exit 1
+         ;;
   esac
   export CC CXX CFLAGS CXXFLAGS LDFLAGS
   cat<<EOF
@@ -116,7 +111,7 @@ if [ $DO_NOPREP = 0 ] ; then
   if which quilt >/dev/null ; then
     if [ $DO_MAINT = 1 ] ; then
       export QUILT_PATCHES="$PATCHES/patches"
-      while [ $(quilt next) ne "reautoconf-stuff" ] ; do
+      while [ $(basename `quilt next`) != "reautoconf-stuff" ] ; do
         quilt push
       done
       tempdir=$(mktemp -d)
@@ -147,14 +142,12 @@ if [ $DO_NOPREP = 0 ] ; then
     done
   fi
 
-  # echo "running reautoconf"
-  # #TL_AUTOMAKE=automake-1.13 TL_ACLOCAL=aclocal-1.13 ./reautoconf
-  # ./reautoconf
+  #echo "running reautoconf"
+  #TL_AUTOMAKE=automake-1.13 TL_ACLOCAL=aclocal-1.13 ./reautoconf
 fi	# of $DO_NOPREP = 0
 
 
 TL_CONFIGURE_ARGS="	\
-        --disable-shared --enable-static \
 	--enable-texlive	\
 	--disable-all-pkgs	\
 	--disable-xdvipdfmx	\
