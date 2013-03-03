@@ -1,79 +1,32 @@
----
- texk/pxdvik/AJ16.c                                     | 2313 +++++++++++++++++
- texk/pxdvik/CHANGES.xdvik-jp                           |  713 +++++
- texk/pxdvik/Makefile.am                                |   51 
- texk/pxdvik/README.xdvik-jp                            |   84 
- texk/pxdvik/READMEs/ChangeLog.xdvik20a-j1.1            |  132 
- texk/pxdvik/READMEs/ChangeLog.xdvik20c-j1.0            |   34 
- texk/pxdvik/READMEs/ChangeLog.xdvik22.40b-j1.05        |   69 
- texk/pxdvik/READMEs/ChangeLog.xdvik22.40y1-j1.21.html  |  322 ++
- texk/pxdvik/READMEs/HEADERS.DOC                        |  170 +
- texk/pxdvik/READMEs/InternalVars                       |   56 
- texk/pxdvik/READMEs/README.jp+toc+hal2                 |   57 
- texk/pxdvik/READMEs/README.jp-patch                    |  778 +++++
- texk/pxdvik/READMEs/README.markpage+toc+printdvi       |  200 +
- texk/pxdvik/READMEs/README.markpage+toc+printdvi+paper |  583 ++++
- texk/pxdvik/READMEs/README.miyu-beta6                  |  239 +
- texk/pxdvik/READMEs/README.ptex                        |   80 
- texk/pxdvik/READMEs/README.tasai-ussy                  |  312 ++
- texk/pxdvik/READMEs/README.vf2ft                       |  100 
- texk/pxdvik/READMEs/README.xdvik-22.15-j1.04.patch     |  217 +
- texk/pxdvik/READMEs/README.xdvik-22.40b-j1.05.patch    |  220 +
- texk/pxdvik/READMEs/README.xdvik-22.40y1-j1.21         |  239 +
- texk/pxdvik/READMEs/README.xdvik18f-j1.0.patch         |  103 
- texk/pxdvik/READMEs/README.xdvik18f-j1.1p5.patch       |  322 ++
- texk/pxdvik/READMEs/README.xdvik20a-j1.1.patch         |  273 ++
- texk/pxdvik/READMEs/README.xdvik20c-j1.0+hal2+dvisel   |  179 +
- texk/pxdvik/READMEs/README.xdvik20c-j1.0p1.patch       |   43 
- texk/pxdvik/ac/withenable.ac                           |    4 
- texk/pxdvik/aclocal.m4                                 |    2 
- texk/pxdvik/c-auto.in                                  |    6 
- texk/pxdvik/configure.ac                               |   16 
- texk/pxdvik/dvi-draw.c                                 |  648 ++++
- texk/pxdvik/dvi-draw.h                                 |   12 
- texk/pxdvik/dvi-init.c                                 |   74 
- texk/pxdvik/dvi-init.h                                 |   15 
- texk/pxdvik/dvi.h                                      |    4 
- texk/pxdvik/dvisel.c                                   |    1 
- texk/pxdvik/encodings.c                                |   79 
- texk/pxdvik/font-open.c                                |   21 
- texk/pxdvik/fontconfig.c                               |   92 
- texk/pxdvik/fontconfig.h                               |    6 
- texk/pxdvik/ft2.c                                      |  253 +
- texk/pxdvik/ft2.h                                      |    6 
- texk/pxdvik/ft2vert.c                                  |  399 ++
- texk/pxdvik/ft2vert.h                                  |    7 
- texk/pxdvik/gui/help-window.c                          |    3 
- texk/pxdvik/jfm.c                                      |   94 
- texk/pxdvik/jfm.h                                      |   47 
- texk/pxdvik/jisx0208.c                                 | 1199 ++++++++
- texk/pxdvik/jisx0208.h                                 |    3 
- texk/pxdvik/main.c                                     |   19 
- texk/pxdvik/pk.c                                       |    3 
- texk/pxdvik/psgs.c                                     |   23 
- texk/pxdvik/ptexmap.c                                  |  254 +
- texk/pxdvik/ptexmap.h                                  |   23 
- texk/pxdvik/pxdvizilla                                 |  175 +
- texk/pxdvik/special.c                                  |  760 +++++
- texk/pxdvik/tests/Makefile.am                          |   10 
- texk/pxdvik/texmf/XDvi                                 |   29 
- texk/pxdvik/texmf/pxdvi.cfg                            |  109 
- texk/pxdvik/texmf/xdvi.cfg                             |   65 
- texk/pxdvik/tounimap2h.lua                             |   58 
- texk/pxdvik/util.c                                     |   33 
- texk/pxdvik/util.h                                     |    3 
- texk/pxdvik/version.h                                  |    5 
- texk/pxdvik/xdvi-debug.h                               |    1 
- texk/pxdvik/xdvi-ptex.sample                           |   91 
- texk/pxdvik/xdvi.h                                     |   10 
- texk/pxdvik/xdvizilla                                  |  175 -
- texk/pxdvik/zeit.c                                     |   93 
- texk/pxdvik/zeit.h                                     |    8 
- 70 files changed, 12450 insertions(+), 377 deletions(-)
-
---- /dev/null
-+++ source/texk/pxdvik/AJ16.c
-@@ -0,0 +1,2313 @@
+diff -udNr source.orig/texk/pxdvik/AJ16.c source/texk/pxdvik/AJ16.c
+--- source.orig/texk/pxdvik/AJ16.c	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/AJ16.c	2013-03-03 09:42:43.403624240 +0900
+@@ -0,0 +1,2338 @@
++/*
++
++Copyright (c) 2011-2013 Hironori KITAGAWA
++
++Permission is hereby granted, free of charge, to any person obtaining
++a copy of this software and associated documentation files (the
++"Software"), to deal in the Software without restriction, including
++without limitation the rights to use, copy, modify, merge, publish,
++distribute, sublicense, and/or sell copies of the Software, and to
++permit persons to whom the Software is furnished to do so, subject to
++the following conditions:
++
++The above copyright notice and this permission notice shall be
++included in all copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
++LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
++OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
++WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++
++*/
++
 +/* This file was generated by tounimap2h.lua.
 +Used ToUnicode table is: Adobe-Japan1-UCS2.*/
 +
@@ -2387,9 +2340,14 @@
 +
 +#define AJ162uni(cid) (AJ162uni_table[cid])
 +
---- /dev/null
-+++ source/texk/pxdvik/CHANGES.xdvik-jp
-@@ -0,0 +1,713 @@
+diff -udNr source.orig/texk/pxdvik/CHANGES.xdvik-jp source/texk/pxdvik/CHANGES.xdvik-jp
+--- source.orig/texk/pxdvik/CHANGES.xdvik-jp	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/CHANGES.xdvik-jp	2013-03-03 09:59:20.103593033 +0900
+@@ -0,0 +1,717 @@
++2013-03-03  Hironori Kitagawa  <h_kitagawa2001@yahoo.co.jp>
++
++	* AJ16.c, tounimap2h.lua: These files are under X11 license.
++
 +2011-11-06  Hironori Kitagawa  <h_kitagawa2001@yahoo.co.jp>
 +
 +        * ptexmap.c, texmf/pxdvi.cfg: Support "/AJ16" syntax in replace
@@ -3103,8 +3061,9 @@
 +mode: change-log
 +coding: euc-japan
 +End:
---- source.orig/texk/pxdvik/Makefile.am
-+++ source/texk/pxdvik/Makefile.am
+diff -udNr source.orig/texk/pxdvik/Makefile.am source/texk/pxdvik/Makefile.am
+--- source.orig/texk/pxdvik/Makefile.am	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/Makefile.am	2013-03-03 09:30:50.263646568 +0900
 @@ -11,7 +11,7 @@
  
  include common.am
@@ -3153,7 +3112,7 @@
  # When cross-compiling, EXEEXT for the build and host systems may differ.
  # Thus we depend on the auxiliary file squeeze/stamp-squeeze.
 @@ -208,20 +227,26 @@
- pixmapdir = $(datarootdir)/texmf/xdvi/pixmap
+ pixmapdir = $(datarootdir)/texmf-dist/xdvi/pixmap
  dist_pixmap_DATA = pixmaps/toolbar.xpm pixmaps/toolbar2.xpm
  
 -dist_noinst_DATA = texmf/xdvi.cfg
@@ -3196,8 +3155,9 @@
 +	pxdvizilla \
  	xdvizilla.1
  
---- /dev/null
-+++ source/texk/pxdvik/README.xdvik-jp
+diff -udNr source.orig/texk/pxdvik/README.xdvik-jp source/texk/pxdvik/README.xdvik-jp
+--- source.orig/texk/pxdvik/README.xdvik-jp	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/README.xdvik-jp	2013-03-03 09:30:50.263646568 +0900
 @@ -0,0 +1,84 @@
 +
 +		<< xdvik-22.84.16-jp patch について >>
@@ -3283,8 +3243,9 @@
 +ださい．
 +
 +/* xdvi-jp メーリングリスト <xdvi-users(at)lists.sourceforge.jp> */
---- /dev/null
-+++ source/texk/pxdvik/READMEs/ChangeLog.xdvik20a-j1.1
+diff -udNr source.orig/texk/pxdvik/READMEs/ChangeLog.xdvik20a-j1.1 source/texk/pxdvik/READMEs/ChangeLog.xdvik20a-j1.1
+--- source.orig/texk/pxdvik/READMEs/ChangeLog.xdvik20a-j1.1	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/ChangeLog.xdvik20a-j1.1	2013-03-03 09:30:50.263646568 +0900
 @@ -0,0 +1,132 @@
 +xdvik20a-j1.1 変更履歴
 +				千葉大学総合情報処理センター 山賀正人
@@ -3418,8 +3379,9 @@
 +
 +	sscanf() の実装を勘違いしていたために BoundingBox のスケールを
 +	正しく読み取れなかったバグの修正 (special.c)
---- /dev/null
-+++ source/texk/pxdvik/READMEs/ChangeLog.xdvik20c-j1.0
+diff -udNr source.orig/texk/pxdvik/READMEs/ChangeLog.xdvik20c-j1.0 source/texk/pxdvik/READMEs/ChangeLog.xdvik20c-j1.0
+--- source.orig/texk/pxdvik/READMEs/ChangeLog.xdvik20c-j1.0	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/ChangeLog.xdvik20c-j1.0	2013-03-03 09:30:50.263646568 +0900
 @@ -0,0 +1,34 @@
 +xdvik20c-j1.0p0.patch 変更履歴
 +                                     筑波大学 社会工学研究科 中右 浩二
@@ -3455,8 +3417,9 @@
 +	JIS 補助漢字を利用するための修正
 +	対象：xdvikの dvi_draw.c, dvi_init.c, vf.c, xdvi.h
 +				      (内山＠慶応大さん)
---- /dev/null
-+++ source/texk/pxdvik/READMEs/ChangeLog.xdvik22.40b-j1.05
+diff -udNr source.orig/texk/pxdvik/READMEs/ChangeLog.xdvik22.40b-j1.05 source/texk/pxdvik/READMEs/ChangeLog.xdvik22.40b-j1.05
+--- source.orig/texk/pxdvik/READMEs/ChangeLog.xdvik22.40b-j1.05	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/ChangeLog.xdvik22.40b-j1.05	2013-03-03 09:30:50.263646568 +0900
 @@ -0,0 +1,69 @@
 +/* ******************* *
 + *  xdvik-jp 変更履歴  *
@@ -3527,8 +3490,9 @@
 +## ドキュメント群をお読み下さい。:-)
 +
 +/* xdvi-jp メーリングリスト <xdvi-jp@bi.appi.keio.ac.jp> */
---- /dev/null
-+++ source/texk/pxdvik/READMEs/ChangeLog.xdvik22.40y1-j1.21.html
+diff -udNr source.orig/texk/pxdvik/READMEs/ChangeLog.xdvik22.40y1-j1.21.html source/texk/pxdvik/READMEs/ChangeLog.xdvik22.40y1-j1.21.html
+--- source.orig/texk/pxdvik/READMEs/ChangeLog.xdvik22.40y1-j1.21.html	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/ChangeLog.xdvik22.40y1-j1.21.html	2013-03-03 09:30:50.263646568 +0900
 @@ -0,0 +1,322 @@
 +<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 +<HTML>
@@ -3852,8 +3816,9 @@
 +<ADDRESS><A HREF="http://www.nn.iij4u.or.jp/~tutimura/">土村 展之</A>(tutimura@nn.iij4u.or.jp)</ADDRESS>
 +</BODY>
 +</HTML>
---- /dev/null
-+++ source/texk/pxdvik/READMEs/HEADERS.DOC
+diff -udNr source.orig/texk/pxdvik/READMEs/HEADERS.DOC source/texk/pxdvik/READMEs/HEADERS.DOC
+--- source.orig/texk/pxdvik/READMEs/HEADERS.DOC	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/HEADERS.DOC	2013-03-03 09:30:50.263646568 +0900
 @@ -0,0 +1,170 @@
 +Path: tkyex1.phys.s.u-tokyo.ac.jp!news.u-tokyo.ac.jp!eccnews!ecc-s401!s31514
 +From: s31514@secc.ecc.u-tokyo.ac.jp (s31514)
@@ -4025,8 +3990,9 @@
 +
 +							Good luck,
 +								   Patrice
---- /dev/null
-+++ source/texk/pxdvik/READMEs/InternalVars
+diff -udNr source.orig/texk/pxdvik/READMEs/InternalVars source/texk/pxdvik/READMEs/InternalVars
+--- source.orig/texk/pxdvik/READMEs/InternalVars	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/InternalVars	2013-03-03 09:30:50.263646568 +0900
 @@ -0,0 +1,56 @@
 +------------------------------------------------------------------------
 +            <<<< Internal Variable for printdvi patch >>>>
@@ -4084,8 +4050,9 @@
 + y
 +%Z : paper size specified with -paper option (tranlated with table)
 +%z : paper size specified with -paper option (lower case; ex. "a4")
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.jp+toc+hal2
+diff -udNr source.orig/texk/pxdvik/READMEs/README.jp+toc+hal2 source/texk/pxdvik/READMEs/README.jp+toc+hal2
+--- source.orig/texk/pxdvik/READMEs/README.jp+toc+hal2	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.jp+toc+hal2	2013-03-03 09:30:50.263646568 +0900
 @@ -0,0 +1,57 @@
 +やーどうもどうも。このパッチは xdvi-17 にあてるパッチでっす(ver1.2)。
 +
@@ -4144,8 +4111,9 @@
 +TEXLIB とか tfm(jfm)の PATH とかいろいろ変えてちょ。
 +
 +/* はやし はるひさ hayashi@himeji-tech.ac.jp 08Aug97 */
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.jp-patch
+diff -udNr source.orig/texk/pxdvik/READMEs/README.jp-patch source/texk/pxdvik/READMEs/README.jp-patch
+--- source.orig/texk/pxdvik/READMEs/README.jp-patch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.jp-patch	2013-03-03 09:30:50.263646568 +0900
 @@ -0,0 +1,778 @@
 +
 +            << xdvi PL17 jp-patch について >>
@@ -4925,8 +4893,9 @@
 +  方々のお名前も一緒に含めてください。
 +
 +-- END OF DOCUMENT --
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.markpage+toc+printdvi
+diff -udNr source.orig/texk/pxdvik/READMEs/README.markpage+toc+printdvi source/texk/pxdvik/READMEs/README.markpage+toc+printdvi
+--- source.orig/texk/pxdvik/READMEs/README.markpage+toc+printdvi	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.markpage+toc+printdvi	2013-03-03 09:30:50.267646568 +0900
 @@ -0,0 +1,200 @@
 +
 +        << xdvi-17+markpage+toc+printdvi patch について >>
@@ -5128,8 +5097,9 @@
 +4. マークページリストの表記を
 +	5,8-12,27,29,35-36,41
 +   のようにする
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.markpage+toc+printdvi+paper
+diff -udNr source.orig/texk/pxdvik/READMEs/README.markpage+toc+printdvi+paper source/texk/pxdvik/READMEs/README.markpage+toc+printdvi+paper
+--- source.orig/texk/pxdvik/READMEs/README.markpage+toc+printdvi+paper	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.markpage+toc+printdvi+paper	2013-03-03 09:30:50.267646568 +0900
 @@ -0,0 +1,583 @@
 +
 +      << xdvi-17+markpage+toc+printdvi+paper patchについて >>
@@ -5714,8 +5684,9 @@
 +	にした。
 +fix-1				1995/10/07
 +(1)	用紙タイプを変更した時に二回redrawされるのを修正。
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.miyu-beta6
+diff -udNr source.orig/texk/pxdvik/READMEs/README.miyu-beta6 source/texk/pxdvik/READMEs/README.miyu-beta6
+--- source.orig/texk/pxdvik/READMEs/README.miyu-beta6	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.miyu-beta6	2013-03-03 09:30:50.267646568 +0900
 @@ -0,0 +1,239 @@
 +
 +                << miyu-patch for xdvi PL17 について >>
@@ -5956,8 +5927,9 @@
 +--
 +1993年 9月15日(祝)        すぎうら しげき  <miyu@ftp.tohoku.ac.jp>
 +
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.ptex
+diff -udNr source.orig/texk/pxdvik/READMEs/README.ptex source/texk/pxdvik/READMEs/README.ptex
+--- source.orig/texk/pxdvik/READMEs/README.ptex	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.ptex	2013-03-03 09:30:50.267646568 +0900
 @@ -0,0 +1,80 @@
 +
 +		  << xdvi-17+ptex patch について >>
@@ -6039,8 +6011,9 @@
 +  日本の著作権法上放棄はできないはずですが、本パッチの著作権を積極的に
 +  主張するつもりはありません。配布・改造は自由です。
 +
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.tasai-ussy
+diff -udNr source.orig/texk/pxdvik/READMEs/README.tasai-ussy source/texk/pxdvik/READMEs/README.tasai-ussy
+--- source.orig/texk/pxdvik/READMEs/README.tasai-ussy	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.tasai-ussy	2013-03-03 09:30:50.267646568 +0900
 @@ -0,0 +1,312 @@
 +
 +               ** pagenumber-patch for Xdvi PL17 + etc. **
@@ -6354,8 +6327,9 @@
 +のfix & version upパッチをお送りします。
 +
 +  前回 流したものにさらにパッチをあててください。
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.vf2ft
+diff -udNr source.orig/texk/pxdvik/READMEs/README.vf2ft source/texk/pxdvik/READMEs/README.vf2ft
+--- source.orig/texk/pxdvik/READMEs/README.vf2ft	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.vf2ft	2013-03-03 09:30:50.267646568 +0900
 @@ -0,0 +1,100 @@
 +＊ xdvik-22.40l-j1.09-vf2ft.patch について
 +
@@ -6457,8 +6431,9 @@
 +get-mapping.c、フォントマッピングテーブルに関するサンプル
 +get-origfontfile.cについては、このパッチでは反映されていませんが、検討
 +すべき問題提起がされていると思います。(山田 泰司<taiji@aihara.co.jp>)
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.xdvik-22.15-j1.04.patch
+diff -udNr source.orig/texk/pxdvik/READMEs/README.xdvik-22.15-j1.04.patch source/texk/pxdvik/READMEs/README.xdvik-22.15-j1.04.patch
+--- source.orig/texk/pxdvik/READMEs/README.xdvik-22.15-j1.04.patch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.xdvik-22.15-j1.04.patch	2013-03-03 09:30:50.267646568 +0900
 @@ -0,0 +1,217 @@
 +
 +		<< xdvik-22.15-j1.04 patch について >>
@@ -6677,8 +6652,9 @@
 +こちらは xdvi-jp ではなく xdvi-jp-ctl です。
 +
 +/* xdvi-jp メーリングリスト <xdvi-jp@bi.appi.keio.ac.jp> */
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.xdvik-22.40b-j1.05.patch
+diff -udNr source.orig/texk/pxdvik/READMEs/README.xdvik-22.40b-j1.05.patch source/texk/pxdvik/READMEs/README.xdvik-22.40b-j1.05.patch
+--- source.orig/texk/pxdvik/READMEs/README.xdvik-22.40b-j1.05.patch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.xdvik-22.40b-j1.05.patch	2013-03-03 09:30:50.267646568 +0900
 @@ -0,0 +1,220 @@
 +
 +		<< xdvik-22.40b-j1.05 patch について >>
@@ -6900,8 +6876,9 @@
 +こちらは xdvi-jp ではなく xdvi-jp-ctl です。
 +
 +/* xdvi-jp メーリングリスト <xdvi-jp@bi.appi.keio.ac.jp> */
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.xdvik-22.40y1-j1.21
+diff -udNr source.orig/texk/pxdvik/READMEs/README.xdvik-22.40y1-j1.21 source/texk/pxdvik/READMEs/README.xdvik-22.40y1-j1.21
+--- source.orig/texk/pxdvik/READMEs/README.xdvik-22.40y1-j1.21	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.xdvik-22.40y1-j1.21	2013-03-03 09:30:50.267646568 +0900
 @@ -0,0 +1,239 @@
 +
 +		<< xdvik-22.40y1-j1.21 patch について >>
@@ -7142,8 +7119,9 @@
 +こちらは xdvi-jp ではなく xdvi-jp-ctl です。
 +
 +/* xdvi-jp メーリングリスト <xdvi-jp@bi.appi.keio.ac.jp> */
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.xdvik18f-j1.0.patch
+diff -udNr source.orig/texk/pxdvik/READMEs/README.xdvik18f-j1.0.patch source/texk/pxdvik/READMEs/README.xdvik18f-j1.0.patch
+--- source.orig/texk/pxdvik/READMEs/README.xdvik18f-j1.0.patch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.xdvik18f-j1.0.patch	2013-03-03 09:30:50.267646568 +0900
 @@ -0,0 +1,103 @@
 +*このパッチについて
 +  このパッチ (xdvik18f-j1.0.patch) は xdvik18f を日本語対応にするため
@@ -7248,8 +7226,9 @@
 +中山 一昭
 +東京大学大学院理学系研究科
 +nakayama@monet.phys.s.u-tokyo.ac.jp
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.xdvik18f-j1.1p5.patch
+diff -udNr source.orig/texk/pxdvik/READMEs/README.xdvik18f-j1.1p5.patch source/texk/pxdvik/READMEs/README.xdvik18f-j1.1p5.patch
+--- source.orig/texk/pxdvik/READMEs/README.xdvik18f-j1.1p5.patch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.xdvik18f-j1.1p5.patch	2013-03-03 09:30:50.267646568 +0900
 @@ -0,0 +1,322 @@
 +*xdvik18f-j1.1p5.patch について
 +
@@ -7573,8 +7552,9 @@
 +
 +まで。
 +						平成９年３月３日（月）
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.xdvik20a-j1.1.patch
+diff -udNr source.orig/texk/pxdvik/READMEs/README.xdvik20a-j1.1.patch source/texk/pxdvik/READMEs/README.xdvik20a-j1.1.patch
+--- source.orig/texk/pxdvik/READMEs/README.xdvik20a-j1.1.patch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.xdvik20a-j1.1.patch	2013-03-03 09:30:50.267646568 +0900
 @@ -0,0 +1,273 @@
 +*xdvik20a-j1.1.patch について
 +
@@ -7849,8 +7829,9 @@
 +
 +まで。
 +						平成９年１２月３１日（水）
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.xdvik20c-j1.0+hal2+dvisel
+diff -udNr source.orig/texk/pxdvik/READMEs/README.xdvik20c-j1.0+hal2+dvisel source/texk/pxdvik/READMEs/README.xdvik20c-j1.0+hal2+dvisel
+--- source.orig/texk/pxdvik/READMEs/README.xdvik20c-j1.0+hal2+dvisel	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.xdvik20c-j1.0+hal2+dvisel	2013-03-03 09:30:50.267646568 +0900
 @@ -0,0 +1,179 @@
 +
 +		<< xdvik20c+hal2+dvisel patch について >>
@@ -8031,8 +8012,9 @@
 +トリ以下のファイル群などを見て下さい。
 +
 +/* Takeshi WATANABE <watanabe@komadori.planet.sci.kobe-u.ac.jp> */
---- /dev/null
-+++ source/texk/pxdvik/READMEs/README.xdvik20c-j1.0p1.patch
+diff -udNr source.orig/texk/pxdvik/READMEs/README.xdvik20c-j1.0p1.patch source/texk/pxdvik/READMEs/README.xdvik20c-j1.0p1.patch
+--- source.orig/texk/pxdvik/READMEs/README.xdvik20c-j1.0p1.patch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/READMEs/README.xdvik20c-j1.0p1.patch	2013-03-03 09:30:50.267646568 +0900
 @@ -0,0 +1,43 @@
 +xdvik20c-j1.0p1.patch について
 +
@@ -8077,8 +8059,9 @@
 +
 +     ● Makefile       (変更無し)
 +     ● xdvi-config.h  (以前の config.h に相当)
---- source.orig/texk/pxdvik/ac/withenable.ac
-+++ source/texk/pxdvik/ac/withenable.ac
+diff -udNr source.orig/texk/pxdvik/ac/withenable.ac source/texk/pxdvik/ac/withenable.ac
+--- source.orig/texk/pxdvik/ac/withenable.ac	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/ac/withenable.ac	2013-03-03 09:30:50.267646568 +0900
 @@ -6,5 +6,5 @@
  dnl extra_dirs = texk/xdvik/squeeze
  dnl
@@ -8087,8 +8070,9 @@
 -m4_include(kpse_TL[texk/xdvik/ac/xdvik.ac])
 +KPSE_ENABLE_PROG([pxdvik], [kpathsea t1lib freetype2 zlib], [x])
 +m4_include(kpse_TL[texk/pxdvik/ac/xdvik.ac])
---- source.orig/texk/pxdvik/aclocal.m4
-+++ source/texk/pxdvik/aclocal.m4
+diff -udNr source.orig/texk/pxdvik/aclocal.m4 source/texk/pxdvik/aclocal.m4
+--- source.orig/texk/pxdvik/aclocal.m4	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/aclocal.m4	2013-03-03 09:30:50.271646568 +0900
 @@ -1049,9 +1049,11 @@
  m4_include([m4/xdvi-sys-old-linux.m4])
  m4_include([m4/xdvi-sys-streams.m4])
@@ -8101,8 +8085,9 @@
  m4_include([../../m4/libtool.m4])
  m4_include([../../m4/ltoptions.m4])
  m4_include([../../m4/ltsugar.m4])
---- source.orig/texk/pxdvik/c-auto.in
-+++ source/texk/pxdvik/c-auto.in
+diff -udNr source.orig/texk/pxdvik/c-auto.in source/texk/pxdvik/c-auto.in
+--- source.orig/texk/pxdvik/c-auto.in	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/c-auto.in	2013-03-03 09:30:50.271646568 +0900
 @@ -75,6 +75,9 @@
  /* Define to 1 if you have the <float.h> header file. */
  #undef HAVE_FLOAT_H
@@ -8123,8 +8108,9 @@
  /* Define as the return type of signal handlers (`int' or `void'). */
  #undef RETSIGTYPE
  
---- source.orig/texk/pxdvik/configure.ac
-+++ source/texk/pxdvik/configure.ac
+diff -udNr source.orig/texk/pxdvik/configure.ac source/texk/pxdvik/configure.ac
+--- source.orig/texk/pxdvik/configure.ac	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/configure.ac	2013-03-03 09:30:50.271646568 +0900
 @@ -67,6 +67,16 @@
        [AC_MSG_NOTICE([Disabled a4/cm, using letter/in instead])],
        [AC_DEFINE([A4], 1, [Define to use A4 as the default paper size.])])
@@ -8162,8 +8148,9 @@
  
  KPSE_ADD_FLAGS([kpathsea])
  
---- source.orig/texk/pxdvik/dvi-draw.c
-+++ source/texk/pxdvik/dvi-draw.c
+diff -udNr source.orig/texk/pxdvik/dvi-draw.c source/texk/pxdvik/dvi-draw.c
+--- source.orig/texk/pxdvik/dvi-draw.c	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/dvi-draw.c	2013-03-03 09:30:50.271646568 +0900
 @@ -57,6 +57,7 @@
  #include "special.h"
  #include "tfmload.h"
@@ -8840,10 +8827,10 @@
  #ifdef TEXXET
 -	    DVI_H = dvi_h_sav;
 +	    POP_POSITION;
- 	}
- #endif
- 	return DIR * g->dvi_adv;
-     }
++	}
++#endif
++	return DIR * g->dvi_adv;
++    }
 +#ifdef PTEX
 +    else if (currinf.set_char_p == set_char2) {
 +	struct glyph *g;
@@ -8869,10 +8856,10 @@
 +	    do_char(ch, currinf, info, PXL_V, y, x, x + g->bitmap.w - 1, g);
 +#ifdef TEXXET
 +	    POP_POSITION;
-+	}
-+#endif
-+	return DIR * g->dvi_adv;
-+    }
+ 	}
+ #endif
+ 	return DIR * g->dvi_adv;
+     }
 +#endif /* PTEX */
      else if (currinf.set_char_p == set_vf_char) {
  	struct macro *m;
@@ -9232,8 +9219,9 @@
  	} else {
  	    /* again, nag them with a popup so that they'll do something about this ... */
  	    popup_message(globals.widgets.top_level,
---- source.orig/texk/pxdvik/dvi-draw.h
-+++ source/texk/pxdvik/dvi-draw.h
+diff -udNr source.orig/texk/pxdvik/dvi-draw.h source/texk/pxdvik/dvi-draw.h
+--- source.orig/texk/pxdvik/dvi-draw.h	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/dvi-draw.h	2013-03-03 09:30:50.271646568 +0900
 @@ -82,6 +82,11 @@
  #define XX      currinf.data.x
  #define YY      currinf.data.y
@@ -9260,8 +9248,9 @@
  extern setcharRetvalT load_n_set_char(
  #ifdef TEXXET
  				      wide_ubyte cmd,
---- source.orig/texk/pxdvik/dvi-init.c
-+++ source/texk/pxdvik/dvi-init.c
+diff -udNr source.orig/texk/pxdvik/dvi-init.c source/texk/pxdvik/dvi-init.c
+--- source.orig/texk/pxdvik/dvi-init.c	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/dvi-init.c	2013-03-03 09:30:50.271646568 +0900
 @@ -31,6 +31,8 @@
  
  #include "dvi-init.h"
@@ -9409,8 +9398,9 @@
  	*errflag = WRONG_DVI_VERSION;
  	TRACE_FILES((stderr, "find_postamble: returning FALSE"));
  	return False;
---- source.orig/texk/pxdvik/dvi-init.h
-+++ source/texk/pxdvik/dvi-init.h
+diff -udNr source.orig/texk/pxdvik/dvi-init.h source/texk/pxdvik/dvi-init.h
+--- source.orig/texk/pxdvik/dvi-init.h	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/dvi-init.h	2013-03-03 09:30:50.271646568 +0900
 @@ -95,6 +95,12 @@
      char *pixmap2_gc2;	    /* separate image data for drawing image to globals.gc.fore2 */
  #endif /* GREY */
@@ -9454,8 +9444,9 @@
  extern void reset_fonts(void);
  #if COLOR
  extern void reset_colors(void);
---- source.orig/texk/pxdvik/dvi.h
-+++ source/texk/pxdvik/dvi.h
+diff -udNr source.orig/texk/pxdvik/dvi.h source/texk/pxdvik/dvi.h
+--- source.orig/texk/pxdvik/dvi.h	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/dvi.h	2013-03-03 09:30:50.271646568 +0900
 @@ -61,4 +61,8 @@
  #define	SREFL		250
  #define	EREFL		251
@@ -9465,8 +9456,9 @@
 +#endif  /* PTEX */
 +
  #define	TRAILER		223	/* Trailing bytes at end of file */
---- source.orig/texk/pxdvik/dvisel.c
-+++ source/texk/pxdvik/dvisel.c
+diff -udNr source.orig/texk/pxdvik/dvisel.c source/texk/pxdvik/dvisel.c
+--- source.orig/texk/pxdvik/dvisel.c	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/dvisel.c	2013-03-03 09:30:50.271646568 +0900
 @@ -28,6 +28,7 @@
  #include <string.h>
  #include <ctype.h>
@@ -9475,8 +9467,9 @@
  #include "dvi.h"
  #include "pagesel.h"
  #include "dvisel.h"
---- source.orig/texk/pxdvik/encodings.c
-+++ source/texk/pxdvik/encodings.c
+diff -udNr source.orig/texk/pxdvik/encodings.c source/texk/pxdvik/encodings.c
+--- source.orig/texk/pxdvik/encodings.c	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/encodings.c	2013-03-03 09:30:50.275646568 +0900
 @@ -69,10 +69,12 @@
  #if HAVE_ICONV_H
  # include <iconv.h>
@@ -9584,8 +9577,9 @@
      /* our encoding vectors only have size 256 */
      if (ch > 255) {
  	XDVI_WARNING((stderr, "guess_encoding: font index %lu too large", (unsigned long)ch));
---- source.orig/texk/pxdvik/font-open.c
-+++ source/texk/pxdvik/font-open.c
+diff -udNr source.orig/texk/pxdvik/font-open.c source/texk/pxdvik/font-open.c
+--- source.orig/texk/pxdvik/font-open.c	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/font-open.c	2013-03-03 09:30:50.275646568 +0900
 @@ -27,6 +27,7 @@
  #include "xdvi-config.h"
  #include "xdvi.h"
@@ -9628,8 +9622,9 @@
  #ifdef T1LIB
      if (resource.t1lib) {
  	*t1id = -1;
---- /dev/null
-+++ source/texk/pxdvik/fontconfig.c
+diff -udNr source.orig/texk/pxdvik/fontconfig.c source/texk/pxdvik/fontconfig.c
+--- source.orig/texk/pxdvik/fontconfig.c	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/fontconfig.c	2013-03-03 09:30:50.275646568 +0900
 @@ -0,0 +1,92 @@
 +#include "xdvi-config.h"
 +#include "xdvi.h"
@@ -9723,8 +9718,9 @@
 +}
 +
 +#endif	/* PTEX */
---- /dev/null
-+++ source/texk/pxdvik/fontconfig.h
+diff -udNr source.orig/texk/pxdvik/fontconfig.h source/texk/pxdvik/fontconfig.h
+--- source.orig/texk/pxdvik/fontconfig.h	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/fontconfig.h	2013-03-03 09:30:50.275646568 +0900
 @@ -0,0 +1,6 @@
 +
 +#ifdef	PTEX
@@ -9732,8 +9728,9 @@
 +char *get_ptex_font_pathname(char *name);
 +
 +#endif /* PTEX */
---- /dev/null
-+++ source/texk/pxdvik/ft2.c
+diff -udNr source.orig/texk/pxdvik/ft2.c source/texk/pxdvik/ft2.c
+--- source.orig/texk/pxdvik/ft2.c	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/ft2.c	2013-03-03 09:30:50.275646568 +0900
 @@ -0,0 +1,253 @@
 +#include "xdvi-config.h"
 +#include "xdvi.h"
@@ -9988,8 +9985,9 @@
 +}
 +
 +#endif	/* PTEX */
---- /dev/null
-+++ source/texk/pxdvik/ft2.h
+diff -udNr source.orig/texk/pxdvik/ft2.h source/texk/pxdvik/ft2.h
+--- source.orig/texk/pxdvik/ft2.h	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/ft2.h	2013-03-03 09:30:50.275646568 +0900
 @@ -0,0 +1,6 @@
 +
 +struct ptexmap;	/* forward declaration */
@@ -9997,8 +9995,9 @@
 +
 +int ft2_open_font(struct ptexmap *map);
 +int ft2_get_bitmap(int char_code, int ft2_index, struct bitmap *bm);
---- /dev/null
-+++ source/texk/pxdvik/ft2vert.c
+diff -udNr source.orig/texk/pxdvik/ft2vert.c source/texk/pxdvik/ft2vert.c
+--- source.orig/texk/pxdvik/ft2vert.c	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/ft2vert.c	2013-03-03 09:30:50.275646568 +0900
 @@ -0,0 +1,399 @@
 +/*
 + * "ft2vert.c"
@@ -10399,8 +10398,9 @@
 +}
 +
 +#endif	/* PTEX */
---- /dev/null
-+++ source/texk/pxdvik/ft2vert.h
+diff -udNr source.orig/texk/pxdvik/ft2vert.h source/texk/pxdvik/ft2vert.h
+--- source.orig/texk/pxdvik/ft2vert.h	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/ft2vert.h	2013-03-03 09:30:50.275646568 +0900
 @@ -0,0 +1,7 @@
 +
 +/* store GSUB feature vert/vrt2 */
@@ -10409,8 +10409,9 @@
 +/* convert horizontal glyph index to vertical glyph index
 + */
 +FT_UInt ft2vert_get_gid(struct ft2vert_st *ft2vert, FT_UInt gid);
---- source.orig/texk/pxdvik/gui/help-window.c
-+++ source/texk/pxdvik/gui/help-window.c
+diff -udNr source.orig/texk/pxdvik/gui/help-window.c source/texk/pxdvik/gui/help-window.c
+--- source.orig/texk/pxdvik/gui/help-window.c	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/gui/help-window.c	2013-03-03 09:30:50.275646568 +0900
 @@ -307,6 +307,9 @@
  #ifdef T1LIB
  	"- T1lib (direct rendering of PS fonts) enabled\n",
@@ -10421,8 +10422,9 @@
  #if HAVE_ICONV_H
  	"- Iconv support compiled in\n",
  #if USE_LANGINFO
---- /dev/null
-+++ source/texk/pxdvik/jfm.c
+diff -udNr source.orig/texk/pxdvik/jfm.c source/texk/pxdvik/jfm.c
+--- source.orig/texk/pxdvik/jfm.c	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/jfm.c	2013-03-03 09:30:50.275646568 +0900
 @@ -0,0 +1,94 @@
 +#include "xdvi-config.h"
 +#include "xdvi.h"
@@ -10518,8 +10520,9 @@
 +	return j;
 +}
 +#endif	/* PTEX */
---- /dev/null
-+++ source/texk/pxdvik/jfm.h
+diff -udNr source.orig/texk/pxdvik/jfm.h source/texk/pxdvik/jfm.h
+--- source.orig/texk/pxdvik/jfm.h	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/jfm.h	2013-03-03 09:30:50.275646568 +0900
 @@ -0,0 +1,47 @@
 +/**********************************************
 + *  Copyright (C) Atsuo Kawaguchi, 1987.
@@ -10568,8 +10571,9 @@
 +};
 +
 +struct jfm *read_jfm(FILE *fp, char *fontname);
---- /dev/null
-+++ source/texk/pxdvik/jisx0208.c
+diff -udNr source.orig/texk/pxdvik/jisx0208.c source/texk/pxdvik/jisx0208.c
+--- source.orig/texk/pxdvik/jisx0208.c	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/jisx0208.c	2013-03-03 09:30:50.275646568 +0900
 @@ -0,0 +1,1199 @@
 +/* This file was derived from "src/VF_Ftype.c" in VFlib2-2.25.6
 +   by Dr. Kakugawa on 2006/4/19.
@@ -11770,14 +11774,16 @@
 +}
 +#endif /* HAVE_ICONV_H */
 +#endif /* TEST */
---- /dev/null
-+++ source/texk/pxdvik/jisx0208.h
+diff -udNr source.orig/texk/pxdvik/jisx0208.h source/texk/pxdvik/jisx0208.h
+--- source.orig/texk/pxdvik/jisx0208.h	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/jisx0208.h	2013-03-03 09:30:50.275646568 +0900
 @@ -0,0 +1,3 @@
 +
 +/* JIS -> unicode */
 +int jis2uni(int jis);
---- source.orig/texk/pxdvik/main.c
-+++ source/texk/pxdvik/main.c
+diff -udNr source.orig/texk/pxdvik/main.c source/texk/pxdvik/main.c
+--- source.orig/texk/pxdvik/main.c	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/main.c	2013-03-03 09:30:50.275646568 +0900
 @@ -30,6 +30,14 @@
  #undef STRINGIFY
  #undef TOSTRING
@@ -11818,8 +11824,9 @@
  }
  
  
---- source.orig/texk/pxdvik/pk.c
-+++ source/texk/pxdvik/pk.c
+diff -udNr source.orig/texk/pxdvik/pk.c source/texk/pxdvik/pk.c
+--- source.orig/texk/pxdvik/pk.c	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/pk.c	2013-03-03 09:30:50.275646568 +0900
 @@ -201,6 +201,9 @@
  
      g->dvi_adv = fontp->dimconv * fpwidth;
@@ -11830,8 +11837,9 @@
      if (globals.debug & DBG_PK) {
  	if (g->bitmap.w != 0)
  	    printf(", size=%dx%d, dvi_adv=%ld", g->bitmap.w, g->bitmap.h,
---- source.orig/texk/pxdvik/psgs.c
-+++ source/texk/pxdvik/psgs.c
+diff -udNr source.orig/texk/pxdvik/psgs.c source/texk/pxdvik/psgs.c
+--- source.orig/texk/pxdvik/psgs.c	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/psgs.c	2013-03-03 09:30:50.275646568 +0900
 @@ -80,6 +80,16 @@
  extern const char psheader[];
  extern unsigned psheaderlen;
@@ -11869,8 +11877,9 @@
      if (resource.postscript == 0)
  	toggle_gs(0);	/* if we got a 'v' already */
      else {
---- /dev/null
-+++ source/texk/pxdvik/ptexmap.c
+diff -udNr source.orig/texk/pxdvik/ptexmap.c source/texk/pxdvik/ptexmap.c
+--- source.orig/texk/pxdvik/ptexmap.c	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/ptexmap.c	2013-03-03 09:30:50.275646568 +0900
 @@ -0,0 +1,254 @@
 +#include "xdvi-config.h"
 +#include "xdvi.h"
@@ -12126,8 +12135,9 @@
 +    fclose(fp);
 +}
 +#endif	/* PTEX */
---- /dev/null
-+++ source/texk/pxdvik/ptexmap.h
+diff -udNr source.orig/texk/pxdvik/ptexmap.h source/texk/pxdvik/ptexmap.h
+--- source.orig/texk/pxdvik/ptexmap.h	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/ptexmap.h	2013-03-03 09:30:50.275646568 +0900
 @@ -0,0 +1,23 @@
 +
 +#ifdef PTEX
@@ -12152,8 +12162,9 @@
 +
 +void add_replace_dictionary(char *key, char *word);
 +#endif	/* PTEX */
---- /dev/null
-+++ source/texk/pxdvik/pxdvizilla
+diff -udNr source.orig/texk/pxdvik/pxdvizilla source/texk/pxdvik/pxdvizilla
+--- source.orig/texk/pxdvik/pxdvizilla	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/pxdvizilla	2013-03-03 09:30:50.275646568 +0900
 @@ -0,0 +1,175 @@
 +#! /bin/sh
 +#
@@ -12330,8 +12341,9 @@
 +do_cleanup
 +
 +exit 0
---- source.orig/texk/pxdvik/special.c
-+++ source/texk/pxdvik/special.c
+diff -udNr source.orig/texk/pxdvik/special.c source/texk/pxdvik/special.c
+--- source.orig/texk/pxdvik/special.c	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/special.c	2013-03-03 09:30:50.279646567 +0900
 @@ -691,6 +691,12 @@
    contains these coordinates.
  */
@@ -13203,8 +13215,9 @@
  	case CMD('i', 'p'):	/* throw away the path -- jansteen */
  	    path_len = 0;
  	    return;
---- source.orig/texk/pxdvik/tests/Makefile.am
-+++ source/texk/pxdvik/tests/Makefile.am
+diff -udNr source.orig/texk/pxdvik/tests/Makefile.am source/texk/pxdvik/tests/Makefile.am
+--- source.orig/texk/pxdvik/tests/Makefile.am	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/tests/Makefile.am	2013-03-03 09:30:50.279646567 +0900
 @@ -5,7 +5,7 @@
  ##
  include ../common.am
@@ -13233,8 +13246,9 @@
  ## Not used
  ##
  EXTRA_DIST = test1.c
---- source.orig/texk/pxdvik/texmf/XDvi
-+++ source/texk/pxdvik/texmf/XDvi
+diff -udNr source.orig/texk/pxdvik/texmf/XDvi source/texk/pxdvik/texmf/XDvi
+--- source.orig/texk/pxdvik/texmf/XDvi	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/texmf/XDvi	2013-03-03 09:30:50.279646567 +0900
 @@ -118,14 +118,14 @@
  
  
@@ -13294,8 +13308,9 @@
  
  
  !!! Color used for page border, image bounding boxes and the ruler in `Ruler mode'.
---- /dev/null
-+++ source/texk/pxdvik/texmf/pxdvi.cfg
+diff -udNr source.orig/texk/pxdvik/texmf/pxdvi.cfg source/texk/pxdvik/texmf/pxdvi.cfg
+--- source.orig/texk/pxdvik/texmf/pxdvi.cfg	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/texmf/pxdvi.cfg	2013-03-03 09:30:50.279646567 +0900
 @@ -0,0 +1,109 @@
 +% original xdvi.cfg -- Configuration file for the Type1 rendering module of xdvi.
 +% (If you change or delete `original' in the first line of this file,
@@ -13406,8 +13421,9 @@
 +replace HYGoThic-Medium		UnDotum.ttf
 +
 +ptexmap kanjix.map
---- source.orig/texk/pxdvik/texmf/xdvi.cfg
-+++ /dev/null
+diff -udNr source.orig/texk/pxdvik/texmf/xdvi.cfg source/texk/pxdvik/texmf/xdvi.cfg
+--- source.orig/texk/pxdvik/texmf/xdvi.cfg	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/texmf/xdvi.cfg	1970-01-01 09:00:00.000000000 +0900
 @@ -1,65 +0,0 @@
 -% original xdvi.cfg -- Configuration file for the Type1 rendering module of xdvi.
 -% (If you change or delete `original' in the first line of this file,
@@ -13474,9 +13490,32 @@
 -% dvipsmap psfonts.map
 -dvipsmap ps2pk.map
 -
---- /dev/null
-+++ source/texk/pxdvik/tounimap2h.lua
-@@ -0,0 +1,58 @@
+diff -udNr source.orig/texk/pxdvik/tounimap2h.lua source/texk/pxdvik/tounimap2h.lua
+--- source.orig/texk/pxdvik/tounimap2h.lua	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/tounimap2h.lua	2013-03-03 09:45:38.283618764 +0900
+@@ -0,0 +1,80 @@
++-- Copyright (c) 2011-2013 Hironori KITAGAWA
++--
++-- Permission is hereby granted, free of charge, to any person
++-- obtaining a copy of this software and associated documentation
++-- files (the "Software"), to deal in the Software without
++-- restriction, including without limitation the rights to use, copy,
++-- modify, merge, publish, distribute, sublicense, and/or sell copies
++-- of the Software, and to permit persons to whom the Software is
++-- furnished to do so, subject to the following conditions:
++--
++-- The above copyright notice and this permission notice shall be
++-- included in all copies or substantial portions of the Software.
++--
++-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++-- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++-- NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
++-- BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
++-- ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
++-- CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++-- SOFTWARE.
++
 +-- usage: tounimap2h.lua <ToUniCode> <function name> <end cid number>
 +
 +local result = {}
@@ -13535,9 +13574,9 @@
 +print("}; \n")
 +
 +print("#define " .. arg[2] .. "2uni(cid) (" .. arg[2] .. "2uni_table[cid])\n")
-\ No newline at end of file
---- source.orig/texk/pxdvik/util.c
-+++ source/texk/pxdvik/util.c
+diff -udNr source.orig/texk/pxdvik/util.c source/texk/pxdvik/util.c
+--- source.orig/texk/pxdvik/util.c	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/util.c	2013-03-03 09:30:50.279646567 +0900
 @@ -211,6 +211,7 @@
      {  DBG_GUI,		"gui",		", " },
      {  DBG_FIND,	"find",		", " },
@@ -13585,8 +13624,9 @@
  
  #ifndef HAVE_MEMICMP
  /*
---- source.orig/texk/pxdvik/util.h
-+++ source/texk/pxdvik/util.h
+diff -udNr source.orig/texk/pxdvik/util.h source/texk/pxdvik/util.h
+--- source.orig/texk/pxdvik/util.h	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/util.h	2013-03-03 09:30:50.279646567 +0900
 @@ -73,6 +73,9 @@
  
  struct bitmap; /* forward declaration */
@@ -13597,8 +13637,9 @@
  
  extern char *my_realpath(const char *path, char *real);
  #ifdef HAVE_REALPATH
---- source.orig/texk/pxdvik/version.h
-+++ source/texk/pxdvik/version.h
+diff -udNr source.orig/texk/pxdvik/version.h source/texk/pxdvik/version.h
+--- source.orig/texk/pxdvik/version.h	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/version.h	2013-03-03 09:30:50.279646567 +0900
 @@ -3,6 +3,7 @@
  #define VERSION_H_
  
@@ -13617,8 +13658,9 @@
 +#define XDVI_TERSE_VERSION_INFO XDVI_VERSION" "JPVERSION
  
  #endif /* VERSION_H_ */
---- source.orig/texk/pxdvik/xdvi-debug.h
-+++ source/texk/pxdvik/xdvi-debug.h
+diff -udNr source.orig/texk/pxdvik/xdvi-debug.h source/texk/pxdvik/xdvi-debug.h
+--- source.orig/texk/pxdvik/xdvi-debug.h	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/xdvi-debug.h	2013-03-03 09:30:50.279646567 +0900
 @@ -101,6 +101,7 @@
  #define DBG_GUI			131072
  #define DBG_FIND		262144
@@ -13627,8 +13669,9 @@
  #define	DBG_ALL			(~DBG_BATCH)
  
  /* a mapping of numerical options to descriptive strings, defined in util.c */
---- /dev/null
-+++ source/texk/pxdvik/xdvi-ptex.sample
+diff -udNr source.orig/texk/pxdvik/xdvi-ptex.sample source/texk/pxdvik/xdvi-ptex.sample
+--- source.orig/texk/pxdvik/xdvi-ptex.sample	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/xdvi-ptex.sample	2013-03-03 09:30:50.279646567 +0900
 @@ -0,0 +1,91 @@
 +%
 +% Sample "xdvi-ptex.map"
@@ -13721,8 +13764,9 @@
 +
 +otf-ukgr-h  Unicode-H	UnDotum.ttf
 +otf-ukgr-v  Unicode-V	UnDotum.ttf
---- source.orig/texk/pxdvik/xdvi.h
-+++ source/texk/pxdvik/xdvi.h
+diff -udNr source.orig/texk/pxdvik/xdvi.h source/texk/pxdvik/xdvi.h
+--- source.orig/texk/pxdvik/xdvi.h	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/xdvi.h	2013-03-03 09:30:50.279646567 +0900
 @@ -289,6 +289,10 @@
  #  define OPEN_MODE_ARGS const char *, const char *
  #endif
@@ -13754,8 +13798,9 @@
      char       *help_general;
      char       *help_hypertex;
      char       *help_othercommands;
---- source.orig/texk/pxdvik/xdvizilla
-+++ /dev/null
+diff -udNr source.orig/texk/pxdvik/xdvizilla source/texk/pxdvik/xdvizilla
+--- source.orig/texk/pxdvik/xdvizilla	2013-03-03 09:30:26.923647299 +0900
++++ source/texk/pxdvik/xdvizilla	1970-01-01 09:00:00.000000000 +0900
 @@ -1,175 +0,0 @@
 -#! /bin/sh
 -#
@@ -13932,8 +13977,9 @@
 -do_cleanup
 -
 -exit 0
---- /dev/null
-+++ source/texk/pxdvik/zeit.c
+diff -udNr source.orig/texk/pxdvik/zeit.c source/texk/pxdvik/zeit.c
+--- source.orig/texk/pxdvik/zeit.c	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/zeit.c	2013-03-03 09:30:50.279646567 +0900
 @@ -0,0 +1,93 @@
 +/*******************************************************
 + *  Zeit Shotai Kurabu interface routine for xdvi pl.17
@@ -14028,8 +14074,9 @@
 +    return 0;
 +}
 +#endif  /* PTEX */
---- /dev/null
-+++ source/texk/pxdvik/zeit.h
+diff -udNr source.orig/texk/pxdvik/zeit.h source/texk/pxdvik/zeit.h
+--- source.orig/texk/pxdvik/zeit.h	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/pxdvik/zeit.h	2013-03-03 09:30:50.279646567 +0900
 @@ -0,0 +1,8 @@
 +/*******************************************************
 + *  Zeit Shotai Kurabu interface routine for xdvi-22.40k
