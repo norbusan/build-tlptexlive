@@ -1,9 +1,10 @@
 ptex-inhibitglue
-pxdvi-base
-pxdvi-density
-pxdvi-uptex
-freetype-modules
-activate-pxdvi-build
-pmpost-base
-pmpost-svg
+#pxdvi-base
+#pxdvi-density
+#pxdvi-uptex
+#freetype-modules
+#activate-pxdvi-build
+pmpost-mp1.803-20130726
+#pmpost-base
+#pmpost-svg
 reautoconf-stuff

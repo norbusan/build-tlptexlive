@@ -5,7 +5,7 @@
 #
 --- source.orig/texk/web2c/ptexdir/ptex-base.ch
 +++ source/texk/web2c/ptexdir/ptex-base.ch
-@@ -4439,7 +4439,8 @@
+@@ -4440,7 +4440,8 @@
  main_loop_j:@<Append KANJI-character |cur_chr|
    to the current hlist in the current font; |goto reswitch| when
    a non-character has been fetched@>;
@@ -15,7 +15,7 @@
    to the current hlist in the current font; |goto reswitch| when
    a non-character has been fetched@>;
  @z
-@@ -4531,6 +4532,7 @@
+@@ -4532,6 +4533,7 @@
  if cur_cmd=no_boundary then bchar:=non_char;
  cur_r:=bchar; lig_stack:=null; goto main_lig_loop;
  main_loop_lookahead+1: adjust_space_factor;
@@ -23,7 +23,7 @@
  fast_get_avail(lig_stack); font(lig_stack):=main_f;
  cur_r:=qi(cur_chr); character(lig_stack):=cur_r;
  if cur_r=false_bchar then cur_r:=non_char {this prevents spurious ligatures}
-@@ -4566,12 +4568,24 @@
+@@ -4567,12 +4569,24 @@
    end
  @z
  
@@ -48,7 +48,7 @@
  if not is_char_node(tail)and(type(tail)=disp_node) then
    begin prev_append(new_kern(cur_val)); subtype(prev_node):=s;
    end
-@@ -4879,6 +4893,7 @@
+@@ -4880,6 +4894,7 @@
  @x [47.1091] l.21096 - pTeX: new_graf, adjust direction
  push_nest; mode:=hmode; space_factor:=1000; set_cur_lang; clang:=cur_lang;
  @y
@@ -56,7 +56,7 @@
  push_nest; adjust_dir:=abs(direction);
  mode:=hmode; space_factor:=1000; set_cur_lang; clang:=cur_lang;
  @z
-@@ -5400,7 +5415,8 @@
+@@ -5401,7 +5416,8 @@
      print_err("Not one-byte family");
      help1("IGNORE.");@/
      error;
@@ -66,7 +66,7 @@
  @z
  
  @x [48.1158] l.22690 - pTeX: scan_math
-@@ -5422,6 +5438,14 @@
+@@ -5423,6 +5439,14 @@
  scan_math(nucleus(tail),kcode_noad(tail));
  @z
  
@@ -81,7 +81,7 @@
  @x [48.1164] l.22790 - pTeX: vcenter : dir
  vcenter_group: begin end_graf; unsave; save_ptr:=save_ptr-2;
    p:=vpack(link(head),saved(1),saved(0)); pop_nest;
-@@ -5438,12 +5462,31 @@
+@@ -5439,12 +5463,31 @@
    end;
  @z
  
@@ -113,7 +113,7 @@
  @x [48.1186] l.23006 - pTeX: copy kanji code
       if math_type(supscr(p))=empty then
        begin mem[saved(0)].hh:=mem[nucleus(p)].hh;
-@@ -5452,6 +5495,12 @@
+@@ -5453,6 +5496,12 @@
        begin mem[saved(0)].hh:=mem[nucleus(p)].hh;
  @z
  
@@ -126,7 +126,7 @@
  @x [48.1194] l.23078 - pTeX: set cur_kanji_skip, cur_xkanji_skip
  var l:boolean; {`\.{\\leqno}' instead of `\.{\\eqno}'}
  @y
-@@ -6685,6 +6734,7 @@
+@@ -6686,6 +6735,7 @@
  procedure set_math_kchar(@!c:integer);
  var p:pointer; {the new noad}
  begin p:=new_noad; math_type(nucleus(p)):=math_jchar;
