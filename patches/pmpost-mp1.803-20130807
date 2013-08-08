@@ -7,12 +7,12 @@
  texk/web2c/pmpostdir/jfm.ch       |  104 ++++++++
  texk/web2c/pmpostdir/jmp.ch       |  342 ++++++++++++++++++++++++++
  texk/web2c/pmpostdir/jmppsw.ch    |   74 +++++
- texk/web2c/pmpostdir/mpost.ch     |  287 ++++++++++++++++++++++
+ texk/web2c/pmpostdir/mpost.ch     |  289 ++++++++++++++++++++++
  texk/web2c/pmpostdir/mpxout.ch    |    8 
  texk/web2c/pmpostdir/pdvitomp.ch  |  492 ++++++++++++++++++++++++++++++++++++++
  texk/web2c/pmpostdir/psout.ch     |   42 +++
  texk/web2c/pmpostdir/svgout.ch    |   59 ++++
- 13 files changed, 1638 insertions(+)
+ 13 files changed, 1640 insertions(+)
 
 --- source.orig/texk/kpathsea/texmf.cnf
 +++ source/texk/kpathsea/texmf.cnf
@@ -808,7 +808,7 @@
 +@z
 --- /dev/null
 +++ source/texk/web2c/pmpostdir/mpost.ch
-@@ -0,0 +1,287 @@
+@@ -0,0 +1,289 @@
 +@x
 +#include <kpathsea/kpathsea.h>
 +@y
@@ -1063,9 +1063,10 @@
 +@x
 +  options->print_found_names = (int)true;
 +  {
-+    const char *base = cleaned_invocation_name(argv[0]);
++    char *base = kpse_program_basename(argv[0]);
 +    if (FILESTRCASEEQ(base, "dvitomp"))
 +      dvitomp_only=1;
++    free(base);
 +  }
 +  if (dvitomp_only) {
 +    @<Read and set dvitomp command line options@>;
@@ -1082,9 +1083,10 @@
 +#endif
 +
 +  {
-+    const char *base = cleaned_invocation_name(argv[0]);
++    char *base = kpse_program_basename(argv[0]);
 +    if (FILESTRCASEEQ(base, "dvitomp"))
 +      dvitomp_only=1;
++    free(base);
 +  }
 +  if (dvitomp_only) {
 +    @<Read and set dvitomp command line options@>;

@@ -160,6 +160,7 @@ TL_CONFIGURE_ARGS="	\
 	--enable-pmp		\
 	--enable-makejvf	\
 	--enable-dvipdfmx	\
+	--enable-dvipsk		\
 	--enable-tetex		\
 	--enable-texk		\
 	--enable-web2c		\
@@ -199,7 +200,16 @@ esac
 
 cd inst/bin
 arch=`/bin/ls`
+
+# dvips:  Fix a pTeX-extension bug in bbox.c (r31350).
+#   cf. http://oku.edu.mie-u.ac.jp/tex/mod/forum/discuss.php?d=1070
+# pTeX:   Fix a potential bug in ptexenc (r30905).
+# e-pTeX: Update to e-pTeX 130605 (r30897).
+#   cf. http://oku.edu.mie-u.ac.jp/tex/mod/forum/discuss.php?d=1024
+
 zip -r $TARGET/binaries.zip 	\
+	*/afm2tfm$EXT		\
+	*/dvips$EXT		\
 	*/dvi2tty$EXT		\
 	*/dvipdfmx$EXT		\
 	*/eptex$EXT		\
