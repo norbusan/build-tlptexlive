@@ -1,0 +1,538 @@
+diff -udrN source.orig/texk/kpathsea/texmf.cnf source/texk/kpathsea/texmf.cnf
+--- source.orig/texk/kpathsea/texmf.cnf	2013-08-09 16:27:51.207548900 +0900
++++ source/texk/kpathsea/texmf.cnf	2013-08-09 16:27:58.975548802 +0900
+@@ -221,10 +221,11 @@
+ TEXINPUTS.eptex         = .;$TEXMF/tex/{ptex,plain,generic,}//
+ TEX.pmpost = eptex
+ 
+-% (e)up(La)TeX.
++% (e)up(La)TeX, and for upmpost.
+ TEXINPUTS.uplatex = .;$TEXMF/tex/{uplatex,platex,latex,generic,}//
+ TEXINPUTS.uptex   = .;$TEXMF/tex/{uptex,ptex,plain,generic,}//
+ TEXINPUTS.euptex  = .;$TEXMF/tex/{uptex,ptex,plain,generic}//
++TEX.upmpost = euptex
+ 
+ % pBibTeX bibliographies and style files.
+ BIBINPUTS.pbibtex       = .;$TEXMF/{pbibtex,bibtex}/bib//
+diff -udrN source.orig/texk/web2c/Makefile.am source/texk/web2c/Makefile.am
+--- source.orig/texk/web2c/Makefile.am	2013-08-09 16:27:51.207548900 +0900
++++ source/texk/web2c/Makefile.am	2013-08-09 16:27:58.975548802 +0900
+@@ -181,8 +181,9 @@
+ ## MetaPost
+ include $(srcdir)/mplibdir/am/mplib.am
+ 
+-## pMetaPost
++## [u]pMetaPost
+ include $(srcdir)/pmpostdir/am/pmpost.am
++include $(srcdir)/upmpostdir/am/upmpost.am
+ 
+ ## libmplib, used by MetaPost and luaTeX
+ include $(srcdir)/mplibdir/am/libmplib.am
+diff -udrN source.orig/texk/web2c/ac/web2c.ac source/texk/web2c/ac/web2c.ac
+--- source.orig/texk/web2c/ac/web2c.ac	2013-08-09 16:27:51.207548900 +0900
++++ source/texk/web2c/ac/web2c.ac	2013-08-09 16:27:58.975548802 +0900
+@@ -42,6 +42,7 @@
+ [[luatex], [yes], [],    [luaTeX],  [poppler cairo libpng zziplib lua52]],
+ [[mp],     [yes], [],    [MetaPost],[cairo libpng]],
+ [[pmp],    [yes], [],    [pMetaPost], [cairo libpng ptexenc]],
++[[upmp],   [yes], [],    [upMetaPost], [cairo libpng ptexenc]],
+ [[xetex],  [yes], [yes], [XeTeX],   [poppler libpng freetype2 teckit harfbuzz]],
+ ])[]dnl
+ m4_foreach([Kpse_Prog], [kpse_tex_progs],
+diff -udrN source.orig/texk/web2c/configure.ac source/texk/web2c/configure.ac
+--- source.orig/texk/web2c/configure.ac	2013-08-09 16:21:36.799553625 +0900
++++ source/texk/web2c/configure.ac	2013-08-09 16:27:58.975548802 +0900
+@@ -199,6 +199,8 @@
+                      [KPSE_MFWIN_DEFINE(Kpse_Win)])])[]dnl
+ 
+ AM_CONDITIONAL([MP], [test "x$enable_mp" != xno])
++AM_CONDITIONAL([PMP], [test "x$enable_pmp" != xno])
++AM_CONDITIONAL([UPMP], [test "x$enable_upmp" != xno])
+ 
+ AM_CONDITIONAL([WEB], [test "x$enable_web_progs" != xno])
+ 
+diff -udrN source.orig/texk/web2c/upmpostdir/am/upmpost.am source/texk/web2c/upmpostdir/am/upmpost.am
+--- source.orig/texk/web2c/upmpostdir/am/upmpost.am	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/upmpostdir/am/upmpost.am	2013-08-09 16:27:58.979548802 +0900
+@@ -0,0 +1,127 @@
++## texk/web2c/upmpostdir/am/upmpost.am: Makefile fragment for upMetaPost.
++
++CTIE = ./ctie
++ctie = $(ctie_silent)CWEBINPUTS=.:$(srcdir) $(buildenv) $(CTIE)
++ctie_silent = $(ctie_silent_$(V))
++ctie_silent_ = $(ctie_silent_$(AM_DEFAULT_VERBOSITY))
++ctie_silent_0 = @echo "  CTIE    " $@; $(SHELL) ./silent-sh $@ #
++ctie_silent_1 = 
++
++
++if UPMP
++bin_PROGRAMS += upmpost
++bin_links += upmpost$(EXEEXT):updvitomp
++endif UPMP
++EXTRA_PROGRAMS +=upmpost
++
++upmpost_CPPFLAGS = $(CAIRO_INCLUDES) $(PIXMAN_INCLUDES) $(AM_CPPFLAGS) $(ZLIB_INCLUDES) $(LIBPNG_INCLUDES) -I$(srcdir)/mplibdir  -I$(srcdir)/pmpostdir -I$(srcdir)/upmpostdir $(PTEXENC_INCLUDES)
++upmpost_LDADD = $(KPATHSEA_LIBS) $(CAIRO_LIBS) $(PIXMAN_LIBS) $(LIBPNG_LIBS) $(ZLIB_LIBS) -lm $(PTEXENC_LIBS)
++
++
++.PHONY: install-upmpost-links uninstall-upmpost-links
++
++# Creating one file: just one rule
++upmp_ctangle = $(ctangle_silent)CWEBINPUTS=.:$(srcdir)/pmpostdir:$(srcdir)/upmpostdir $(ctangle)
++# Creating several files: need stamp file and two rules with identical recipes
++upmp_ctangle_sh = CWEBINPUTS=.:$(srcdir)/pmpostdir:$(srcdir)/upmpostdir AM_V_P=$(AM_V_P) $(SHELL) ./tangle-sh $@ $(CTANGLE)
++
++## upMetaPost C sources
++upmpost_SOURCES = mplibdir/avl.h mplibdir/avl.c
++nodist_upmpost_SOURCES = uptfmin.c $(upmp_c_h) $(upmpmath_c_h) $(upmpmathdouble_c_h) $(uppsout_c_h) $(upsvgout_c_h) $(uppngout_c_h) $(upmpstrings_c_h) upmpost.c  $(upmpxout_c_h)
++upmp_c_h =  upmp.c upmplib.h upmpmp.h
++upmpmath_c_h = upmpmath.h upmpmath.c
++upmpmathdouble_c_h = upmpmathdouble.h upmpmathdouble.c
++upmpstrings_c_h = upmpstrings.h upmpstrings.c
++uppsout_c_h = upmppsout.h uppsout.c upmplibps.h
++upsvgout_c_h = upmplibsvg.h upmpsvgout.h upsvgout.c
++uppngout_c_h = upmplibpng.h upmppngout.h uppngout.c
++upmpxout_c_h = upmpxout.c upmpxout.h
++
++# sed script
++upmp_sed_main = "s/mpxout\\.h/upmpxout.h/;s/mpmp\\.h/upmpmp.h/;s/mplib\\.h/upmplib.h/;s/mpstrings\\.h/upmpstrings.h/"
++upmp_sed_math = "s/mpmath\\.h/upmpmath.h/;s/mpmathdouble\\.h/upmpmathdouble.h/"
++upmp_sed_ps   = "s/mplibps\\.h/upmplibps.h/;s/mppsout\\.h/upmppsout.h/"
++upmp_sed_svg  = "s/mplibsvg\\.h/upmplibsvg.h/;s/mpsvgout\\.h/upmpsvgout.h/"
++upmp_sed_png  = "s/mplibpng\\.h/upmplibpng.h/;s/mppngout\\.h/upmppngout.h/"
++upmp_sed = sed -e $(upmp_sed_main) -e $(upmp_sed_math) -e $(upmp_sed_ps) -e $(upmp_sed_svg) -e $(upmp_sed_png)
++
++# Creating one file: just one rule
++uptfmin.c: ctangle$(EXEEXT) mplibdir/tfmin.w uptfmin-tot.ch
++	$(upmp_ctangle) uptfmin.w uptfmin-tot.ch
++uptfmin-tot.ch: ctie$(EXEEXT) mplibdir/tfmin.w pmpostdir/jfm.ch upmpostdir/upjfm.ch
++	cat $(srcdir)/mplibdir/tfmin.w | $(upmp_sed) > uptfmin.w
++	$(ctie) -c uptfmin-tot.ch uptfmin.w pmpostdir/jfm.ch upmpostdir/upjfm.ch
++
++upmpost.c: ctangle$(EXEEXT) mplibdir/mpost.w upmpost-tot.ch
++	$(upmp_ctangle) upmpost.w upmpost-tot.ch
++upmpost-tot.ch: ctie$(EXEEXT) mplibdir/mpost.w pmpostdir/mpost.ch upmpostdir/upmpost.ch
++	cat $(srcdir)/mplibdir/mpost.w | $(upmp_sed) > upmpost.w
++	$(ctie) -c upmpost-tot.ch upmpost.w pmpostdir/mpost.ch upmpostdir/upmpost.ch
++
++
++# Creating several files: need stamp file and two rules with identical recipes
++$(upmp_c_h): upmp-tangle
++	@$(upmp_ctangle_sh) upmp.w upmp-tot.ch
++upmp-tangle: ctangle$(EXEEXT) mplibdir/mp.w upmp-tot.ch tangle-sh
++	@$(upmp_ctangle_sh) upmp.w upmp-tot.ch
++upmp-tot.ch: ctie$(EXEEXT) mplibdir/mp.w pmpostdir/jmp.ch upmpostdir/upjmp.ch
++	cat $(srcdir)/mplibdir/mp.w | $(upmp_sed) > upmp.w
++	$(ctie) -c upmp-tot.ch upmp.w pmpostdir/jmp.ch upmpostdir/upjmp.ch
++
++$(upmpmath_c_h): upmpmath-tangle
++	@$(upmp_ctangle_sh) upmpmath
++upmpmath-tangle: ctangle$(EXEEXT) mplibdir/mpmath.w tangle-sh
++	cat $(srcdir)/mplibdir/mpmath.w | $(upmp_sed) > upmpmath.w
++	@$(upmp_ctangle_sh) upmpmath
++
++$(upmpmathdouble_c_h): upmpmathdouble-tangle
++	@$(upmp_ctangle_sh) upmpmathdouble
++upmpmathdouble-tangle: ctangle$(EXEEXT) mplibdir/mpmathdouble.w tangle-sh
++	cat $(srcdir)/mplibdir/mpmathdouble.w | $(upmp_sed) > upmpmathdouble.w
++	@$(upmp_ctangle_sh) upmpmathdouble
++
++$(upmpstrings_c_h): upmpstrings-tangle
++	@$(upmp_ctangle_sh) upmpstrings
++upmpstrings-tangle: ctangle$(EXEEXT) mplibdir/mpstrings.w tangle-sh
++	cat $(srcdir)/mplibdir/mpstrings.w | $(upmp_sed) > upmpstrings.w
++	@$(upmp_ctangle_sh) upmpstrings
++
++$(uppsout_c_h): uppsout-tangle
++	@$(upmp_ctangle_sh) uppsout.w uppsout-tot.ch
++uppsout-tangle: ctangle$(EXEEXT) mplibdir/psout.w uppsout-tot.ch tangle-sh
++	@$(upmp_ctangle_sh) uppsout.w uppsout-tot.ch
++uppsout-tot.ch: ctie$(EXEEXT) mplibdir/psout.w pmpostdir/psout.ch pmpostdir/jmppsw.ch upmpostdir/upjmppsw.ch
++	cat $(srcdir)/mplibdir/psout.w | $(upmp_sed) > uppsout.w
++	$(ctie) -c uppsout-tot.ch uppsout.w pmpostdir/psout.ch pmpostdir/jmppsw.ch upmpostdir/upjmppsw.ch
++
++$(upsvgout_c_h): upsvgout-tangle
++	@$(upmp_ctangle_sh) upsvgout upsvgout-tot.ch
++upsvgout-tangle: ctangle$(EXEEXT) mplibdir/svgout.w upsvgout-tot.ch tangle-sh
++	cat $(srcdir)/mplibdir/svgout.w | $(upmp_sed) > upsvgout.w
++	@$(upmp_ctangle_sh) upsvgout upsvgout-tot.ch
++upsvgout-tot.ch: ctie$(EXEEXT) mplibdir/svgout.w pmpostdir/svgout.ch upmpostdir/upsvgout.ch
++	cat $(srcdir)/mplibdir/svgout.w | $(upmp_sed) > upsvgout.w
++	$(ctie) -c upsvgout-tot.ch upsvgout.w pmpostdir/svgout.ch upmpostdir/upsvgout.ch
++
++$(uppngout_c_h): uppngout-tangle
++	@$(upmp_ctangle_sh) uppngout
++uppngout-tangle: ctangle$(EXEEXT) mplibdir/pngout.w tangle-sh
++	cat $(srcdir)/mplibdir/pngout.w | $(upmp_sed) > uppngout.w
++	@$(upmp_ctangle_sh) uppngout
++
++$(upmpxout_c_h): upmpxout-tangle
++	@$(upmp_ctangle_sh) upmpxout upmpxout-tot.ch
++upmpxout-tangle: ctangle$(EXEEXT) mplibdir/mpxout.w upmpxout-tot.ch tangle-sh
++	@$(upmp_ctangle_sh) upmpxout upmpxout-tot.ch
++upmpxout-tot.ch: ctie$(EXEEXT) mplibdir/mpxout.w pmpostdir/mpxout.ch pmpostdir/pdvitomp.ch upmpostdir/updvitomp.ch
++	cat $(srcdir)/mplibdir/mpxout.w | $(upmp_sed) > upmpxout.w
++	$(ctie) -c upmpxout-tot.ch upmpxout.w pmpostdir/mpxout.ch pmpostdir/pdvitomp.ch upmpostdir/updvitomp.ch
++
++## pMetaPost CWeb sources
++upmpost_web = mplibdir/mpost.w mplibdir/mpxout.w
++upmpost_web += mplibdir/mp.w mplibdir/psout.w mplibdir/svgout.w mplibdir/pngout.w
++upmpost_web += mplibdir/mpmath.w mplibdir/mpmathdouble.w mplibdir/mpstrings.w mplibdir/tfmin.w
++
++$(upmpost_OBJECTS): $(nodist_upmpost_SOURCES)
++
++DISTCLEANFILES += $(nodist_upmpost_SOURCES)
+diff -udrN source.orig/texk/web2c/upmpostdir/updvitomp.ch source/texk/web2c/upmpostdir/updvitomp.ch
+--- source.orig/texk/web2c/upmpostdir/updvitomp.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/upmpostdir/updvitomp.ch	2013-08-09 16:27:58.979548802 +0900
+@@ -0,0 +1,62 @@
++@x
++@d virtual_space 1000000 /* maximum total bytes of typesetting commands for virtual fonts */
++@d max_fonts 1000 /* maximum number of distinct fonts per \.{DVI} file */
++@d max_fnums 3000 /* maximum number of fonts plus fonts local to virtual fonts */
++@d max_widths 512000 /* maximum number of different characters among all fonts */
++@y
++@d max_widths 512000 /* maximum number of different characters among all fonts */
++@d virtual_space 2000000 /* maximum total bytes of typesetting commands for virtual fonts */
++@d max_fonts 1000 /* maximum number of distinct fonts per \.{DVI} file */
++@d max_fnums 3000 /* maximum number of fonts plus fonts local to virtual fonts */
++@d max_widths 2000000 /* maximum number of different characters among all fonts */
++@z
++
++@x
++@ PDVItoMP: |do_set_char| is called with non-virtual font.
++@y
++@ upDVItoMP: |do_set_char| is called with non-virtual font.
++@z
++
++@x
++@d Hi(x) (((x)>> 8) & 0xff)
++@d Lo(x) ( (x)      & 0xff)
++@y
++@d BYTE1(x) (((x)>>24) & 0xff)
++@d BYTE2(x) (((x)>>16) & 0xff)
++@d BYTE3(x) (((x)>> 8) & 0xff)
++@d BYTE4(x) ( (x)      & 0xff)
++@z
++
++@x
++void mpx_print_kanji_char (MPX mpx,integer c)
++{
++@y
++void mpx_print_kanji_char (MPX mpx,integer c)
++{
++  int pflag = 0;
++@z
++
++@x
++  c=toBUFF(fromDVI(c));
++  putc2(Hi(c), mpx->mpxfile);
++  mpx->print_col++;
++  putc2(Lo(c), mpx->mpxfile);
++@y
++  c=toBUFF(fromDVI(c));
++  if (BYTE1(c)!=0) pflag = 1;
++  if (pflag) {
++    putc2(BYTE1(c), mpx->mpxfile);
++    mpx->print_col++;
++  }
++  if (BYTE2(c)!=0) pflag = 1;
++  if (pflag) {
++    putc2(BYTE2(c), mpx->mpxfile);
++    mpx->print_col++;
++  }
++  if (BYTE3(c)!=0) pflag = 1;
++  if (pflag) {
++    putc2(BYTE3(c), mpx->mpxfile);
++    mpx->print_col++;
++  }
++  putc2(BYTE4(c), mpx->mpxfile);
++@z
+diff -udrN source.orig/texk/web2c/upmpostdir/upjfm.ch source/texk/web2c/upmpostdir/upjfm.ch
+--- source.orig/texk/web2c/upmpostdir/upjfm.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/upmpostdir/upjfm.ch	2013-08-09 16:27:58.979548802 +0900
+@@ -0,0 +1,13 @@
++%
++% routine to process JFM file format
++@x
++@d read_two(A) { (A)=tfbyte;
++  if ( (A)>127 ) goto BAD_TFM;
++  tfget; (A)=(A)*0400+tfbyte;
++}
++@y
++@d read_two(A) { (A)=tfbyte;
++  tfget; (A)=(A)*0400+tfbyte;
++}
++@z
++
+diff -udrN source.orig/texk/web2c/upmpostdir/upjmp.ch source/texk/web2c/upmpostdir/upjmp.ch
+--- source.orig/texk/web2c/upmpostdir/upjmp.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/upmpostdir/upjmp.ch	2013-08-09 16:27:58.979548802 +0900
+@@ -0,0 +1,35 @@
++% upMetaPost change file for MetaPost
++
++@x
++@d default_banner "This is pMetaPost, Version 1.803-0.04" /* printed when \MP\ starts */
++@y
++@d default_banner "This is upMetaPost, Version 1.803-0.04-u1.11" /* printed when \MP\ starts */
++@z
++
++@x
++#define metapost_version "1.803-0.04"
++@y
++#define metapost_version "1.803-0.04-u1.11"
++@z
++
++@x
++void mp_set_text_box (MP mp, mp_text_node p) {
++@y
++void mp_set_text_box (MP mp, mp_text_node p) {
++  int cx; /* code for Japanese two byte character */
++@z
++
++@x
++    if (mp->font_id[f]!=0) {
++      cc=char_mp_info(f,mp_lookup_ctype(mp, f,fromBUFF(mp_text_p(p)->str,limit,k)));
++      k++;
++@y
++    if (mp->font_id[f]!=0) {
++      if (multistrlen(mp_text_p (p)->str, kk, k)>1) {
++        cx=fromBUFF(mp_text_p (p)->str, kk, k);
++        k=k+multistrlen(mp_text_p (p)->str, kk, k)-1;
++      } else {
++        cx=*(mp_text_p (p)->str + k);
++      }
++      cc = char_mp_info (f, mp_lookup_ctype(mp, f, cx));
++@z
+diff -udrN source.orig/texk/web2c/upmpostdir/upjmppsw.ch source/texk/web2c/upmpostdir/upjmppsw.ch
+--- source.orig/texk/web2c/upmpostdir/upjmppsw.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/upmpostdir/upjmppsw.ch	2013-08-09 16:27:58.979548802 +0900
+@@ -0,0 +1,49 @@
++@x
++#include <ptexenc/ptexenc.h>
++@y
++#include <ptexenc/ptexenc.h>
++#include <ptexenc/unicode.h>
++@z
++
++@x
++void mp_ps_kanji_string_out (MP mp, unsigned char *s)
++{
++int i, len;
++int c;
++
++len = strlen(s);
++i=0;
++mp_ps_print(mp, "<");
++while (i<len)
++  { if ( mp->ps->ps_offset+5>mp->max_print_line ) mp_ps_print_ln(mp);
++  c=toDVI(fromBUFF(s, i+2, i));
++  i=i+2;
++@y
++void mp_ps_kanji_string_out (MP mp, unsigned char *s)
++{
++int i, len;
++int c, cx;
++
++len = strlen(s);
++i=0;
++mp_ps_print(mp, "<");
++while (i<len) {
++  if ( mp->ps->ps_offset+5>mp->max_print_line )
++    mp_ps_print_ln(mp);
++  c=toDVI(fromBUFF(s, len, i));
++  i=i+multistrlen(s, len, i);
++  if (isinternalUPTEX && c>65535) {
++    cx=UTF32toUTF16HS(c); /* High surrogate */
++    mp_hex_digit_out(mp, Hi(cx) / 16);
++    mp_hex_digit_out(mp, Hi(cx) % 16);
++    mp_hex_digit_out(mp, Lo(cx) / 16);
++    mp_hex_digit_out(mp, Lo(cx) % 16);
++    c=UTF32toUTF16LS(c); /* Low surrogate */
++  }
++@z
++
++@x
++  mp_ps_print_nl(mp, "%%Creator: MetaPost (Japanese version) ");
++@y
++  mp_ps_print_nl(mp, "%%Creator: MetaPost (upTeX version) ");
++@z
+diff -udrN source.orig/texk/web2c/upmpostdir/upmpost.ch source/texk/web2c/upmpostdir/upmpost.ch
+--- source.orig/texk/web2c/upmpostdir/upmpost.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/upmpostdir/upmpost.ch	2013-08-09 16:27:58.979548802 +0900
+@@ -0,0 +1,133 @@
++@x
++@d TEX     "eptex"
++@y
++@d TEX     "euptex"
++@z
++
++@x
++#define MPXCOMMAND "pmakempx"
++@y
++#define MPXCOMMAND "upmakempx"
++@z
++
++@x
++        const char *banner = "% Written by pmpost version ";
++@y
++        const char *banner = "% Written by upmpost version ";
++@z
++
++@x
++      const char *banner = "% Written by pdvitomp version ";
++@y
++      const char *banner = "% Written by updvitomp version ";
++@z
++
++@x
++  fprintf(stdout, "This is pdvitomp %s" WEB2CVERSION "\n", s);
++@y
++  fprintf(stdout, "This is updvitomp %s" WEB2CVERSION "\n", s);
++@z
++
++@x
++  fprintf(stdout, "This is pMetaPost %s" WEB2CVERSION "\n", s);
++@y
++  fprintf(stdout, "This is upMetaPost %s" WEB2CVERSION "\n", s);
++@z
++
++@x
++"Usage: pmpost [OPTION] [&MEMNAME] [MPNAME[.mp]] [COMMANDS]\n"
++"       pmpost --dvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
++"\n"
++"  Run pMetaPost on MPNAME, usually creating MPNAME.NNN (and perhaps\n"
++"  MPNAME.tfm), where NNN are the character numbers generated.\n"
++"  Any remaining COMMANDS are processed as pMetaPost input,\n"
++"  after MPNAME is read.\n\n"
++"  With a --dvitomp argument, pMetaPost acts as DVI-to-MPX converter only.\n"
++"  Call pMetaPost with --dvitomp --help for option explanations.\n\n");
++fprintf(stdout,
++"  -ini                      be inipmpost, for dumping mem files\n"
++@y
++"Usage: upmpost [OPTION] [&MEMNAME] [MPNAME[.mp]] [COMMANDS]\n"
++"       upmpost --dvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
++"\n"
++"  Run upMetaPost on MPNAME, usually creating MPNAME.NNN (and perhaps\n"
++"  MPNAME.tfm), where NNN are the character numbers generated.\n"
++"  Any remaining COMMANDS are processed as upMetaPost input,\n"
++"  after MPNAME is read.\n\n"
++"  With a --dvitomp argument, pMetaPost acts as DVI-to-MPX converter only.\n"
++"  Call upMetaPost with --dvitomp --help for option explanations.\n\n");
++fprintf(stdout,
++"  -ini                      be iniupmpost, for dumping mem files\n"
++@z
++
++@x
++  fprintf(stdout, "This is pdvitomp %s" WEB2CVERSION "\n", s);
++@y
++  fprintf(stdout, "This is updvitomp %s" WEB2CVERSION "\n", s);
++@z
++
++@x
++  fprintf(stdout, "This is pMetaPost %s" WEB2CVERSION "\n", s);
++@y
++  fprintf(stdout, "This is upMetaPost %s" WEB2CVERSION "\n", s);
++@z
++
++@x
++"Usage: pdvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
++"       pmpost --dvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
++"\n"
++"  Convert a TeX DVI file to a MetaPost MPX file.\n\n");
++fprintf(stdout,
++"  -progname=STRING          set program name to STRING\n"
++"  -kanji=STRING             set kanji encoding (sjis, jis, euc, utf8)\n"
++@y
++"Usage: updvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
++"       upmpost --dvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
++"\n"
++"  Convert a TeX DVI file to a MetaPost MPX file.\n\n");
++fprintf(stdout,
++"  -progname=STRING          set program name to STRING\n"
++"  -kanji=STRING             set kanji encoding (STRING=euc|jis|sjis|utf8|uptex)\n"
++@z
++
++@x
++  fprintf(stdout, "pdvitomp (pMetaPost) %s" WEB2CVERSION "\n", s);
++@y
++  fprintf(stdout, "updvitomp (pMetaPost) %s" WEB2CVERSION "\n", s);
++@z
++
++@x
++  fprintf(stdout, "pMetaPost %s" WEB2CVERSION "\n", s);
++@y
++  fprintf(stdout, "upMetaPost %s" WEB2CVERSION "\n", s);
++@z
++
++@x
++"Authors of pMetaPost: Michio Matsuyama, Hideyuki Suzuki.\n"
++@y
++"Authors of upMetaPost: Michio Matsuyama, Hideyuki Suzuki, Takuji Tanaka.\n"
++@z
++
++@x
++  const char * banner = "This is pMetaPost, version ";
++@y
++  const char * banner = "This is upMetaPost, version ";
++@z
++
++@x
++  enable_UPTEX (false);
++#if defined(WIN32)
++  set_enc_string("sjis", "sjis");
++#else
++  set_enc_string("utf8", "euc");
++#endif
++@y
++  enable_UPTEX (true);
++  set_enc_string("uptex", "uptex");
++@z
++
++@x
++  if(putenv(xstrdup("engine=pmpost")))
++@y
++  if(putenv(xstrdup("engine=upmpost")))
++@z
+diff -udrN source.orig/texk/web2c/upmpostdir/upsvgout.ch source/texk/web2c/upmpostdir/upsvgout.ch
+--- source.orig/texk/web2c/upmpostdir/upsvgout.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/upmpostdir/upsvgout.ch	2013-08-09 16:27:58.979548802 +0900
+@@ -0,0 +1,38 @@
++@x
++#include <ptexenc/ptexenc.h>
++@y
++#include <ptexenc/ptexenc.h>
++#include <ptexenc/unicode.h>
++@z
++
++@x
++    if ( mp->font_id[gr_font_n(p)]!=0 ) {
++    l >>= 1;
++    while (l-->0) {
++         k =((int)*s++)*0x100; k += (int)*s++;
++         append_string("&#");
++         mp_svg_store_int(mp,toUCS(k));
++         append_char(';');
++       }
++    } else
++@y
++    if ( mp->font_id[gr_font_n(p)]!=0 ) {
++        if  (is_internalUPTEX() ) { 
++            while (l>0) {
++	        append_string("&#");
++                mp_svg_store_int(mp,UTF8StoUCS(s));
++                append_char(';');
++                k = UTF8length((int)*s); s += k; l -= k; 
++            }
++        } else { /* 1 charatcer = 2 bytes */
++            l >>= 1;
++            while (l-->0) {
++                k =((int)*s++)*0x100; k += (int)*s++;
++                append_string("&#");
++                mp_svg_store_int(mp,toUCS(k));
++                append_char(';');
++            }
++        }
++    } else
++@z
++

@@ -4,7 +4,6 @@ ptex-inhibitglue
 #pxdvi-uptex
 #freetype-modules
 #activate-pxdvi-build
-pmpost-mp1.803-20130807
-#pmpost-base
-#pmpost-svg
+pmpost-mp1.803-20130809
+upmpost-mp1.803-20130809
 reautoconf-stuff

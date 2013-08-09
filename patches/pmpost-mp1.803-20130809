@@ -1,21 +1,6 @@
----
- texk/kpathsea/texmf.cnf           |    1 
- texk/web2c/Makefile.am            |    3 
- texk/web2c/ac/web2c.ac            |    1 
- texk/web2c/pmpostdir/Makefile     |  107 ++++++++
- texk/web2c/pmpostdir/am/pmpost.am |  118 +++++++++
- texk/web2c/pmpostdir/jfm.ch       |  104 ++++++++
- texk/web2c/pmpostdir/jmp.ch       |  342 ++++++++++++++++++++++++++
- texk/web2c/pmpostdir/jmppsw.ch    |   74 +++++
- texk/web2c/pmpostdir/mpost.ch     |  289 ++++++++++++++++++++++
- texk/web2c/pmpostdir/mpxout.ch    |    8 
- texk/web2c/pmpostdir/pdvitomp.ch  |  492 ++++++++++++++++++++++++++++++++++++++
- texk/web2c/pmpostdir/psout.ch     |   42 +++
- texk/web2c/pmpostdir/svgout.ch    |   59 ++++
- 13 files changed, 1640 insertions(+)
-
---- source.orig/texk/kpathsea/texmf.cnf
-+++ source/texk/kpathsea/texmf.cnf
+diff -udrN source.orig/texk/kpathsea/texmf.cnf source/texk/kpathsea/texmf.cnf
+--- source.orig/texk/kpathsea/texmf.cnf	2013-08-09 16:21:36.819553625 +0900
++++ source/texk/kpathsea/texmf.cnf	2013-08-09 16:25:17.307550842 +0900
 @@ -646,6 +646,7 @@
  % Used by makempx to run TeX.  We use "etex" because MetaPost is
  % expecting DVI, and not "tex" because we want first line parsing.
@@ -24,8 +9,9 @@
  
  % These variables specify the external program called for the
  % interactive `e' option.  %d is replaced by the line number and %s by
---- source.orig/texk/web2c/Makefile.am
-+++ source/texk/web2c/Makefile.am
+diff -udrN source.orig/texk/web2c/Makefile.am source/texk/web2c/Makefile.am
+--- source.orig/texk/web2c/Makefile.am	2013-08-09 16:21:36.811553625 +0900
++++ source/texk/web2c/Makefile.am	2013-08-09 16:25:17.307550842 +0900
 @@ -181,6 +181,9 @@
  ## MetaPost
  include $(srcdir)/mplibdir/am/mplib.am
@@ -36,8 +22,9 @@
  ## libmplib, used by MetaPost and luaTeX
  include $(srcdir)/mplibdir/am/libmplib.am
  
---- source.orig/texk/web2c/ac/web2c.ac
-+++ source/texk/web2c/ac/web2c.ac
+diff -udrN source.orig/texk/web2c/ac/web2c.ac source/texk/web2c/ac/web2c.ac
+--- source.orig/texk/web2c/ac/web2c.ac	2013-08-09 16:21:36.799553625 +0900
++++ source/texk/web2c/ac/web2c.ac	2013-08-09 16:25:17.307550842 +0900
 @@ -41,6 +41,7 @@
  [[pdftex], [yes], [yes], [pdfTeX],  [xpdf libpng]],
  [[luatex], [yes], [],    [luaTeX],  [poppler cairo libpng zziplib lua52]],
@@ -46,119 +33,10 @@
  [[xetex],  [yes], [yes], [XeTeX],   [poppler libpng freetype2 teckit harfbuzz]],
  ])[]dnl
  m4_foreach([Kpse_Prog], [kpse_tex_progs],
---- /dev/null
-+++ source/texk/web2c/pmpostdir/Makefile
-@@ -0,0 +1,107 @@
-+#
-+# Makefile for W32
-+#
-+PTEXENCDIR=../../ptexenc
-+
-+RM = rm -f
-+CC = cl
-+LD = cl
-+CTANGLE = ../ctangle
-+CTIE = ctie
-+AR = lib
-+
-+CAIROVER=cairo-1.12.8
-+#CAIROVER=cairo-1.12.12
-+
-+KPSEBUILDDIR = ../../kpathsea
-+KPSESRCDIR = ../..
-+KPSELIB=$(KPSEBUILDDIR)/libkpathsea.lib
-+PTEXENCLIB= ../../ptexenc/libptexenc.lib
-+CAIROLIB = ../../../libs/cairo/$(CAIROVER)/src/release/cairo-static.lib
-+PNGLIB = ../../../libs/libpng/libpng.lib
-+ZLIBLIB = ../../../libs/zlib/libz.lib
-+SYSLIBS = user32.lib advapi32.lib gdi32.lib
-+ADDLIBS = $(ZLIBLIB) $(PNGLIB) $(CAIROLIB) $(SYSLIBS)
-+
-+MPLIBBUILDDIR = .
-+MPLIBSRCDIR = .
-+MPLIB = libjmplib.lib
-+
-+# LDEBUG=-link /DEBUG
-+LDEBUG=
-+
-+# CFLAGS = -nologo -w -MT -Od -Zi -DMPXOUT=1 -DWIN32=1 -DMSVC=1 -DR_OK=4
-+
-+CFLAGS = -nologo -w -MT -O2 -DMPXOUT=1 -DWIN32=1 -DMSVC=1 -DR_OK=4 \
-+-Dstrcasecmp=stricmp -DHAVE_SNPRINTF=1 -D_CRT_SECURE_NO_DEPRECATE=1 \
-+-DCAIRO_WIN32_STATIC_BUILD=1 \
-+-DNO_KPSE_DLL=1 -I. -I../.. -I../../kpathsea \
-+-I$(PTEXENCDIR) -I.. \
-+-I../../../libs/cairo/$(CAIROVER)/src \
-+-I../../../libs/libpng
-+
-+OBJECTS = mpost.obj mpxout.obj
-+LIBOBJECTS = avl.obj mp.obj pngout.obj psout.obj svgout.obj tfmin.obj \
-+mpmath.obj mpmathdouble.obj mpstrings.obj
-+
-+pmpost.exe: $(MPLIB) $(OBJECTS) $(KPSELIB)
-+	$(LD) -Fe$@ $(OBJECTS) setargv.obj $(MPLIB) $(KPSELIB) $(PTEXENCLIB) $(ADDLIBS) $(LDEBUG)
-+
-+$(MPLIB): $(LIBOBJECTS)
-+	$(AR) -out:$@ $(LIBOBJECTS)
-+
-+.w.c:
-+	$(CTANGLE) $< $@
-+
-+mpost.c: mpost.w mpost.ch mpxout.c
-+	$(CTANGLE) mpost.w mpost.ch
-+
-+mpxout.c: mpxout.w mpxout-tot.ch
-+	$(CTANGLE) mpxout.w mpxout-tot.ch
-+
-+mpxout-tot.ch: mpxout.w mpxout.ch pdvitomp.ch
-+	$(CTIE) -c $@ mpxout.w mpxout.ch pdvitomp.ch
-+
-+mpmathdouble.c: mpmathdouble.w
-+	$(CTANGLE) mpmathdouble.w
-+
-+mp.c: mp.w mp-tot.ch pngout.c psout.c svgout.c tfmin.c mpmath.c \
-+mpmathdouble.c mpstrings.c
-+	$(CTANGLE) mp.w mp-tot.ch
-+
-+mp-tot.ch: mp.w mp.ch jmp.ch
-+	$(CTIE) -c $@ mp.w mp.ch jmp.ch
-+
-+tfmin.c: tfmin.w jfm.ch
-+	$(CTANGLE) tfmin.w jfm.ch
-+ 
-+mpstrings.c: mpstrings.w
-+	$(CTANGLE) mpstrings.w
-+
-+psout.c: psout.w psout-tot.ch mpstrings.c
-+	$(CTANGLE) psout.w psout-tot.ch 
-+
-+psout-tot.ch: psout.w psout.ch jmppsw.ch
-+	$(CTIE) -c $@ psout.w psout.ch jmppsw.ch
-+
-+svgout.c: svgout.w svgout.ch
-+	$(CTANGLE) svgout.w svgout.ch
-+
-+mpmath.c: mpmath.w
-+	$(CTANGLE) mpmath.w
-+
-+$(OBJECTS): %.obj: %.c
-+	$(CC) -c $(CFLAGS) $< -Fo$@
-+
-+$(LIBOBJECTS): %.obj: %.c
-+	$(CC) -c $(CFLAGS) $< -Fo$@
-+
-+clean:
-+	$(RM) *.obj mp.c mpxout.c psout.c psout.h mp*.h *.scn \
-+        *.idx *.toc *.pdf *.log mpmath.c mpost.c tfmin.c svgout.c \
-+        mpstrings.c *~ pngout.c mpmathdouble.c mp-tot.ch mpxout-tot.ch \
-+        psout-tot.ch *.pdb *.eps *.exp *.exe *.lib
-+
-+install: pmpost.exe
-+	cp -p pmpost.exe c:/usr/local/bin/
-+	cp -p pmpost.exe c:/usr/work/edrive/wk/dist/PTEX/bin/
---- /dev/null
-+++ source/texk/web2c/pmpostdir/am/pmpost.am
-@@ -0,0 +1,118 @@
+diff -udrN source.orig/texk/web2c/pmpostdir/am/pmpost.am source/texk/web2c/pmpostdir/am/pmpost.am
+--- source.orig/texk/web2c/pmpostdir/am/pmpost.am	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/am/pmpost.am	2013-08-09 16:25:17.307550842 +0900
+@@ -0,0 +1,116 @@
 +## texk/web2c/pmpostdir/am/pmpost.am: Makefile fragment for pMetaPost.
 +
 +CTIE = ./ctie
@@ -217,12 +95,10 @@
 +
 +# Creating several files: need stamp file and two rules with identical recipes
 +$(pmp_c_h): pmp-tangle
-+	@$(pmp_ctangle_sh) pmp.w pmp-tot.ch
-+pmp-tangle: ctangle$(EXEEXT) mplibdir/mp.w pmp-tot.ch tangle-sh
-+	@$(pmp_ctangle_sh) pmp.w pmp-tot.ch
-+pmp-tot.ch: ctie$(EXEEXT) mplibdir/mp.w pmpostdir/jmp.ch
++	@$(pmp_ctangle_sh) pmp.w jmp.ch
++pmp-tangle: ctangle$(EXEEXT) mplibdir/mp.w tangle-sh
 +	cat $(srcdir)/mplibdir/mp.w | $(pmp_sed) > pmp.w
-+	$(ctie) -c pmp-tot.ch pmp.w pmpostdir/jmp.ch
++	@$(pmp_ctangle_sh) pmp.w jmp.ch
 +
 +$(pmpmath_c_h): pmpmath-tangle
 +	@$(pmp_ctangle_sh) pmpmath
@@ -277,8 +153,9 @@
 +$(pmpost_OBJECTS): $(nodist_pmpost_SOURCES)
 +
 +DISTCLEANFILES += $(nodist_pmpost_SOURCES)
---- /dev/null
-+++ source/texk/web2c/pmpostdir/jfm.ch
+diff -udrN source.orig/texk/web2c/pmpostdir/jfm.ch source/texk/web2c/pmpostdir/jfm.ch
+--- source.orig/texk/web2c/pmpostdir/jfm.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/jfm.ch	2013-08-09 16:25:17.307550842 +0900
 @@ -0,0 +1,104 @@
 +@x
 +#include <w2c/config.h>
@@ -384,8 +261,9 @@
 +  if(fulln) mp_xfree(fulln);
 +}
 +@z
---- /dev/null
-+++ source/texk/web2c/pmpostdir/jmp.ch
+diff -udrN source.orig/texk/web2c/pmpostdir/jmp.ch source/texk/web2c/pmpostdir/jmp.ch
+--- source.orig/texk/web2c/pmpostdir/jmp.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/jmp.ch	2013-08-09 16:25:17.307550842 +0900
 @@ -0,0 +1,342 @@
 +% jMetaPost change file for MetaPost
 +%
@@ -729,9 +607,10 @@
 +}
 +@* Debugging.
 +@z
---- /dev/null
-+++ source/texk/web2c/pmpostdir/jmppsw.ch
-@@ -0,0 +1,74 @@
+diff -udrN source.orig/texk/web2c/pmpostdir/jmppsw.ch source/texk/web2c/pmpostdir/jmppsw.ch
+--- source.orig/texk/web2c/pmpostdir/jmppsw.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/jmppsw.ch	2013-08-09 16:25:17.307550842 +0900
+@@ -0,0 +1,72 @@
 +%
 +%
 +% change file of psout.w for jMetaPost (CWEB version)
@@ -740,11 +619,9 @@
 +%
 +
 +@x
-+#include "pmppsout.h" /* internal header */
-+#include "pmpmath.h" /* internal header */
++#include <math.h>
 +@y
-+#include "pmppsout.h" /* internal header */
-+#include "pmpmath.h" /* internal header */
++#include <math.h>
 +#include <ptexenc/ptexenc.h>
 +@z
 +
@@ -806,8 +683,9 @@
 +           mp_ps_string_out(mp, gr_text_p(p),gr_text_l(p));
 +        mp_ps_name_out(mp, mp->font_name[gr_font_n(p)],false);
 +@z
---- /dev/null
-+++ source/texk/web2c/pmpostdir/mpost.ch
+diff -udrN source.orig/texk/web2c/pmpostdir/mpost.ch source/texk/web2c/pmpostdir/mpost.ch
+--- source.orig/texk/web2c/pmpostdir/mpost.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/mpost.ch	2013-08-09 16:25:17.307550842 +0900
 @@ -0,0 +1,289 @@
 +@x
 +#include <kpathsea/kpathsea.h>
@@ -1098,8 +976,9 @@
 +@y
 +  if(putenv(xstrdup("engine=pmpost")))
 +@z
---- /dev/null
-+++ source/texk/web2c/pmpostdir/mpxout.ch
+diff -udrN source.orig/texk/web2c/pmpostdir/mpxout.ch source/texk/web2c/pmpostdir/mpxout.ch
+--- source.orig/texk/web2c/pmpostdir/mpxout.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/mpxout.ch	2013-08-09 16:25:17.307550842 +0900
 @@ -0,0 +1,8 @@
 +@x
 +#include <process.h>
@@ -1109,13 +988,14 @@
 +typedef int boolean;
 +typedef int integer;
 +@z
---- /dev/null
-+++ source/texk/web2c/pmpostdir/pdvitomp.ch
+diff -udrN source.orig/texk/web2c/pmpostdir/pdvitomp.ch source/texk/web2c/pmpostdir/pdvitomp.ch
+--- source.orig/texk/web2c/pmpostdir/pdvitomp.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/pdvitomp.ch	2013-08-09 16:25:17.307550842 +0900
 @@ -0,0 +1,492 @@
 +@x
-+#include "pmpxout.h"
++#include "avl.h"
 +@y
-+#include "pmpxout.h"
++#include "avl.h"
 +#include <ptexenc/ptexenc.h>
 +@z
 +
@@ -1604,8 +1484,9 @@
 +  mpx->print_col++;
 +}
 +@z
---- /dev/null
-+++ source/texk/web2c/pmpostdir/psout.ch
+diff -udrN source.orig/texk/web2c/pmpostdir/psout.ch source/texk/web2c/pmpostdir/psout.ch
+--- source.orig/texk/web2c/pmpostdir/psout.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/psout.ch	2013-08-09 16:25:17.307550842 +0900
 @@ -0,0 +1,42 @@
 +@x
 +integer ps_offset;
@@ -1649,9 +1530,17 @@
 +    fm_read_info (mp);
 +  }
 +@z
---- /dev/null
-+++ source/texk/web2c/pmpostdir/svgout.ch
-@@ -0,0 +1,59 @@
+diff -udrN source.orig/texk/web2c/pmpostdir/svgout.ch source/texk/web2c/pmpostdir/svgout.ch
+--- source.orig/texk/web2c/pmpostdir/svgout.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/svgout.ch	2013-08-09 16:25:17.307550842 +0900
+@@ -0,0 +1,66 @@
++@x
++#include <math.h>
++@y
++#include <math.h>
++#include <ptexenc/ptexenc.h>
++@z
++
 +@x 
 +@<Character |k| is not allowed in SVG output@>=
 + (k=='&')||(k=='>')||(k=='<')

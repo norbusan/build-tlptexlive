@@ -119,7 +119,7 @@ if [ $DO_NOPREP = 0 ] ; then
       cp -a "$SOURCE" $tempdir/source-reautoconf
       cd $tempdir/source-reautoconf
       echo "Running reautoconf"
-      TL_AUTOMAKE=automake-1.13 TL_ACLOCAL=aclocal-1.13 ./reautoconf
+      TL_AUTOMAKE=automake-1.14 TL_ACLOCAL=aclocal-1.14 ./reautoconf
       echo "Updating reautoconf-stuff patch"
       diff -urN -x 'autom4te.cache' "$SOURCE" $tempdir/source-reautoconf > $PATCHES/patches/reautoconf-stuff
       cd "$SOURCE"
@@ -158,6 +158,7 @@ TL_CONFIGURE_ARGS="	\
 	--enable-euptex		\
 	--enable-omfonts	\
 	--enable-pmp		\
+	--enable-upmp		\
 	--enable-makejvf	\
 	--enable-dvipdfmx	\
 	--enable-dvipsk		\
@@ -209,9 +210,9 @@ arch=`/bin/ls`
 
 zip -r $TARGET/binaries.zip 	\
 	*/afm2tfm$EXT		\
-	*/dvips$EXT		\
 	*/dvi2tty$EXT		\
 	*/dvipdfmx$EXT		\
+	*/dvips$EXT		\
 	*/eptex$EXT		\
 	*/euptex$EXT		\
 	*/makejvf$EXT		\
@@ -226,6 +227,7 @@ zip -r $TARGET/binaries.zip 	\
 	*/pxdvi-xaw$EXT		\
 	*/upbibtex$EXT		\
 	*/updvitype$EXT		\
+	*/upmpost$EXT		\
 	*/uppltotf$EXT		\
 	*/uptex$EXT		\
 	*/uptftopl$EXT		\
