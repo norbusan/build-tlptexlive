@@ -371,7 +371,7 @@ diff -udrN source.orig/texk/web2c/pmpostdir/jmp.ch source/texk/web2c/pmpostdir/j
 +    exit (1);
 +  }
 +  if (i == '\r') {
-+    while ((i = getc (f)) == EOF && errno == EINTR)
++    while ((i = getc ((FILE *)f)) == EOF && errno == EINTR)
 +      ;
 +    if (i != '\n')
 +      ungetc (i, f);
