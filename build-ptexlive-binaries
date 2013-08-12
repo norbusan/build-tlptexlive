@@ -161,6 +161,7 @@ TL_CONFIGURE_ARGS="	\
 	--enable-upmp		\
 	--enable-makejvf	\
 	--enable-dvipdfmx	\
+	--enable-dvipdfm-x	\
 	--enable-dvipsk		\
 	--enable-tetex		\
 	--enable-texk		\
@@ -208,6 +209,10 @@ arch=`/bin/ls`
 # e-pTeX: Update to e-pTeX 130605 (r30897).
 #   cf. http://oku.edu.mie-u.ac.jp/tex/mod/forum/discuss.php?d=1024
 
+# disabled for now, until someone updates the patches
+#	*/pxdvi$EXT		\
+#	*/pxdvi-xaw$EXT		\
+	
 zip -r $TARGET/binaries.zip 	\
 	*/afm2tfm$EXT		\
 	*/dvi2tty$EXT		\
@@ -223,8 +228,6 @@ zip -r $TARGET/binaries.zip 	\
 	*/ppltotf$EXT		\
 	*/ptex$EXT		\
 	*/ptftopl$EXT		\
-	*/pxdvi$EXT		\
-	*/pxdvi-xaw$EXT		\
 	*/upbibtex$EXT		\
 	*/updvitype$EXT		\
 	*/upmpost$EXT		\
