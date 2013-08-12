@@ -185,14 +185,13 @@ diff -udrN source.orig/texk/web2c/upmpostdir/am/upmpost.am source/texk/web2c/upm
 diff -udrN source.orig/texk/web2c/upmpostdir/updvitomp.ch source/texk/web2c/upmpostdir/updvitomp.ch
 --- source.orig/texk/web2c/upmpostdir/updvitomp.ch	1970-01-01 09:00:00.000000000 +0900
 +++ source/texk/web2c/upmpostdir/updvitomp.ch	2013-08-09 16:27:58.979548802 +0900
-@@ -0,0 +1,62 @@
+@@ -0,0 +1,61 @@
 +@x
 +@d virtual_space 1000000 /* maximum total bytes of typesetting commands for virtual fonts */
 +@d max_fonts 1000 /* maximum number of distinct fonts per \.{DVI} file */
 +@d max_fnums 3000 /* maximum number of fonts plus fonts local to virtual fonts */
 +@d max_widths 512000 /* maximum number of different characters among all fonts */
 +@y
-+@d max_widths 512000 /* maximum number of different characters among all fonts */
 +@d virtual_space 2000000 /* maximum total bytes of typesetting commands for virtual fonts */
 +@d max_fonts 1000 /* maximum number of distinct fonts per \.{DVI} file */
 +@d max_fnums 3000 /* maximum number of fonts plus fonts local to virtual fonts */
@@ -316,23 +315,23 @@ diff -udrN source.orig/texk/web2c/upmpostdir/upjmppsw.ch source/texk/web2c/upmpo
 +@z
 +
 +@x
-+void mp_ps_kanji_string_out (MP mp, unsigned char *s)
++void mp_ps_kanji_string_out (MP mp, const char *s)
 +{
-+int i, len;
-+int c;
++int i, c;
++size_t len;
 +
 +len = strlen(s);
 +i=0;
 +mp_ps_print(mp, "<");
 +while (i<len)
 +  { if ( mp->ps->ps_offset+5>mp->max_print_line ) mp_ps_print_ln(mp);
-+  c=toDVI(fromBUFF(s, i+2, i));
++  c=toDVI(fromBUFF((ASCII_code*)s, i+2, i));
 +  i=i+2;
 +@y
-+void mp_ps_kanji_string_out (MP mp, unsigned char *s)
++void mp_ps_kanji_string_out (MP mp, const char *s)
 +{
-+int i, len;
-+int c, cx;
++int i, c, cx;
++size_t len;
 +
 +len = strlen(s);
 +i=0;
@@ -340,9 +339,9 @@ diff -udrN source.orig/texk/web2c/upmpostdir/upjmppsw.ch source/texk/web2c/upmpo
 +while (i<len) {
 +  if ( mp->ps->ps_offset+5>mp->max_print_line )
 +    mp_ps_print_ln(mp);
-+  c=toDVI(fromBUFF(s, len, i));
-+  i=i+multistrlen(s, len, i);
-+  if (isinternalUPTEX && c>65535) {
++  c=toDVI(fromBUFF((ASCII_code*)s, len, i));
++  i=i+multistrlen((ASCII_code*)s, len, i);
++  if (isinternalUPTEX() && c>65535) {
 +    cx=UTF32toUTF16HS(c); /* High surrogate */
 +    mp_hex_digit_out(mp, Hi(cx) / 16);
 +    mp_hex_digit_out(mp, Hi(cx) % 16);

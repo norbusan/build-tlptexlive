@@ -1,19 +1,7 @@
----
- texk/kpathsea/texmf.cnf           |    1 
- texk/web2c/Makefile.am            |    3 
- texk/web2c/ac/web2c.ac            |    1 
- texk/web2c/configure.ac           |    1 
- texk/web2c/pmplibdir/am/pmpost.am |   78 ++++++
- texk/web2c/pmplibdir/jfm.ch       |  110 ++++++++
- texk/web2c/pmplibdir/jmp.ch       |  283 +++++++++++++++++++++
- texk/web2c/pmplibdir/jmppsw.ch    |   76 +++++
- texk/web2c/pmplibdir/pdvitomp.ch  |  494 ++++++++++++++++++++++++++++++++++++++
- texk/web2c/pmplibdir/pmpost.ch    |  234 ++++++++++++++++++
- 10 files changed, 1281 insertions(+)
-
---- source.orig/texk/kpathsea/texmf.cnf
-+++ source/texk/kpathsea/texmf.cnf
-@@ -627,6 +627,7 @@
+diff -udrN source.orig/texk/kpathsea/texmf.cnf source/texk/kpathsea/texmf.cnf
+--- source.orig/texk/kpathsea/texmf.cnf	2013-08-09 16:21:36.819553625 +0900
++++ source/texk/kpathsea/texmf.cnf	2013-08-09 16:25:17.307550842 +0900
+@@ -646,6 +646,7 @@
  % Used by makempx to run TeX.  We use "etex" because MetaPost is
  % expecting DVI, and not "tex" because we want first line parsing.
  TEX = etex
@@ -21,128 +9,158 @@
  
  % These variables specify the external program called for the
  % interactive `e' option.  %d is replaced by the line number and %s by
---- source.orig/texk/web2c/Makefile.am
-+++ source/texk/web2c/Makefile.am
-@@ -177,6 +177,9 @@
+diff -udrN source.orig/texk/web2c/Makefile.am source/texk/web2c/Makefile.am
+--- source.orig/texk/web2c/Makefile.am	2013-08-09 16:21:36.811553625 +0900
++++ source/texk/web2c/Makefile.am	2013-08-09 16:25:17.307550842 +0900
+@@ -181,6 +181,9 @@
  ## MetaPost
  include $(srcdir)/mplibdir/am/mplib.am
  
 +## pMetaPost
-+include $(srcdir)/pmplibdir/am/pmpost.am
++include $(srcdir)/pmpostdir/am/pmpost.am
 +
  ## libmplib, used by MetaPost and luaTeX
  include $(srcdir)/mplibdir/am/libmplib.am
  
---- source.orig/texk/web2c/ac/web2c.ac
-+++ source/texk/web2c/ac/web2c.ac
+diff -udrN source.orig/texk/web2c/ac/web2c.ac source/texk/web2c/ac/web2c.ac
+--- source.orig/texk/web2c/ac/web2c.ac	2013-08-09 16:21:36.799553625 +0900
++++ source/texk/web2c/ac/web2c.ac	2013-08-09 16:25:17.307550842 +0900
 @@ -41,6 +41,7 @@
  [[pdftex], [yes], [yes], [pdfTeX],  [xpdf libpng]],
- [[luatex], [yes], [],    [luaTeX],  [poppler libpng zziplib]],
- [[mp],     [yes], [],    [MetaPost],[libpng]],
-+[[pmp],    [yes], [],    [pMetaPost],[libpng]],
- [[xetex],  [yes], [yes], [XeTeX],   [poppler libpng freetype2 icu teckit graphite2 harfbuzz]],
+ [[luatex], [yes], [],    [luaTeX],  [poppler cairo libpng zziplib lua52]],
+ [[mp],     [yes], [],    [MetaPost],[cairo libpng]],
++[[pmp],    [yes], [],    [pMetaPost], [cairo libpng ptexenc]],
+ [[xetex],  [yes], [yes], [XeTeX],   [poppler libpng freetype2 teckit harfbuzz]],
  ])[]dnl
  m4_foreach([Kpse_Prog], [kpse_tex_progs],
---- source.orig/texk/web2c/configure.ac
-+++ source/texk/web2c/configure.ac
-@@ -199,6 +199,7 @@
-                      [KPSE_MFWIN_DEFINE(Kpse_Win)])])[]dnl
- 
- AM_CONDITIONAL([MP], [test "x$enable_mp" != xno])
-+AM_CONDITIONAL([PMP], [test "x$enable_pmp" != xno])
- 
- AM_CONDITIONAL([WEB], [test "x$enable_web_progs" != xno])
- 
---- /dev/null
-+++ source/texk/web2c/pmplibdir/am/pmpost.am
-@@ -0,0 +1,78 @@
-+## texk/web2c/pmplibdir/am/pmpost.am: Makefile fragment for MetaPost.
-+##
-+## Copyright (C) 2009-2011 Peter Breitenlohner <tex-live@tug.org>
-+## You may freely use, modify and/or distribute this file.
+diff -udrN source.orig/texk/web2c/pmpostdir/am/pmpost.am source/texk/web2c/pmpostdir/am/pmpost.am
+--- source.orig/texk/web2c/pmpostdir/am/pmpost.am	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/am/pmpost.am	2013-08-09 16:25:17.307550842 +0900
+@@ -0,0 +1,116 @@
++## texk/web2c/pmpostdir/am/pmpost.am: Makefile fragment for pMetaPost.
 +
-+## pMetaPost
-+##
++CTIE = ./ctie
++ctie = $(ctie_silent)CWEBINPUTS=.:$(srcdir) $(buildenv) $(CTIE)
++ctie_silent = $(ctie_silent_$(V))
++ctie_silent_ = $(ctie_silent_$(AM_DEFAULT_VERBOSITY))
++ctie_silent_0 = @echo "  CTIE    " $@; $(SHELL) ./silent-sh $@ #
++ctie_silent_1 = 
++
++
 +if PMP
 +bin_PROGRAMS += pmpost
 +bin_links += pmpost$(EXEEXT):pdvitomp
 +endif PMP
-+EXTRA_PROGRAMS += pmpost
++EXTRA_PROGRAMS +=pmpost
 +
-+pmpost_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/pmplibdir -I$(srcdir)/mplibdir $(PTEXENC_INCLUDES)
-+pmpost_LDADD = $(KPATHSEA_LIBS) -lm $(PTEXENC_LIBS)
++pmpost_CPPFLAGS = $(CAIRO_INCLUDES) $(PIXMAN_INCLUDES) $(AM_CPPFLAGS) $(ZLIB_INCLUDES) $(LIBPNG_INCLUDES) -I$(srcdir)/mplibdir  -I$(srcdir)/pmpostdir $(PTEXENC_INCLUDES)
++pmpost_LDADD = $(KPATHSEA_LIBS) $(CAIRO_LIBS) $(PIXMAN_LIBS) $(LIBPNG_LIBS) $(ZLIB_LIBS) -lm $(PTEXENC_LIBS)
 +
 +
 +.PHONY: install-pmpost-links uninstall-pmpost-links
 +
 +# Creating one file: just one rule
-+pmp_ctangle = CWEBINPUTS=.:$(srcdir)/pmplibdir $(ctangle)
++pmp_ctangle = $(ctangle_silent)CWEBINPUTS=.:$(srcdir)/pmpostdir $(ctangle)
 +# Creating several files: need stamp file and two rules with identical recipes
-+pmp_ctangle_sh = CWEBINPUTS=.:$(srcdir)/pmplibdir $(SHELL) ./tangle-sh $@ $(CTANGLE)
++pmp_ctangle_sh = CWEBINPUTS=.:$(srcdir)/pmpostdir AM_V_P=$(AM_V_P) $(SHELL) ./tangle-sh $@ $(CTANGLE)
 +
 +## pMetaPost C sources
 +pmpost_SOURCES = mplibdir/avl.h mplibdir/avl.c
-+nodist_pmpost_SOURCES = pmpost.c $(pmpxout_c_h) $(pmp_c_h) $(pmpmath_c_h) $(ppsout_c_h) $(psvgout_c_h) ptfmin.c
-+pmpxout_c_h = pmpxout.c pmpxout.h
++nodist_pmpost_SOURCES = ptfmin.c $(pmp_c_h) $(pmpmath_c_h) $(pmpmathdouble_c_h) $(ppsout_c_h) $(psvgout_c_h) $(ppngout_c_h) $(pmpstrings_c_h) pmpost.c  $(pmpxout_c_h)
 +pmp_c_h =  pmp.c pmplib.h pmpmp.h
 +pmpmath_c_h = pmpmath.h pmpmath.c
++pmpmathdouble_c_h = pmpmathdouble.h pmpmathdouble.c
++pmpstrings_c_h = pmpstrings.h pmpstrings.c
 +ppsout_c_h = pmppsout.h ppsout.c pmplibps.h
 +psvgout_c_h = pmplibsvg.h pmpsvgout.h psvgout.c
-+pmp_sed = "s/mpxout\\.h/pmpxout.h/;s/mpmp\\.h/pmpmp.h/;s/mplib\\.h/pmplib.h/;s/mppsout\\.h/pmppsout.h/;s/mplibps\\.h/pmplibps.h/;s/mplibsvg\\.h/pmplibsvg.h/;s/mpsvgout\\.h/pmpsvgout.h/;s/mpmath\\.h/pmpmath.h/"
++ppngout_c_h = pmplibpng.h pmppngout.h ppngout.c
++pmpxout_c_h = pmpxout.c pmpxout.h
 +
++# sed script
++pmp_sed_main = "s/mpxout\\.h/pmpxout.h/;s/mpmp\\.h/pmpmp.h/;s/mplib\\.h/pmplib.h/;s/mpstrings\\.h/pmpstrings.h/"
++pmp_sed_math = "s/mpmath\\.h/pmpmath.h/;s/mpmathdouble\\.h/pmpmathdouble.h/"
++pmp_sed_ps   = "s/mplibps\\.h/pmplibps.h/;s/mppsout\\.h/pmppsout.h/"
++pmp_sed_svg  = "s/mplibsvg\\.h/pmplibsvg.h/;s/mpsvgout\\.h/pmpsvgout.h/"
++pmp_sed_png  = "s/mplibpng\\.h/pmplibpng.h/;s/mppngout\\.h/pmppngout.h/"
++pmp_sed = sed -e $(pmp_sed_main) -e $(pmp_sed_math) -e $(pmp_sed_ps) -e $(pmp_sed_svg) -e $(pmp_sed_png)
++
++# Creating one file: just one rule
 +ptfmin.c: ctangle$(EXEEXT) mplibdir/tfmin.w
-+	cat $(srcdir)/mplibdir/tfmin.w | sed $(pmp_sed) > ptfmin.w
++	cat $(srcdir)/mplibdir/tfmin.w | $(pmp_sed) > ptfmin.w
 +	$(pmp_ctangle) ptfmin.w jfm.ch
 +pmpost.c: ctangle$(EXEEXT) mplibdir/mpost.w
-+	cat $(srcdir)/mplibdir/mpost.w | sed $(pmp_sed) > pmpost.w
-+	$(pmp_ctangle) pmpost.w pmpost.ch
++	cat $(srcdir)/mplibdir/mpost.w | $(pmp_sed) > pmpost.w
++	$(pmp_ctangle) pmpost.w mpost.ch
++
++
++# Creating several files: need stamp file and two rules with identical recipes
 +$(pmp_c_h): pmp-tangle
 +	@$(pmp_ctangle_sh) pmp.w jmp.ch
-+$(ppsout_c_h): ppsout-tangle
-+	@$(pmp_ctangle_sh) ppsout.w jmppsw.ch
-+$(pmpxout_c_h): pmpxout-tangle
-+	@$(pmp_ctangle_sh) pmpxout pdvitomp.ch
 +pmp-tangle: ctangle$(EXEEXT) mplibdir/mp.w tangle-sh
-+	cat $(srcdir)/mplibdir/mp.w | sed $(pmp_sed) > pmp.w
++	cat $(srcdir)/mplibdir/mp.w | $(pmp_sed) > pmp.w
 +	@$(pmp_ctangle_sh) pmp.w jmp.ch
-+ppsout-tangle: ctangle$(EXEEXT) mplibdir/psout.w tangle-sh
-+	cat $(srcdir)/mplibdir/psout.w | sed $(pmp_sed) > ppsout.w
-+	@$(pmp_ctangle_sh) ppsout.w jmppsw.ch
-+pmpxout-tangle: ctangle$(EXEEXT) mplibdir/mpxout.w tangle-sh
-+	cat $(srcdir)/mplibdir/mpxout.w | sed $(pmp_sed) > pmpxout.w
-+	@$(pmp_ctangle_sh) pmpxout pdvitomp.ch
 +
-+$(psvgout_c_h): psvgout-tangle
-+	@$(pmp_ctangle_sh) psvgout
-+psvgout-tangle: ctangle$(EXEEXT) mplibdir/svgout.w tangle-sh
-+	cat $(srcdir)/mplibdir/svgout.w | sed $(pmp_sed) > psvgout.w
-+	@$(pmp_ctangle_sh) psvgout
 +$(pmpmath_c_h): pmpmath-tangle
 +	@$(pmp_ctangle_sh) pmpmath
 +pmpmath-tangle: ctangle$(EXEEXT) mplibdir/mpmath.w tangle-sh
-+	cat $(srcdir)/mplibdir/mpmath.w | sed $(pmp_sed) > pmpmath.w
++	cat $(srcdir)/mplibdir/mpmath.w | $(pmp_sed) > pmpmath.w
 +	@$(pmp_ctangle_sh) pmpmath
 +
++$(pmpmathdouble_c_h): pmpmathdouble-tangle
++	@$(pmp_ctangle_sh) pmpmathdouble
++pmpmathdouble-tangle: ctangle$(EXEEXT) mplibdir/mpmathdouble.w tangle-sh
++	cat $(srcdir)/mplibdir/mpmathdouble.w | $(pmp_sed) > pmpmathdouble.w
++	@$(pmp_ctangle_sh) pmpmathdouble
++
++$(pmpstrings_c_h): pmpstrings-tangle
++	@$(pmp_ctangle_sh) pmpstrings
++pmpstrings-tangle: ctangle$(EXEEXT) mplibdir/mpstrings.w tangle-sh
++	cat $(srcdir)/mplibdir/mpstrings.w | $(pmp_sed) > pmpstrings.w
++	@$(pmp_ctangle_sh) pmpstrings
++
++$(ppsout_c_h): ppsout-tangle
++	@$(pmp_ctangle_sh) ppsout.w ppsout-tot.ch
++ppsout-tangle: ctangle$(EXEEXT) mplibdir/psout.w ppsout-tot.ch tangle-sh
++	@$(pmp_ctangle_sh) ppsout.w ppsout-tot.ch
++ppsout-tot.ch: ctie$(EXEEXT) mplibdir/psout.w pmpostdir/psout.ch pmpostdir/jmppsw.ch
++	cat $(srcdir)/mplibdir/psout.w | $(pmp_sed) > ppsout.w
++	$(ctie) -c ppsout-tot.ch ppsout.w pmpostdir/psout.ch pmpostdir/jmppsw.ch
++
++$(psvgout_c_h): psvgout-tangle
++	@$(pmp_ctangle_sh) psvgout svgout.ch
++psvgout-tangle: ctangle$(EXEEXT) mplibdir/svgout.w pmpostdir/svgout.ch tangle-sh
++	cat $(srcdir)/mplibdir/svgout.w | $(pmp_sed) > psvgout.w
++	@$(pmp_ctangle_sh) psvgout svgout.ch
++$(ppngout_c_h): ppngout-tangle
++	@$(pmp_ctangle_sh) ppngout
++ppngout-tangle: ctangle$(EXEEXT) mplibdir/pngout.w tangle-sh
++	cat $(srcdir)/mplibdir/pngout.w | $(pmp_sed) > ppngout.w
++	@$(pmp_ctangle_sh) ppngout
++
++$(pmpxout_c_h): pmpxout-tangle
++	@$(pmp_ctangle_sh) pmpxout pmpxout-tot.ch
++pmpxout-tangle: ctangle$(EXEEXT) mplibdir/mpxout.w pmpxout-tot.ch tangle-sh
++	@$(pmp_ctangle_sh) pmpxout pmpxout-tot.ch
++pmpxout-tot.ch: ctie$(EXEEXT) mplibdir/mpxout.w pmpostdir/mpxout.ch pmpostdir/pdvitomp.ch
++	cat $(srcdir)/mplibdir/mpxout.w | $(pmp_sed) > pmpxout.w
++	$(ctie) -c pmpxout-tot.ch pmpxout.w pmpostdir/mpxout.ch pmpostdir/pdvitomp.ch
 +
 +## pMetaPost CWeb sources
-+pmpost_web = mplibdir/mpost.w mplibdir/mpxout.w 
-+pmpost_web += mplibdir/mp.w mplibdir/psout.w mplibdir/svgout.w 
-+pmpost_web += mplibdir/mpmath.w mplibdir/tfmin.w
-+
++pmpost_web = mplibdir/mpost.w mplibdir/mpxout.w
++pmpost_web += mplibdir/mp.w mplibdir/psout.w mplibdir/svgout.w mplibdir/pngout.w
++pmpost_web += mplibdir/mpmath.w mplibdir/mpmathdouble.w mplibdir/mpstrings.w mplibdir/tfmin.w
 +
 +$(pmpost_OBJECTS): $(nodist_pmpost_SOURCES)
 +
 +DISTCLEANFILES += $(nodist_pmpost_SOURCES)
-+
---- /dev/null
-+++ source/texk/web2c/pmplibdir/jfm.ch
-@@ -0,0 +1,110 @@
+diff -udrN source.orig/texk/web2c/pmpostdir/jfm.ch source/texk/web2c/pmpostdir/jfm.ch
+--- source.orig/texk/web2c/pmpostdir/jfm.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/jfm.ch	2013-08-09 16:25:17.307550842 +0900
+@@ -0,0 +1,104 @@
 +@x
 +#include <w2c/config.h>
 +@y
-+#ifdef WIN32
 +#include <kpathsea/kpathsea.h>
-+#endif
 +#include <w2c/config.h>
 +@z
 +
@@ -236,20 +254,17 @@
 +mp->tfm_infile = (mp->open_file)(mp, mp->name_of_file, "r",mp_filetype_metrics);
 +@y
 +mp_pack_file_name(mp, mp->cur_name,mp->cur_area,mp->cur_ext);
-+#ifdef WIN32
 +{
 +  char *fulln;
 +  fulln = kpse_find_file(fname, kpse_tfm_format, 1);
 +  mp->tfm_infile = (mp->open_file)(mp, fulln, "r",mp_filetype_metrics);
 +  if(fulln) mp_xfree(fulln);
 +}
-+#else
-+mp->tfm_infile = (mp->open_file)(mp, mp->name_of_file, "r",mp_filetype_metrics);
-+#endif
 +@z
---- /dev/null
-+++ source/texk/web2c/pmplibdir/jmp.ch
-@@ -0,0 +1,283 @@
+diff -udrN source.orig/texk/web2c/pmpostdir/jmp.ch source/texk/web2c/pmpostdir/jmp.ch
+--- source.orig/texk/web2c/pmpostdir/jmp.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/jmp.ch	2013-08-09 16:25:17.307550842 +0900
+@@ -0,0 +1,342 @@
 +% jMetaPost change file for MetaPost
 +%
 +% written by Michio Matsuyama <fwhw5892@mb.infoweb.ne.jp>
@@ -258,22 +273,22 @@
 +% $Id: jmp.ch,v 1.42 2000/03/20 02:55:50 hideyuki Exp $
 +
 +%
++%
 +% change file of mp.w for pMetaPost (CWEB version)
 +% Akira Kakuto (translated the WEB version)
 +%
-+% rewrited for TeX Live 2011
-+% Hironori Kitagawa <h_kitagawa2001@yahoo.co.jp>
++%
 +
 +@x
-+@d default_banner "This is MetaPost, Version 1.504" /* printed when \MP\ starts */
++@d default_banner "This is MetaPost, Version 1.803" /* printed when \MP\ starts */
 +@y
-+@d default_banner "This is pMetaPost, Version 1.504-0.04" /* printed when \MP\ starts */
++@d default_banner "This is pMetaPost, Version 1.803-0.04" /* printed when \MP\ starts */
 +@z
 +
 +@x
-+#define metapost_version "1.504"
++#define metapost_version "1.803"
 +@y
-+#define metapost_version "1.504-0.04"
++#define metapost_version "1.803-0.04"
 +@z
 +
 +@x
@@ -282,15 +297,43 @@
 +@y
 +#  include <unistd.h>           /* for access */
 +#endif
-+#include <ptexenc/ptexenc.h>
++#include <kpathsea/config.h>
 +#include <kpathsea/kpathsea.h>
++#include <ptexenc/ptexenc.h>
 +#include <errno.h>
++@z
++
++@x
++void mp_close_file (MP mp, void *f) {
++  (void) mp;
++  if (f != NULL)
++    fclose ((FILE *) f);
++@y
++void mp_close_file (MP mp, void *f) {
++  (void) mp;
++#ifdef WIN32
++  if (f != NULL) {
++    clear_infile_enc((FILE *)f);
++    fclose ((FILE *) f);
++  }
++#else
++  if (f != NULL)
++    fclose ((FILE *) f);
++#endif
 +@z
 +
 +@x
 +mp->buf_size = 200;
 +@y
-+mp->buf_size = atoi(kpse_var_value("buf_size"));
++{
++  char *kpse_buf = kpse_var_value("buf_size");
++  if(kpse_buf) {
++    mp->buf_size = atoi(kpse_buf);
++    free(kpse_buf);
++  } else {
++    mp->buf_size = 500000;
++  }
++}
 +@z
 +
 +@x
@@ -328,7 +371,7 @@
 +    exit (1);
 +  }
 +  if (i == '\r') {
-+    while ((i = fgetc (f)) == EOF && errno == EINTR)
++    while ((i = getc ((FILE *)f)) == EOF && errno == EINTR)
 +      ;
 +    if (i != '\n')
 +      ungetc (i, f);
@@ -378,11 +421,6 @@
 +rectangle that needs to be transformed according to the transformation
 +parameters stored in the text node.
 +
-+@<Other cases for updating the bounding box...@>=
-+case mp_text_node_type:
-+x1 = mp_take_scaled (mp, txx_val (p), width_val (p));
-+y0 = mp_take_scaled (mp, txy_val (p), -depth_val (p));
-+y1 = mp_take_scaled (mp, txy_val (p), height_val (p));
 +@y
 +@ The height width and depth information stored in a text node determines a
 +rectangle that needs to be transformed according to the transformation
@@ -394,33 +432,67 @@
 +@d tate_jfm_id   9  /* `tate-kumi' fonts */
 +@d font_jfm_p(A) (mp->font_id[(A)]!=0)
 +
-+@<Other cases for updating the bounding box...@>=
-+case mp_text_node_type:
-+  if ( mp->font_id[mp_font_n(p)]!=tate_jfm_id ) {
-+    x1 = mp_take_scaled(mp, txx_val(p), width_val(p));
-+    y0 = mp_take_scaled(mp, txy_val(p), -depth_val(p));
-+    y1 = mp_take_scaled(mp, txy_val(p), height_val(p));
-+  } else {
-+    x1 = mp_take_scaled(mp, txy_val(p), -width_val(p));
-+    y0 = mp_take_scaled(mp, txx_val(p), -depth_val(p));
-+    y1 = mp_take_scaled(mp, txx_val(p), height_val(p));
-+  };
 +@z
 +
 +@x
-+x1 = mp_take_scaled (mp, tyx_val (p), width_val (p));
-+y0 = mp_take_scaled (mp, tyy_val (p), -depth_val (p));
-+y1 = mp_take_scaled (mp, tyy_val (p), height_val (p));
++  mp_number x0a, y0a, x1a, y1a, arg1;
++  mp_text_node p0 = (mp_text_node)p;
++  new_number (x0a);
++  new_number (x1a);
++  new_number (y0a);
++  new_number (y1a);
++  new_number (arg1);
++  number_clone (arg1, p0->depth);
++  number_negate (arg1);
++  take_scaled (x1a, p0->txx, p0->width);
++  take_scaled (y0a, p0->txy, arg1);
++  take_scaled (y1a, p0->txy, p0->height);
 +@y
-+if ( mp->font_id[mp_font_n(p)]!=tate_jfm_id ) {
-+  x1 = mp_take_scaled(mp, tyx_val(p), width_val(p));
-+  y0 = mp_take_scaled(mp, tyy_val(p), -depth_val(p));
-+  y1 = mp_take_scaled(mp, tyy_val(p),height_val(p));
-+} else {
-+  x1 = mp_take_scaled(mp, tyy_val(p), -width_val(p));
-+  y0 = mp_take_scaled(mp, tyx_val(p), -depth_val(p));
-+  y1 = mp_take_scaled(mp, tyx_val(p), height_val(p));
-+};
++  mp_number x0a, y0a, x1a, y1a, arg1, arg2;
++  mp_text_node p0 = (mp_text_node)p;
++  new_number (x0a);
++  new_number (x1a);
++  new_number (y0a);
++  new_number (y1a);
++  new_number (arg1);
++  new_number (arg2);
++  number_clone (arg1, p0->depth);
++  number_negate (arg1);
++  number_clone (arg2, p0->width);
++  number_negate (arg2);
++  if ( mp->font_id[mp_font_n(p)]!=tate_jfm_id ) {
++     take_scaled (x1a, p0->txx, p0->width);
++     take_scaled (y0a, p0->txy, arg1);
++     take_scaled (y1a, p0->txy, p0->height);
++  } else {
++     take_scaled (x1a, p0->txy, arg2);
++     take_scaled (y0a, p0->txx, arg1);
++     take_scaled (y1a, p0->txx, p0->height);
++  }
++@z
++
++@x
++  take_scaled (x1a, p0->tyx, p0->width);
++  number_clone (arg1, p0->depth);
++  number_negate (arg1);
++  take_scaled (y0a, p0->tyy, arg1);
++  take_scaled (y1a, p0->tyy, p0->height);
++@y
++  if ( mp->font_id[mp_font_n(p)]!=tate_jfm_id ) {
++     take_scaled (x1a, p0->tyx, p0->width);
++     number_clone (arg1, p0->depth);
++     number_negate (arg1);
++     take_scaled (y0a, p0->tyy, arg1);
++     take_scaled (y1a, p0->tyy, p0->height);
++  } else {
++     number_clone (arg1, p0->depth);
++     number_negate (arg1);
++     number_clone (arg2, p0->width);
++     number_negate (arg2);
++     take_scaled (x1a, p0->tyy, arg2);
++     take_scaled (y0a, p0->tyx, arg1);
++     take_scaled (y1a, p0->tyx, p0->height);
++  }
 +@z
 +
 +@x
@@ -492,10 +564,10 @@
 +%
 +% lookup character type table
 +@x
-+void mp_set_text_box (MP mp, mp_node p) {
++void mp_set_text_box (MP mp, mp_text_node p) {
 +@y
 +@<Declare JFM function for text measuring@>;
-+void mp_set_text_box (MP mp, mp_node p) {
++void mp_set_text_box (MP mp, mp_text_node p) {
 +@z
 +
 +@x
@@ -506,11 +578,13 @@
 +@y
 +  if ( ((*(mp_text_p (p)->str + k) < bc) || (*(mp_text_p (p)->str + k) > ec)) && (mp->font_id[f]==0) ) {
 +    mp_lost_warning (mp, f, *(mp_text_p (p)->str + k));
-+  } else { if (mp->font_id[f]==0) {
-+    cc = char_mp_info (f, *(mp_text_p (p)->str + k));
 +  } else {
-+    cc=char_mp_info(f,mp_lookup_ctype(mp, f,fromBUFF(mp_text_p(p)->str,limit,k)));
-+    k++; }
++    if (mp->font_id[f]!=0) {
++      cc=char_mp_info(f,mp_lookup_ctype(mp, f,fromBUFF(mp_text_p(p)->str,limit,k)));
++      k++;
++    } else {
++      cc = char_mp_info (f, *(mp_text_p (p)->str + k));
++    }
 +@z
 +
 +@x
@@ -533,24 +607,21 @@
 +}
 +@* Debugging.
 +@z
---- /dev/null
-+++ source/texk/web2c/pmplibdir/jmppsw.ch
-@@ -0,0 +1,76 @@
+diff -udrN source.orig/texk/web2c/pmpostdir/jmppsw.ch source/texk/web2c/pmpostdir/jmppsw.ch
+--- source.orig/texk/web2c/pmpostdir/jmppsw.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/jmppsw.ch	2013-08-09 16:25:17.307550842 +0900
+@@ -0,0 +1,72 @@
 +%
 +%
 +% change file of psout.w for jMetaPost (CWEB version)
 +% Akira Kakuto (translated the WEB version)
 +%
-+% rewrited for TeX Live 2011
-+% Hironori Kitagawa <h_kitagawa2001@yahoo.co.jp>
 +%
 +
 +@x
-+#include "pmppsout.h" /* internal header */
-+#include "pmpmath.h" /* internal header */
++#include <math.h>
 +@y
-+#include "pmppsout.h" /* internal header */
-+#include "pmpmath.h" /* internal header */
++#include <math.h>
 +#include <ptexenc/ptexenc.h>
 +@z
 +
@@ -567,23 +638,23 @@
 +static void mp_print_initial_comment(MP mp,mp_edge_object *hh, int prologues);
 +@y
 +static void mp_print_initial_comment(MP mp,mp_edge_object *hh, int prologues);
-+void mp_ps_kanji_string_out (MP mp, string s);
++void mp_ps_kanji_string_out (MP mp, const char *s);
 +
 +#define Hi(x) (((x) >> 8) & 0xff)
 +#define Lo(x) ((x) & 0xff)
 +
 +@ @c
-+void mp_ps_kanji_string_out (MP mp, string s)
++void mp_ps_kanji_string_out (MP mp, const char *s)
 +{
-+int i, len;
-+int c;
++int i, c;
++size_t len;
 +
 +len = strlen(s);
 +i=0;
 +mp_ps_print(mp, "<");
 +while (i<len)
 +  { if ( mp->ps->ps_offset+5>mp->max_print_line ) mp_ps_print_ln(mp);
-+  c=toDVI(fromBUFF(s, i+2, i));
++  c=toDVI(fromBUFF((ASCII_code*)s, i+2, i));
 +  i=i+2;
 +  mp_hex_digit_out(mp, Hi(c) / 16);
 +  mp_hex_digit_out(mp, Hi(c) % 16);
@@ -612,16 +683,320 @@
 +           mp_ps_string_out(mp, gr_text_p(p),gr_text_l(p));
 +        mp_ps_name_out(mp, mp->font_name[gr_font_n(p)],false);
 +@z
---- /dev/null
-+++ source/texk/web2c/pmplibdir/pdvitomp.ch
-@@ -0,0 +1,494 @@
+diff -udrN source.orig/texk/web2c/pmpostdir/mpost.ch source/texk/web2c/pmpostdir/mpost.ch
+--- source.orig/texk/web2c/pmpostdir/mpost.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/mpost.ch	2013-08-09 16:25:17.307550842 +0900
+@@ -0,0 +1,289 @@
 +@x
-+#include "pmpxout.h"
-+@h
++#include <kpathsea/kpathsea.h>
 +@y
-+#include "pmpxout.h"
++#include <kpathsea/kpathsea.h>
 +#include <ptexenc/ptexenc.h>
-+@h
++char kanjioption[16];
++@z
++
++@x
++@d TEX     "tex"
++@d TROFF   "soelim | eqn -Tps -d$$ | troff -Tps"
++
++@c
++#ifndef MPXCOMMAND
++#define MPXCOMMAND "makempx"
++#endif
++@y
++@d TEX     "eptex"
++@d TROFF   "gsoelim | geqn -Tps -d$$ | gtroff -Tps"
++
++@c
++#ifndef MPXCOMMAND
++#define MPXCOMMAND "pmakempx"
++#endif
++@z
++
++@x
++    if (cnf_cmd!=NULL && (strcmp (cnf_cmd, "1")!=0)) {
++      if (mp_troff_mode(mp)!=0)
++        cmd = concatn (cnf_cmd, " -troff ",
++                     qmpname, " ", qmpxname, NULL);
++      else if (mpost_tex_program!=NULL && *mpost_tex_program != '\0')
++        cmd = concatn (cnf_cmd, " -tex=", mpost_tex_program, " ",
++                     qmpname, " ", qmpxname, NULL);
++@y
++    if (cnf_cmd!=NULL && (strcmp (cnf_cmd, "1")!=0)) {
++      if (kanjioption[0])
++        cnf_cmd = concatn (cnf_cmd, " --kanji=", kanjioption, NULL);
++      if (mp_troff_mode(mp))
++        cmd = concatn (cnf_cmd, " -troff ",
++                       qmpname, " ", qmpxname, NULL);
++      else if (mpost_tex_program!=NULL && *mpost_tex_program != '\0')
++        cmd = concatn (cnf_cmd, " -tex=", mpost_tex_program, " ",
++                       qmpname, " ", qmpxname, NULL);
++@z
++
++@x
++      if (mpost_tex_program != NULL && *mpost_tex_program != '\0') {
++        maincmd = mpost_xstrdup(mpost_tex_program);
++      } else {
++        if (mpxmode == mpx_tex_mode) {
++          s = kpse_var_value("TEX");
++          if (s==NULL) s = kpse_var_value("MPXMAINCMD");
++          if (s==NULL) s = mpost_xstrdup (TEX);
++          maincmd = (char *)mpost_xmalloc (strlen(s)+strlen(default_args)+1);
++          strcpy(maincmd,s);
++@y
++      if (mpost_tex_program != NULL && *mpost_tex_program != '\0') {
++        if (kanjioption[0]) {
++          maincmd = (char *)mpost_xmalloc (strlen(mpost_tex_program) +
++                                   strlen(kanjioption) + 15);
++          strcpy(maincmd, mpost_tex_program);
++          strcat(maincmd, " --kanji=");
++          strcat(maincmd, kanjioption);
++        } else
++          maincmd = mpost_xstrdup(mpost_tex_program);
++      } else {
++        if (mpxmode == mpx_tex_mode) {
++          s = kpse_var_value("TEX");
++          if (s==NULL) s = kpse_var_value("MPXMAINCMD");
++          if (s==NULL) s = mpost_xstrdup (TEX);
++          if (kanjioption[0])
++            maincmd = (char *)mpost_xmalloc (strlen(s)+strlen(default_args)+
++                                             strlen(kanjioption)+13);
++          else
++            maincmd = (char *)mpost_xmalloc (strlen(s)+strlen(default_args)+1);
++          strcpy(maincmd,s);
++          if (kanjioption[0]) {
++            strcat(maincmd, " --kanji=");
++            strcat(maincmd, kanjioption);
++          }
++@z
++
++@x
++        const char *banner = "% Written by metapost version ";
++@y
++        const char *banner = "% Written by pmpost version ";
++@z
++
++@x
++  mpost_xfree (cnf_cmd);
++@y
++  if(cnf_cmd)
++    mpost_xfree (cnf_cmd);
++@z
++
++@x
++      const char *banner = "% Written by dvitomp version ";
++@y
++      const char *banner = "% Written by pdvitomp version ";
++@z
++
++@x
++      { "kpathsea-debug",            1, 0, 0 },
++@y
++      { "kpathsea-debug",            1, 0, 0 },
++      { "kanji",                     1, 0, 0 },
++@z
++
++@x
++        if (user_progname == NULL) 
++	      user_progname = optarg;
++      }
++@y
++        if (user_progname == NULL) 
++	      user_progname = optarg;
++      }
++    } else if (ARGUMENT_IS ("kanji")) {
++      strcpy(kanjioption, optarg);
++      if(!set_enc_string(optarg, optarg)) {
++        fprintf(stderr,"Ignoring unknown argument `%s' to --kanji", optarg);
++      }
++@z
++
++@x
++      { "no-kpathsea",               0, &nokpse, 1 },
++@y
++      { "no-kpathsea",               0, &nokpse, 1 },
++      { "kanji",                     1, 0, 0 },
++@z
++
++@x
++    } else if (option_is ("progname")) {
++      user_progname = optarg;
++@y
++    } else if (option_is ("progname")) {
++      user_progname = optarg;
++    } else if (option_is ("kanji")) {
++      strcpy (kanjioption, optarg);
++      if(!set_enc_string(optarg, optarg)) {
++        fprintf(stderr,"Ignoring unknown argument `%s' to --kanji", optarg);
++      }
++@z
++
++@x
++  fprintf(stdout, "This is dvitomp %s" WEB2CVERSION "\n", s);
++else
++  fprintf(stdout, "This is MetaPost %s" WEB2CVERSION "\n", s);
++mpost_xfree(s);
++fprintf(stdout,
++"\n"
++"Usage: mpost [OPTION] [&MEMNAME] [MPNAME[.mp]] [COMMANDS]\n"
++"       mpost --dvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
++"\n"
++"  Run MetaPost on MPNAME, usually creating MPNAME.NNN (and perhaps\n"
++"  MPNAME.tfm), where NNN are the character numbers generated.\n"
++"  Any remaining COMMANDS are processed as MetaPost input,\n"
++"  after MPNAME is read.\n\n"
++"  With a --dvitomp argument, MetaPost acts as DVI-to-MPX converter only.\n"
++"  Call MetaPost with --dvitomp --help for option explanations.\n\n");
++fprintf(stdout,
++"  -ini                      be inimpost, for dumping mem files\n"
++"  -interaction=STRING       set interaction mode (STRING=batchmode/nonstopmode/\n"
++"                            scrollmode/errorstopmode)\n"
++"  -numbersystem=STRING      set number system mode (STRING=scaled/double/binary/decimal)\n"
++"  -jobname=STRING           set the job name to STRING\n"
++@y
++  fprintf(stdout, "This is pdvitomp %s" WEB2CVERSION "\n", s);
++else
++  fprintf(stdout, "This is pMetaPost %s" WEB2CVERSION "\n", s);
++mpost_xfree(s);
++fprintf(stdout,
++"\n"
++"Usage: pmpost [OPTION] [&MEMNAME] [MPNAME[.mp]] [COMMANDS]\n"
++"       pmpost --dvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
++"\n"
++"  Run pMetaPost on MPNAME, usually creating MPNAME.NNN (and perhaps\n"
++"  MPNAME.tfm), where NNN are the character numbers generated.\n"
++"  Any remaining COMMANDS are processed as pMetaPost input,\n"
++"  after MPNAME is read.\n\n"
++"  With a --dvitomp argument, pMetaPost acts as DVI-to-MPX converter only.\n"
++"  Call pMetaPost with --dvitomp --help for option explanations.\n\n");
++fprintf(stdout,
++"  -ini                      be inipmpost, for dumping mem files\n"
++"  -interaction=STRING       set interaction mode (STRING=batchmode/nonstopmode/\n"
++"                            scrollmode/errorstopmode)\n"
++"  -numbersystem=STRING      set number system mode (STRING=scaled/double/binary/decimal)\n"
++"  -jobname=STRING           set the job name to STRING\n"
++"  -kanji=STRING             set the Japanese encoding to STRING\n"
++@z
++
++@x
++"  -version                  output version information and exit\n"
++"\n"
++"Email bug reports to mp-implementors@@tug.org.\n"
++@y
++"  -version                  output version information and exit\n"
++@z
++
++@x
++  fprintf(stdout, "This is dvitomp %s" WEB2CVERSION "\n", s);
++else
++  fprintf(stdout, "This is MetaPost %s" WEB2CVERSION "\n", s);
++mpost_xfree(s);
++fprintf(stdout,
++"\n"
++"Usage: dvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
++"       mpost --dvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
++"\n"
++"  Convert a TeX DVI file to a MetaPost MPX file.\n\n");
++fprintf(stdout,
++"  -progname=STRING          set program name to STRING\n"
++@y
++  fprintf(stdout, "This is pdvitomp %s" WEB2CVERSION "\n", s);
++else
++  fprintf(stdout, "This is pMetaPost %s" WEB2CVERSION "\n", s);
++mpost_xfree(s);
++fprintf(stdout,
++"\n"
++"Usage: pdvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
++"       pmpost --dvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
++"\n"
++"  Convert a TeX DVI file to a MetaPost MPX file.\n\n");
++fprintf(stdout,
++"  -progname=STRING          set program name to STRING\n"
++"  -kanji=STRING             set kanji encoding (sjis, jis, euc, utf8)\n"
++@z
++
++@x
++  fprintf(stdout, "dvitomp (MetaPost) %s" WEB2CVERSION "\n", s);
++else
++  fprintf(stdout, "MetaPost %s" WEB2CVERSION "\n", s);
++@y
++  fprintf(stdout, "pdvitomp (pMetaPost) %s" WEB2CVERSION "\n", s);
++else
++  fprintf(stdout, "pMetaPost %s" WEB2CVERSION "\n", s);
++@z
++
++@x
++"Author of the CWEB MetaPost: Taco Hoekwater.\n"
++@y
++"Author of the CWEB MetaPost: Taco Hoekwater.\n"
++"Authors of pMetaPost: Michio Matsuyama, Hideyuki Suzuki.\n"
++@z
++
++@x
++  const char * banner = "This is MetaPost, version ";
++@y
++  const char * banner = "This is pMetaPost, version ";
++@z
++
++@x
++  options->print_found_names = (int)true;
++  {
++    char *base = kpse_program_basename(argv[0]);
++    if (FILESTRCASEEQ(base, "dvitomp"))
++      dvitomp_only=1;
++    free(base);
++  }
++  if (dvitomp_only) {
++    @<Read and set dvitomp command line options@>;
++  } else {
++@y
++  options->print_found_names = (int)true;
++
++  kanjioption[0] = '\0';
++  enable_UPTEX (false);
++#if defined(WIN32)
++  set_enc_string("sjis", "sjis");
++#else
++  set_enc_string("utf8", "euc");
++#endif
++
++  {
++    char *base = kpse_program_basename(argv[0]);
++    if (FILESTRCASEEQ(base, "dvitomp"))
++      dvitomp_only=1;
++    free(base);
++  }
++  if (dvitomp_only) {
++    @<Read and set dvitomp command line options@>;
++  } else {
++@z
++
++@x
++  if(putenv(xstrdup("engine=metapost")))
++@y
++  if(putenv(xstrdup("engine=pmpost")))
++@z
+diff -udrN source.orig/texk/web2c/pmpostdir/mpxout.ch source/texk/web2c/pmpostdir/mpxout.ch
+--- source.orig/texk/web2c/pmpostdir/mpxout.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/mpxout.ch	2013-08-09 16:25:17.307550842 +0900
+@@ -0,0 +1,8 @@
++@x
++#include <process.h>
++@y
++#include <process.h>
++#define R_OK 4
++typedef int boolean;
++typedef int integer;
++@z
+diff -udrN source.orig/texk/web2c/pmpostdir/pdvitomp.ch source/texk/web2c/pmpostdir/pdvitomp.ch
+--- source.orig/texk/web2c/pmpostdir/pdvitomp.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/pdvitomp.ch	2013-08-09 16:25:17.307550842 +0900
+@@ -0,0 +1,492 @@
++@x
++#include "avl.h"
++@y
++#include "avl.h"
++#include <ptexenc/ptexenc.h>
 +@z
 +
 +@x
@@ -1109,240 +1484,119 @@
 +  mpx->print_col++;
 +}
 +@z
---- /dev/null
-+++ source/texk/web2c/pmplibdir/pmpost.ch
-@@ -0,0 +1,234 @@
+diff -udrN source.orig/texk/web2c/pmpostdir/psout.ch source/texk/web2c/pmpostdir/psout.ch
+--- source.orig/texk/web2c/pmpostdir/psout.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/psout.ch	2013-08-09 16:25:17.307550842 +0900
+@@ -0,0 +1,42 @@
 +@x
-+#include <pmpxout.h>
++integer ps_offset;
 +@y
-+#include <pmpxout.h>
++integer ps_offset;
++integer is_mapfile_read;
++@z
++
++@x
++mp->ps->ps_offset = 0;
++@y
++mp->ps->ps_offset = 0;
++mp->ps->is_mapfile_read = 0;
++@z
++
++@x
++        mp->ps->fm_file = (mp->open_file)(mp, n, "r", mp_filetype_fontmap);
++        if (!mp->ps->fm_file) {
++@y
++        mp->ps->fm_file = (mp->open_file)(mp, n, "r", mp_filetype_fontmap);
++        if (!mp->ps->fm_file) {
++            mp->ps->mitem->map_line = mp_xstrdup (mp,psf_tab_name);
++            n = mp->ps->mitem->map_line;
++            mp->ps->fm_file = (mp->open_file)(mp, n, "r", mp_filetype_fontmap);
++        }
++        if (!mp->ps->fm_file) {
++@z
++
++@x
++@d ps_tab_name "psfonts.map"  /* locates font name translation table */
++@y
++@d ps_tab_name "mpost.map"  /* locates font name translation table */
++@d psf_tab_name "psfonts.map"  /* locates font name translation table */
++@z
++
++@x
++  fm_read_info (mp);
++@y
++  if (mp->ps->is_mapfile_read == 0) {
++    mp->ps->is_mapfile_read++;
++    fm_read_info (mp);
++  }
++@z
+diff -udrN source.orig/texk/web2c/pmpostdir/svgout.ch source/texk/web2c/pmpostdir/svgout.ch
+--- source.orig/texk/web2c/pmpostdir/svgout.ch	1970-01-01 09:00:00.000000000 +0900
++++ source/texk/web2c/pmpostdir/svgout.ch	2013-08-09 16:25:17.307550842 +0900
+@@ -0,0 +1,66 @@
++@x
++#include <math.h>
++@y
++#include <math.h>
 +#include <ptexenc/ptexenc.h>
-+char kanjioption[16];
++@z
++
++@x 
++@<Character |k| is not allowed in SVG output@>=
++ (k=='&')||(k=='>')||(k=='<')
++@y
++@<Character |k| is not allowed in SVG output@>=
++ (k=='&')||(k=='>')||(k=='<')||(k>=0x7F)
 +@z
 +
 +@x
-+@d TEX     "tex"
++@ Now for outputting the actual graphic objects. 
 +@y
-+@d TEX     "ptex"
++@ Now for outputting the actual graphic objects. 
++
++@d yoko_jfm_id   11 /* `yoko-kumi' fonts */
++@d tate_jfm_id   9  /* `tate-kumi' fonts */
++@d font_jfm_p(A) (mp->font_id[(A)]!=0)
++@z
++
++@x Even if prologues=3, Japanese texts are not converted into paths.
++  if (prologues == 3 ) {
++@y
++  if (prologues == 3 && mp->font_id[gr_font_n(p)]==0) {
++@z
++
++@x To realise vertical Japanese texts ...
++    mp_svg_attribute(mp, "font-size", mp->svg->buf);
++@y
++    mp_svg_attribute(mp, "font-size", mp->svg->buf);
++    if ( mp->font_id[gr_font_n(p)]==tate_jfm_id ) {
++      mp_svg_reset_buf(mp);
++      append_string("tb-rl");
++      mp_svg_attribute(mp, "writing-mode", mp->svg->buf);
++    }
 +@z
 +
 +@x
-+#define MPXCOMMAND "makempx"
++    while (l-->0) {
++      k=(int)*s++;
++      if (@<Character |k| is illegal in SVG output@>) {
 +@y
-+#define MPXCOMMAND "pmakempx"
++    if ( mp->font_id[gr_font_n(p)]!=0 ) {
++    l >>= 1;
++    while (l-->0) {
++         k =((int)*s++)*0x100; k += (int)*s++;
++         append_string("&#");
++         mp_svg_store_int(mp,toUCS(k));
++         append_char(';');
++       }
++    } else
++    while (l-->0) {
++      k=(int)*s++;
++      if (@<Character |k| is illegal in SVG output@>) {
 +@z
 +
 +@x
-+    if (cnf_cmd!=NULL && (strcmp (cnf_cmd, "1")!=0)) {
-+      if (mp_troff_mode(mp)!=0)
-+        cmd = concatn (cnf_cmd, " -troff ",
-+                     qmpname, " ", qmpxname, NULL);
-+      else if (mpost_tex_program!=NULL && *mpost_tex_program != '\0')
-+        cmd = concatn (cnf_cmd, " -tex=", mpost_tex_program, " ",
-+                     qmpname, " ", qmpxname, NULL);
++    mp_svg_print(mp, "<?xml version=\"1.0\"?>");
 +@y
-+    if (cnf_cmd!=NULL && (strcmp (cnf_cmd, "1")!=0)) {
-+      if (kanjioption[0])
-+        cnf_cmd = concatn (cnf_cmd, " --kanji=", kanjioption, NULL);
-+      if (mp_troff_mode(mp)!=0)
-+        cmd = concatn (cnf_cmd, " -troff ",
-+                       qmpname, " ", qmpxname, NULL);
-+      else if (mpost_tex_program!=NULL && *mpost_tex_program != '\0')
-+        cmd = concatn (cnf_cmd, " -tex=", mpost_tex_program, " ",
-+                       qmpname, " ", qmpxname, NULL);
-+@z
-+
-+@x
-+      mpxopt = mpost_xmalloc(sizeof(mpx_options));
-+      if (mpost_tex_program != NULL && *mpost_tex_program != '\0') {
-+@y
-+      mpxopt = mpost_xmalloc(sizeof(mpx_options));
-+      if (mpost_tex_program != NULL && *mpost_tex_program != '\0') {
-+        if (kanjioption[0]) {
-+          maincmd = (char *)mpost_xmalloc (strlen(mpost_tex_program) +
-+                                   strlen(kanjioption) + 15);
-+          strcpy(maincmd, mpost_tex_program);
-+          strcat(maincmd, " --kanji=");
-+          strcat(maincmd, kanjioption);
-+        } else
-+@z
-+
-+@x
-+          if (s==NULL) s = mpost_xstrdup (TEX);
-+@y
-+          if (s==NULL) s = mpost_xstrdup (TEX);
-+          if (kanjioption[0])
-+            maincmd = (char *)mpost_xmalloc (strlen(s)+strlen(default_args)+
-+                                             strlen(kanjioption)+13);
-+          else
-+@z
-+
-+@x
-+          strcat(maincmd,default_args);
-+@y
-+          if (kanjioption[0]) {
-+            strcat(maincmd, " --kanji=");
-+            strcat(maincmd, kanjioption);
-+          }
-+          strcat(maincmd,default_args);
-+@z
-+
-+@x
-+        const char *banner = "% Written by metapost version ";
-+@y
-+        const char *banner = "% Written by pmetapost version ";
-+@z
-+
-+@x
-+      const char *banner = "% Written by dvitomp version ";
-+@y
-+      const char *banner = "% Written by pdvitomp version ";
-+@z
-+
-+@x
-+      { "kpathsea-debug",            1, 0, 0 },
-+@y
-+      { "kpathsea-debug",            1, 0, 0 },
-+      { "kanji",                     1, 0, 0 },
-+@z
-+
-+@x
-+        if (user_progname == NULL) 
-+	      user_progname = optarg;
-+      }
-+@y
-+        if (user_progname == NULL) 
-+	      user_progname = optarg;
-+      }
-+    } else if (ARGUMENT_IS ("kanji")) {
-+      strcpy(kanjioption, optarg);
-+      if(!set_enc_string(optarg, optarg)) {
-+        fprintf(stderr,"Ignoring unknown argument `%s' to --kanji", optarg);
-+      }
-+@z
-+
-+@x
-+      { "no-kpathsea",               0, &nokpse, 1 },
-+@y
-+      { "no-kpathsea",               0, &nokpse, 1 },
-+      { "kanji",                     1, 0, 0 },
-+@z
-+
-+@x
-+      user_progname = optarg;
-+@y
-+      user_progname = optarg;
-+    } else if (option_is ("kanji")) {
-+      strcpy (kanjioption, optarg);
-+      if(!set_enc_string(optarg, optarg)) {
-+        fprintf(stderr,"Ignoring unknown argument `%s' to --kanji", optarg);
-+      }
-+@z
-+
-+@x
-+if (dvitomp_only)
-+  fprintf(stdout, "This is dvitomp %s" WEB2CVERSION "\n", s);
-+else
-+  fprintf(stdout, "This is MetaPost %s" WEB2CVERSION "\n", s);
-+@y
-+if (dvitomp_only)
-+  fprintf(stdout, "This is pdvitomp %s" WEB2CVERSION "\n", s);
-+else
-+  fprintf(stdout, "This is pMetaPost %s" WEB2CVERSION "\n", s);
-+@z
-+
-+@x
-+"Usage: mpost [OPTION] [&MEMNAME] [MPNAME[.mp]] [COMMANDS]\n"
-+"       mpost --dvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
-+@y
-+"Usage: pmetapost [OPTION] [&MEMNAME] [MPNAME[.mp]] [COMMANDS]\n"
-+"       pmetapost --dvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
-+@z
-+
-+@x
-+"  Run MetaPost on MPNAME, usually creating MPNAME.NNN (and perhaps\n"
-+@y
-+"  Run pMetaPost on MPNAME, usually creating MPNAME.NNN (and perhaps\n"
-+@z
-+
-+@x
-+"  With a --dvitomp argument, MetaPost acts as DVI-to-MPX converter only.\n"
-+"  Call MetaPost with --dvitomp --help for option explanations.\n\n");
-+@y
-+"  With a --dvitomp argument, pMetaPost acts as DVI-to-MPX converter only.\n"
-+"  Call pMetaPost with --dvitomp --help for option explanations.\n\n");
-+@z
-+
-+@x
-+"  -jobname=STRING           set the job name to STRING\n"
-+@y
-+"  -jobname=STRING           set the job name to STRING\n"
-+"  -kanji=STRING             set the Japanese encoding to STRING\n"
-+@z
-+
-+@x
-+if (dvitomp_only)
-+  fprintf(stdout, "This is dvitomp %s" WEB2CVERSION "\n", s);
-+else
-+  fprintf(stdout, "This is MetaPost %s" WEB2CVERSION "\n", s);
-+@y
-+if (dvitomp_only)
-+  fprintf(stdout, "This is pdvitomp %s" WEB2CVERSION "\n", s);
-+else
-+  fprintf(stdout, "This is pMetaPost %s" WEB2CVERSION "\n", s);
-+@z
-+
-+@x
-+"Usage: dvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
-+"       mpost --dvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
-+@y
-+"Usage: pdvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
-+"       pmetapost --dvitomp DVINAME[.dvi] [MPXNAME[.mpx]]\n"
-+@z
-+
-+@x
-+"  -progname=STRING          set program name to STRING\n"
-+@y
-+"  -progname=STRING          set program name to STRING\n"
-+"  -kanji=STRING             set kanji encoding (sjis, jis, euc, utf8)\n"
-+@z
-+
-+@x
-+if (dvitomp_only)
-+  fprintf(stdout, "dvitomp (MetaPost) %s" WEB2CVERSION "\n", s);
-+else
-+  fprintf(stdout, "MetaPost %s" WEB2CVERSION "\n", s);
-+@y
-+if (dvitomp_only)
-+  fprintf(stdout, "pdvitomp (pMetaPost) %s" WEB2CVERSION "\n", s);
-+else
-+  fprintf(stdout, "pMetaPost %s" WEB2CVERSION "\n", s);
-+@z
-+
-+@x
-+"Author of the CWEB MetaPost: Taco Hoekwater.\n"
-+@y
-+"Author of the CWEB MetaPost: Taco Hoekwater.\n"
-+"Authors of pMetaPost: Michio Matsuyama, Hideyuki Suzuki.\n"
-+@z
-+
-+@x
-+  const char * banner = "This is MetaPost, version ";
-+@y
-+  const char * banner = "This is pMetaPost, version ";
-+@z
-+
-+@x
-+    if (!strcmp(base, "dvitomp") || !strcasecmp(base, "dvitomp.exe"))
-+@y
-+    kanjioption[0] = '\0';
-+    enable_UPTEX (false);
-+    set_enc_string(NULL, "default");
-+    if (!strcmp(base, "pdvitomp") || !strcasecmp(base, "pdvitomp.exe"))
-+@z
-+
-+@x
-+  if(putenv(xstrdup("engine=metapost")))
-+@y
-+  if(putenv(xstrdup("engine=pmetapost")))
++    mp_svg_print(mp, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 +@z
