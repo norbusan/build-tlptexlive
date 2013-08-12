@@ -138,6 +138,7 @@ if [ $DO_NOPREP = 0 ] ; then
       exit 1
     fi
     cat "$PATCHES/patches/series" | while read p r ; do
+      echo $p | grep '^#' >/dev/null  || \
       $PATCH -p1 $r < "$PATCHES/patches/$p"
     done
   fi
