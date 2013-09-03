@@ -1,0 +1,11 @@
+diff -udrN source.orig/texk/web2c/configure.ac source/texk/web2c/configure.ac 
+--- source.orig/texk/web2c/configure.ac	2013-08-17 17:10:53.000000000 +0900
++++ source/texk/web2c/configure.ac	2013-08-17 17:25:46.000000000 +0900
+@@ -336,6 +336,7 @@
+ KPSE_CROSS_PATH_PROG([CTANGLEBOOT], [ctangle],   [./ctangleboot])
+ KPSE_CROSS_PATH_PROG([CTANGLE],     [ctangle],   [./ctangle])
+ KPSE_CROSS_PATH_PROG([TIE],         [tie],       [./tie])
++KPSE_CROSS_PATH_PROG([CTIE],        [ctie],      [./ctie])
+ dnl Required for Aleph and XeTeX
+ KPSE_CROSS_PATH_PROG([OTANGLE],     [otangle],   [./otangle])
+ 

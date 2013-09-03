@@ -57,26 +57,28 @@ gmake   --version > /dev/null 2>&1 && MAKE=gmake ||:
 
 if [ $DO_APPLE == 1 ] ; then
   #
+  # set an old Xcode root directory (e.g. /Developer, /Xcode3)
+  U_XCODEROOT=${BUILD_XCODEROOT:-/Xcode3}
+  #
   # set build arch
   U_ARCH=${BUILD_ARCH:-x86_64}
   U_RELEASE=`uname -r`
+  #
+  U_CC=${BUILD_CC:-gcc-4.2}
+  U_CXX=${BUILD_CXX:-g++-4.2}
   case $U_ARCH in 
       x86_64)
+	 CC=$U_CC
+	 CXX=$U_CXX
          ;;
-      i686)
+      i686|ppc)
          U_SDK=10.6
-         SDK=/Developer/SDKs/MacOSX${U_SDK}.sdk
-  
-         CFLAGS="-isysroot ${SDK} -arch i386 -mmacosx-version-min=10.4"
-         LDFLAGS="-isysroot ${SDK} -Wl,-syslibroot,${SDK} -arch i386 -mmacosx-version-min=10.4"
-         CXXFLAGS=$CFLAGS
-         ;;
-      ppc)
-         U_SDK=10.6
-         SDK=/Developer/SDKs/MacOSX${U_SDK}.sdk
-  
-         CFLAGS="-isysroot ${SDK} -arch ppc -mmacosx-version-min=10.4"
-         LDFLAGS="-isysroot ${SDK} -Wl,-syslibroot,${SDK} -arch ppc -mmacosx-version-min=10.4"
+         SDK=${U_XCODEROOT}/SDKs/MacOSX${U_SDK}.sdk
+
+	 CC=${U_XCODEROOT}/usr/bin/gcc-4.2
+	 CXX=${U_XCODEROOT}/usr/bin/g++-4.2
+         CFLAGS="-isysroot ${SDK} -arch ${U_ARCH} -mmacosx-version-min=10.5"
+         LDFLAGS="-isysroot ${SDK} -Wl,-syslibroot,${SDK} -arch ${U_ARCH} -mmacosx-version-min=10.5"
          CXXFLAGS=$CFLAGS
          ;;
       *)
@@ -85,12 +87,13 @@ if [ $DO_APPLE == 1 ] ; then
   esac
   export CC CXX CFLAGS CXXFLAGS LDFLAGS
   cat<<EOF
-  CC:            $CC
-  CXX:           $CXX
-  CFLAGS:                $CFLAGS
-  LDFLAGS:       $LDFLAGS
+CC:		$CC
+CXX:		$CXX
+CFLAGS:		$CFLAGS
+CXXFLAGS:	$CXXFLAGS
+LDFLAGS:	$LDFLAGS
 EOF
-  sleep 3
+sleep 5
 fi
 
 if [ $DO_NOPREP = 0 ] ; then

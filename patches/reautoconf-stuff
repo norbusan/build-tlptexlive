@@ -772,8 +772,8 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  mpxout_c_h = mpxout.c mpxout.h
  mpost_web = mplibdir/mpost.w mplibdir/mpxout.w
  mp_tests = mplibdir/dvitomp.test mplibdir/mptrap.test
-+CTIE = ./ctie
-+ctie = $(ctie_silent)CWEBINPUTS=.:$(srcdir) $(buildenv) $(CTIE)
++CTIE = ctie
++ctie = $(ctie_silent)CWEBINPUTS=.:$(srcdir):$(srcdir)/pmpostdir $(buildenv) $(CTIE)
 +ctie_silent = $(ctie_silent_$(V))
 +ctie_silent_ = $(ctie_silent_$(AM_DEFAULT_VERBOSITY))
 +ctie_silent_0 = @echo "  CTIE    " $@; $(SHELL) ./silent-sh $@ #
@@ -811,7 +811,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
 +upmpost_LDADD = $(KPATHSEA_LIBS) $(CAIRO_LIBS) $(PIXMAN_LIBS) $(LIBPNG_LIBS) $(ZLIB_LIBS) -lm $(PTEXENC_LIBS)
 +
 +# Creating one file: just one rule
-+upmp_ctangle = $(ctangle_silent)CWEBINPUTS=.:$(srcdir)/pmpostdir:$(srcdir)/upmpostdir $(ctangle)
++upmp_ctangle = $(ctangle_silent)CWEBINPUTS=.:$(srcdir):$(srcdir)/pmpostdir:$(srcdir)/upmpostdir $(ctangle)
 +# Creating several files: need stamp file and two rules with identical recipes
 +upmp_ctangle_sh = CWEBINPUTS=.:$(srcdir)/pmpostdir:$(srcdir)/upmpostdir AM_V_P=$(AM_V_P) $(SHELL) ./tangle-sh $@ $(CTANGLE)
 +upmpost_SOURCES = mplibdir/avl.h mplibdir/avl.c
