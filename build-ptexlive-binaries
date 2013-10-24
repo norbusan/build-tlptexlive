@@ -32,6 +32,12 @@ done
 #
 # the place where you have already the sources, or you want to place them!
 SOURCE=${BUILD_SOURCE:-/tmp/build-place/source}
+
+#
+TL_INSTALL_DEST=${TL_INSTALL_DEST:-$SOURCE/inst}
+unset TL_WORKDIR
+unset TL_CONFIGURE
+
 #
 # where the zip of the binaries are placed
 TARGET=${BUILD_TARGET:-/tmp}
@@ -204,7 +210,7 @@ case `uname` in
   *) EXT= ;;
 esac
 
-cd inst/bin
+cd $TL_INSTALL_DEST/bin
 arch=`/bin/ls`
 
 # dvips:  Fix a pTeX-extension bug in bbox.c (r31350).

@@ -54,16 +54,8 @@ diff -udrN source.orig/texk/web2c/configure.ac source/texk/web2c/configure.ac
 diff -udrN source.orig/texk/web2c/upmpostdir/am/upmpost.am source/texk/web2c/upmpostdir/am/upmpost.am
 --- source.orig/texk/web2c/upmpostdir/am/upmpost.am	1970-01-01 09:00:00.000000000 +0900
 +++ source/texk/web2c/upmpostdir/am/upmpost.am	2013-08-09 16:27:58.979548802 +0900
-@@ -0,0 +1,127 @@
+@@ -0,0 +1,119 @@
 +## texk/web2c/upmpostdir/am/upmpost.am: Makefile fragment for upMetaPost.
-+
-+CTIE = ctie
-+ctie = $(ctie_silent)CWEBINPUTS=.:$(srcdir):$(srcdir)/pmpostdir:$(srcdir)/upmpostdir $(buildenv) $(CTIE)
-+ctie_silent = $(ctie_silent_$(V))
-+ctie_silent_ = $(ctie_silent_$(AM_DEFAULT_VERBOSITY))
-+ctie_silent_0 = @echo "  CTIE    " $@; $(SHELL) ./silent-sh $@ #
-+ctie_silent_1 = 
-+
 +
 +if UPMP
 +bin_PROGRAMS += upmpost

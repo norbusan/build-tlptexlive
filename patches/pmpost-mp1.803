@@ -40,7 +40,7 @@ diff -udrN source.orig/texk/web2c/pmpostdir/am/pmpost.am source/texk/web2c/pmpos
 +## texk/web2c/pmpostdir/am/pmpost.am: Makefile fragment for pMetaPost.
 +
 +CTIE = ctie
-+ctie = $(ctie_silent)CWEBINPUTS=.:$(srcdir):$(srcdir)/pmpostdir $(buildenv) $(CTIE)
++ctie = $(ctie_silent)CWEBINPUTS=.:$(srcdir):$(srcdir)/pmpostdir:$(srcdir)/upmpostdir $(buildenv) $(CTIE)
 +ctie_silent = $(ctie_silent_$(V))
 +ctie_silent_ = $(ctie_silent_$(AM_DEFAULT_VERBOSITY))
 +ctie_silent_0 = @echo "  CTIE    " $@; $(SHELL) ./silent-sh $@ #
