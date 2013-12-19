@@ -1,7 +1,7 @@
 diff -urN -x autom4te.cache source.orig/configure source/configure
---- source.orig/configure	2013-10-24 09:51:47.000000000 +0900
-+++ source/configure	2013-10-24 14:27:53.175069284 +0900
-@@ -823,6 +823,8 @@
+--- source.orig/configure	2013-12-14 21:52:08.000000000 +0900
++++ source/configure	2013-12-19 17:03:42.274579541 +0900
+@@ -822,6 +822,8 @@
  enable_pdftex_synctex
  enable_luatex
  enable_mp
@@ -10,7 +10,7 @@ diff -urN -x autom4te.cache source.orig/configure source/configure
  enable_xetex
  enable_xetex_synctex
  enable_mf
-@@ -1626,6 +1628,8 @@
+@@ -1628,6 +1630,8 @@
    --disable-pdftex-synctex    build pdfTeX without SyncTeX support
    --disable-luatex          do not compile and install luaTeX
    --disable-mp              do not compile and install MetaPost
@@ -19,7 +19,7 @@ diff -urN -x autom4te.cache source.orig/configure source/configure
    --disable-xetex           do not compile and install XeTeX
    --disable-xetex-synctex     build XeTeX without SyncTeX support
    --disable-mf              do not build METAFONT
-@@ -4581,6 +4585,38 @@
+@@ -4570,6 +4574,38 @@
    need_cairo=yes
    need_libpng=yes
  }
@@ -59,9 +59,9 @@ diff -urN -x autom4te.cache source.orig/configure source/configure
  if test "${enable_xetex+set}" = set; then :
    enableval=$enable_xetex;
 diff -urN -x autom4te.cache source.orig/libs/configure source/libs/configure
---- source.orig/libs/configure	2013-10-24 09:51:47.000000000 +0900
-+++ source/libs/configure	2013-10-24 14:28:01.958355035 +0900
-@@ -735,6 +735,8 @@
+--- source.orig/libs/configure	2013-12-04 08:58:40.000000000 +0900
++++ source/libs/configure	2013-12-19 17:03:51.404579467 +0900
+@@ -734,6 +734,8 @@
  enable_pdftex_synctex
  enable_luatex
  enable_mp
@@ -70,7 +70,7 @@ diff -urN -x autom4te.cache source.orig/libs/configure source/libs/configure
  enable_xetex
  enable_xetex_synctex
  enable_mf
-@@ -1530,6 +1532,8 @@
+@@ -1533,6 +1535,8 @@
    --disable-pdftex-synctex    build pdfTeX without SyncTeX support
    --disable-luatex          do not compile and install luaTeX
    --disable-mp              do not compile and install MetaPost
@@ -79,7 +79,7 @@ diff -urN -x autom4te.cache source.orig/libs/configure source/libs/configure
    --disable-xetex           do not compile and install XeTeX
    --disable-xetex-synctex     build XeTeX without SyncTeX support
    --disable-mf              do not build METAFONT
-@@ -3829,6 +3833,38 @@
+@@ -3819,6 +3823,38 @@
    need_cairo=yes
    need_libpng=yes
  }
@@ -119,9 +119,9 @@ diff -urN -x autom4te.cache source.orig/libs/configure source/libs/configure
  if test "${enable_xetex+set}" = set; then :
    enableval=$enable_xetex;
 diff -urN -x autom4te.cache source.orig/texk/configure source/texk/configure
---- source.orig/texk/configure	2013-10-24 09:51:47.000000000 +0900
-+++ source/texk/configure	2013-10-24 14:28:13.224960665 +0900
-@@ -735,6 +735,8 @@
+--- source.orig/texk/configure	2013-12-04 08:58:40.000000000 +0900
++++ source/texk/configure	2013-12-19 17:04:03.284579370 +0900
+@@ -734,6 +734,8 @@
  enable_pdftex_synctex
  enable_luatex
  enable_mp
@@ -130,7 +130,7 @@ diff -urN -x autom4te.cache source.orig/texk/configure source/texk/configure
  enable_xetex
  enable_xetex_synctex
  enable_mf
-@@ -1545,6 +1547,8 @@
+@@ -1548,6 +1550,8 @@
    --disable-pdftex-synctex    build pdfTeX without SyncTeX support
    --disable-luatex          do not compile and install luaTeX
    --disable-mp              do not compile and install MetaPost
@@ -139,7 +139,7 @@ diff -urN -x autom4te.cache source.orig/texk/configure source/texk/configure
    --disable-xetex           do not compile and install XeTeX
    --disable-xetex-synctex     build XeTeX without SyncTeX support
    --disable-mf              do not build METAFONT
-@@ -3844,6 +3848,38 @@
+@@ -3834,6 +3838,38 @@
    need_cairo=yes
    need_libpng=yes
  }
@@ -179,8 +179,8 @@ diff -urN -x autom4te.cache source.orig/texk/configure source/texk/configure
  if test "${enable_xetex+set}" = set; then :
    enableval=$enable_xetex;
 diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c/Makefile.in
---- source.orig/texk/web2c/Makefile.in	2013-10-24 09:51:47.000000000 +0900
-+++ source/texk/web2c/Makefile.in	2013-10-24 14:34:18.676314178 +0900
+--- source.orig/texk/web2c/Makefile.in	2013-12-18 13:57:49.000000000 +0900
++++ source/texk/web2c/Makefile.in	2013-12-19 17:09:00.424576960 +0900
 @@ -79,11 +79,12 @@
  build_triplet = @build@
  host_triplet = @host@
@@ -714,15 +714,15 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  TEST_SUITE_LOG = test-suite.log
  TEST_EXTENSIONS = @EXEEXT@ .test
  LOG_DRIVER = $(SHELL) $(top_srcdir)/../../build-aux/test-driver
-@@ -1977,6 +2022,7 @@
- 	mftrap.diffs $(nodist_libmf_a_SOURCES) mf-final.ch mf-web2c \
- 	mf.p mf.pool mf-tangle $(nodist_mpost_SOURCES) mpxout-tangle \
- 	mptrap.diffs ptmr.mpx tests/xptmr.mpx tests/xstory.mpx \
+@@ -1984,6 +2029,7 @@
+ 	$(nodist_libmf_a_SOURCES) mf-final.ch mf-web2c mf.p mf.pool \
+ 	mf-tangle $(nodist_mpost_SOURCES) mpxout-tangle mptrap.diffs \
+ 	ptmr.mpx tests/xptmr.mpx tests/xstory.mpx \
 +	$(nodist_pmpost_SOURCES) $(nodist_upmpost_SOURCES) \
  	$(nodist_libmplib_a_SOURCES) mp-tangle mpmath-tangle \
  	mpmathdouble-tangle mpstrings-tangle psout-tangle \
  	svgout-tangle pngout-tangle $(nodist_etex_SOURCES) etex.web \
-@@ -2022,15 +2068,15 @@
+@@ -2031,15 +2077,15 @@
  	aleph.web aleph.ch aleph-web2c aleph.p aleph.pool aleph-tangle
  CLEANFILES = 
  TRIPTRAP_CLEAN = $(am__append_9) $(am__append_17) $(am__append_26) \
@@ -745,7 +745,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  NEVER_DIST = `find . -name .svn` cwebdir/cweave.log cwebdir/cweave.trs \
  	ctiedir/ctie.log ctiedir/ctie.trs tiedir/tie.log \
  	tiedir/tie.trs
-@@ -2133,18 +2179,18 @@
+@@ -2142,18 +2188,18 @@
  initex_CPPFLAGS = -DEXEPROG=\"tex.exe\"
  nodist_initex_SOURCES = callexe.c
  initex_LDADD = 
@@ -768,7 +768,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  tex_ch_srcs = \
  	tex.web \
  	tex.ch \
-@@ -2203,6 +2249,70 @@
+@@ -2212,6 +2258,70 @@
  mpxout_c_h = mpxout.c mpxout.h
  mpost_web = mplibdir/mpost.w mplibdir/mpxout.w
  mp_tests = mplibdir/dvitomp.test mplibdir/mptrap.test
@@ -839,7 +839,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  libmplib_a_CPPFLAGS = $(CAIRO_INCLUDES) $(PIXMAN_INCLUDES) $(ZLIB_INCLUDES) $(LIBPNG_INCLUDES) $(AM_CPPFLAGS) -I$(srcdir)/mplibdir
  libmplib_a_SOURCES = mplibdir/avl.h mplibdir/avl.c
  nodist_libmplib_a_SOURCES = tfmin.c $(mp_c_h) $(mpmath_c_h) $(mpmathdouble_c_h) $(psout_c_h) $(svgout_c_h) $(pngout_c_h) $(mpstrings_c_h)
-@@ -2216,19 +2326,19 @@
+@@ -2225,19 +2335,19 @@
  libmplib_web = mplibdir/mp.w mplibdir/psout.w mplibdir/svgout.w \
  	mplibdir/pngout.w mplibdir/mpmath.w mplibdir/mpmathdouble.w \
  	mplibdir/mpstrings.w mplibdir/tfmin.w
@@ -863,7 +863,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  etex_web_srcs = \
  	tex.web \
  	etexdir/etex.ch
-@@ -2263,20 +2373,20 @@
+@@ -2272,20 +2382,20 @@
  pproglib = lib/libp.a
  libkanji_a_SOURCES = ptexdir/kanji.c ptexdir/kanji.h
  libkanji_a_CPPFLAGS = $(ptex_cppflags)
@@ -888,7 +888,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  ptex_web_srcs = \
  	tex.web \
  	tex.ch
-@@ -2310,22 +2420,22 @@
+@@ -2319,22 +2429,22 @@
  # e-pTeX Tests
  #
  eptex_tests = eptexdir/eptrip.test
@@ -915,8 +915,8 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  eptex_web_srcs = \
  	tex.web \
  	etexdir/etex.ch \
-@@ -2360,21 +2470,21 @@
- 
+@@ -2366,21 +2476,21 @@
+ 	uptexdir/yokotate.test
  libukanji_a_SOURCES = uptexdir/kanji.c uptexdir/kanji.h uptexdir/kanji_dump.c
  libukanji_a_CPPFLAGS = $(uptex_cppflags)
 -uptex_CPPFLAGS = $(uptex_cppflags) $(am__append_93)
@@ -941,7 +941,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  uptex_web_srcs = \
  	tex.web \
  	tex.ch
-@@ -2409,23 +2519,23 @@
+@@ -2415,23 +2525,23 @@
  # e-upTeX Tests
  #
  euptex_tests = euptexdir/euptrip.test
@@ -969,7 +969,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  euptex_web_srcs = \
  	tex.web \
  	etexdir/etex.ch \
-@@ -2461,7 +2571,7 @@
+@@ -2467,7 +2577,7 @@
  	pdftexdir/writejbig2.c pdftexdir/writejpg.c \
  	pdftexdir/writepng.c pdftexdir/writet1.c pdftexdir/writet3.c \
  	pdftexdir/writettf.c pdftexdir/writettf.h pdftexdir/writezip.c \
@@ -978,7 +978,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  @MINGW32_TRUE@REGEX_INCLUDES = -I$(srcdir)/pdftexdir/regex
  EXTRA_libpdftex_a_SOURCES = pdftexdir/macnames.c \
  	pdftexdir/regex/regcomp.c pdftexdir/regex/regex_internal.c \
-@@ -2477,7 +2587,7 @@
+@@ -2483,7 +2593,7 @@
  # Force Automake to use CXXLD for linking
  nodist_EXTRA_pdftex_SOURCES = dummy.cxx
  pdf_tangle = WEBINPUTS=.:$(srcdir)/pdftexdir AM_V_P=$(AM_V_P) $(SHELL) ./tangle-sh $@ $(TANGLE)
@@ -987,7 +987,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  pdftex_CXXFLAGS = $(WARNING_CXXFLAGS)
  
  # With --enable-ipc, pdfTeX may need to link with -lsocket.
-@@ -2490,7 +2600,7 @@
+@@ -2496,7 +2606,7 @@
  nodist_pdftex_SOURCES = $(pdftex_c_h) pdftex-pool.c
  dist_pdftex_SOURCES = pdftexdir/pdftexextra.c pdftexdir/pdftexextra.h \
  	pdftexdir/pdftex_version.h pdftexdir/etex_version.h \
@@ -996,7 +996,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  pdftex_ch_srcs = \
  	pdftexdir/pdftex.web \
  	pdftexdir/tex.ch0 \
-@@ -2877,16 +2987,16 @@
+@@ -2884,16 +2994,16 @@
  libxetex = libxetex.a
  xetex_cppflags = $(AM_CPPFLAGS) -I$(srcdir)/xetexdir $(ICU_INCLUDES) \
  	$(FREETYPE2_INCLUDES) $(TECKIT_INCLUDES) $(HARFBUZZ_INCLUDES) \
@@ -1017,7 +1017,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  xetex_CFLAGS = # $(WARNING_CFLAGS)
  xetex_CXXFLAGS = # $(WARNING_CXXFLAGS)
  xetex_LDADD = $(xetex_ldadd) $(LDADD) $(ipc_socketlibs)
-@@ -2897,7 +3007,7 @@
+@@ -2904,7 +3014,7 @@
  nodist_xetex_SOURCES = $(xetex_c_h) xetex-pool.c
  dist_xetex_SOURCES = xetexdir/xetexextra.c xetexdir/xetexextra.h \
  	xetexdir/etex_version.h xetexdir/xetex_version.h \
@@ -1026,7 +1026,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  xetex_ch_srcs = \
  	xetexdir/xetex.web \
  	xetexdir/tex.ch0 \
-@@ -2918,7 +3028,7 @@
+@@ -2925,7 +3035,7 @@
  	xetexdir/XeTeXOTMath.h xetexdir/XeTeX_ext.c \
  	xetexdir/XeTeX_ext.h xetexdir/XeTeXswap.h xetexdir/trans.c \
  	xetexdir/trans.h xetexdir/hz.cpp xetexdir/xetex.h \
@@ -1035,7 +1035,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  
  # We must create xetexd.h etc. before building the libxetex_a_OBJECTS.
  libxetex_prereq = xetexd.h $(xetex_dependencies)
-@@ -3120,7 +3230,7 @@
+@@ -3126,7 +3236,7 @@
  .SUFFIXES: .c .cc .cin .cpp .cxx .h .hin .lo .log .mm .o .obj .p .pin .test .test$(EXEEXT) .trs
  am--refresh: Makefile
  	@:
@@ -1044,7 +1044,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  	@for dep in $?; do \
  	  case '$(am__configure_deps)' in \
  	    *$$dep*) \
-@@ -3142,7 +3252,7 @@
+@@ -3148,7 +3258,7 @@
  	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)'; \
  	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe);; \
  	esac;
@@ -1053,7 +1053,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  
  $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
  	$(SHELL) ./config.status --recheck
-@@ -4084,6 +4194,12 @@
+@@ -4090,6 +4200,12 @@
  pltotf$(EXEEXT): $(pltotf_OBJECTS) $(pltotf_DEPENDENCIES) $(EXTRA_pltotf_DEPENDENCIES) 
  	@rm -f pltotf$(EXEEXT)
  	$(AM_V_CCLD)$(LINK) $(pltotf_OBJECTS) $(pltotf_LDADD) $(LIBS)
@@ -1066,7 +1066,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  
  pooltype$(EXEEXT): $(pooltype_OBJECTS) $(pooltype_DEPENDENCIES) $(EXTRA_pooltype_DEPENDENCIES) 
  	@rm -f pooltype$(EXEEXT)
-@@ -4158,6 +4274,12 @@
+@@ -4164,6 +4280,12 @@
  updvitype$(EXEEXT): $(updvitype_OBJECTS) $(updvitype_DEPENDENCIES) $(EXTRA_updvitype_DEPENDENCIES) 
  	@rm -f updvitype$(EXEEXT)
  	$(AM_V_CCLD)$(LINK) $(updvitype_OBJECTS) $(updvitype_LDADD) $(LIBS)
@@ -1079,7 +1079,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  
  uppltotf$(EXEEXT): $(uppltotf_OBJECTS) $(uppltotf_DEPENDENCIES) $(EXTRA_uppltotf_DEPENDENCIES) 
  	@rm -f uppltotf$(EXEEXT)
-@@ -4393,6 +4515,16 @@
+@@ -4399,6 +4521,16 @@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pktogf.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pktype.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pltotf.Po@am__quote@
@@ -1096,7 +1096,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pooltype.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ppltotf-ppltotf.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ptex-ptex-pool.Po@am__quote@
-@@ -4410,6 +4542,16 @@
+@@ -4416,6 +4548,16 @@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/txt2zlib-txt2zlib.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/upbibtex-upbibtex.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/updvitype-updvitype.Po@am__quote@
@@ -1113,7 +1113,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uppltotf-uppltotf.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uptex-uptex-pool.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uptex-uptex0.Po@am__quote@
-@@ -4539,6 +4681,8 @@
+@@ -4545,6 +4687,8 @@
  @AMDEP_TRUE@@am__include@ @am__quote@luatexdir/utils/$(DEPDIR)/libluatex_a-avl.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@mplibdir/$(DEPDIR)/libluatex_a-lmplib.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@mplibdir/$(DEPDIR)/libmplib_a-avl.Po@am__quote@
@@ -1122,7 +1122,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  @AMDEP_TRUE@@am__include@ @am__quote@pdftexdir/$(DEPDIR)/libpdftex_a-avl.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@pdftexdir/$(DEPDIR)/libpdftex_a-avlstuff.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@pdftexdir/$(DEPDIR)/libpdftex_a-epdf.Po@am__quote@
-@@ -8633,6 +8777,160 @@
+@@ -8639,6 +8783,160 @@
  @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
  @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pdvitype_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o pdvitype-pdvitype.obj `if test -f 'pdvitype.c'; then $(CYGPATH_W) 'pdvitype.c'; else $(CYGPATH_W) '$(srcdir)/pdvitype.c'; fi`
  
@@ -1283,7 +1283,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  ppltotf-ppltotf.o: ppltotf.c
  @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ppltotf_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ppltotf-ppltotf.o -MD -MP -MF $(DEPDIR)/ppltotf-ppltotf.Tpo -c -o ppltotf-ppltotf.o `test -f 'ppltotf.c' || echo '$(srcdir)/'`ppltotf.c
  @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ppltotf-ppltotf.Tpo $(DEPDIR)/ppltotf-ppltotf.Po
-@@ -8927,6 +9225,160 @@
+@@ -8933,6 +9231,160 @@
  @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
  @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(updvitype_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o updvitype-updvitype.obj `if test -f 'updvitype.c'; then $(CYGPATH_W) 'updvitype.c'; else $(CYGPATH_W) '$(srcdir)/updvitype.c'; fi`
  
@@ -1444,7 +1444,7 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  uppltotf-uppltotf.o: uppltotf.c
  @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uppltotf_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT uppltotf-uppltotf.o -MD -MP -MF $(DEPDIR)/uppltotf-uppltotf.Tpo -c -o uppltotf-uppltotf.o `test -f 'uppltotf.c' || echo '$(srcdir)/'`uppltotf.c
  @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/uppltotf-uppltotf.Tpo $(DEPDIR)/uppltotf-uppltotf.Po
-@@ -10505,6 +10957,145 @@
+@@ -10511,6 +10963,145 @@
  mptrap-clean:
  	rm -rf mptrapdir
  
@@ -1591,8 +1591,8 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/Makefile.in source/texk/web2c
  tfmin.c: ctangle$(EXEEXT) mplibdir/tfmin.w
  	$(mp_ctangle) tfmin.w
 diff -urN -x autom4te.cache source.orig/texk/web2c/configure source/texk/web2c/configure
---- source.orig/texk/web2c/configure	2013-10-24 09:51:47.000000000 +0900
-+++ source/texk/web2c/configure	2013-10-24 14:34:14.956334331 +0900
+--- source.orig/texk/web2c/configure	2013-12-14 21:52:08.000000000 +0900
++++ source/texk/web2c/configure	2013-12-19 17:08:56.674576991 +0900
 @@ -740,6 +740,10 @@
  XETEX_SYNCTEX_TRUE
  XETEX_FALSE
@@ -1736,9 +1736,9 @@ diff -urN -x autom4te.cache source.orig/texk/web2c/configure source/texk/web2c/c
    as_fn_error $? "conditional \"WEB\" was never defined.
  Usually this means the macro was only invoked conditionally." "$LINENO" 5
 diff -urN -x autom4te.cache source.orig/utils/configure source/utils/configure
---- source.orig/utils/configure	2013-10-24 09:51:47.000000000 +0900
-+++ source/utils/configure	2013-10-24 14:28:07.624991003 +0900
-@@ -735,6 +735,8 @@
+--- source.orig/utils/configure	2013-12-04 08:58:40.000000000 +0900
++++ source/utils/configure	2013-12-19 17:03:56.944579422 +0900
+@@ -734,6 +734,8 @@
  enable_pdftex_synctex
  enable_luatex
  enable_mp
@@ -1747,7 +1747,7 @@ diff -urN -x autom4te.cache source.orig/utils/configure source/utils/configure
  enable_xetex
  enable_xetex_synctex
  enable_mf
-@@ -1526,6 +1528,8 @@
+@@ -1527,6 +1529,8 @@
    --disable-pdftex-synctex    build pdfTeX without SyncTeX support
    --disable-luatex          do not compile and install luaTeX
    --disable-mp              do not compile and install MetaPost
@@ -1756,7 +1756,7 @@ diff -urN -x autom4te.cache source.orig/utils/configure source/utils/configure
    --disable-xetex           do not compile and install XeTeX
    --disable-xetex-synctex     build XeTeX without SyncTeX support
    --disable-mf              do not build METAFONT
-@@ -3825,6 +3829,38 @@
+@@ -3813,6 +3817,38 @@
    need_cairo=yes
    need_libpng=yes
  }
