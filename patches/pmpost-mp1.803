@@ -1,7 +1,21 @@
-diff -udrN source.orig/texk/kpathsea/texmf.cnf source/texk/kpathsea/texmf.cnf
---- source.orig/texk/kpathsea/texmf.cnf	2013-08-09 16:21:36.819553625 +0900
-+++ source/texk/kpathsea/texmf.cnf	2013-08-09 16:25:17.307550842 +0900
-@@ -646,6 +646,7 @@
+---
+ texk/kpathsea/texmf.cnf           |    1 
+ texk/web2c/Makefile.am            |    3 
+ texk/web2c/ac/web2c.ac            |    1 
+ texk/web2c/pmpostdir/am/pmpost.am |  116 ++++++++
+ texk/web2c/pmpostdir/jfm.ch       |  104 ++++++++
+ texk/web2c/pmpostdir/jmp.ch       |  342 ++++++++++++++++++++++++++
+ texk/web2c/pmpostdir/jmppsw.ch    |   72 +++++
+ texk/web2c/pmpostdir/mpost.ch     |  273 +++++++++++++++++++++
+ texk/web2c/pmpostdir/mpxout.ch    |    8 
+ texk/web2c/pmpostdir/pdvitomp.ch  |  492 ++++++++++++++++++++++++++++++++++++++
+ texk/web2c/pmpostdir/psout.ch     |   42 +++
+ texk/web2c/pmpostdir/svgout.ch    |   60 ++++
+ 12 files changed, 1514 insertions(+)
+
+--- source.orig/texk/kpathsea/texmf.cnf
++++ source/texk/kpathsea/texmf.cnf
+@@ -642,6 +642,7 @@
  % Used by makempx to run TeX.  We use "etex" because MetaPost is
  % expecting DVI, and not "tex" because we want first line parsing.
  TEX = etex
@@ -9,9 +23,8 @@ diff -udrN source.orig/texk/kpathsea/texmf.cnf source/texk/kpathsea/texmf.cnf
  
  % These variables specify the external program called for the
  % interactive `e' option.  %d is replaced by the line number and %s by
-diff -udrN source.orig/texk/web2c/Makefile.am source/texk/web2c/Makefile.am
---- source.orig/texk/web2c/Makefile.am	2013-08-09 16:21:36.811553625 +0900
-+++ source/texk/web2c/Makefile.am	2013-08-09 16:25:17.307550842 +0900
+--- source.orig/texk/web2c/Makefile.am
++++ source/texk/web2c/Makefile.am
 @@ -181,6 +181,9 @@
  ## MetaPost
  include $(srcdir)/mplibdir/am/mplib.am
@@ -22,20 +35,18 @@ diff -udrN source.orig/texk/web2c/Makefile.am source/texk/web2c/Makefile.am
  ## libmplib, used by MetaPost and luaTeX
  include $(srcdir)/mplibdir/am/libmplib.am
  
-diff -udrN source.orig/texk/web2c/ac/web2c.ac source/texk/web2c/ac/web2c.ac
---- source.orig/texk/web2c/ac/web2c.ac	2013-08-09 16:21:36.799553625 +0900
-+++ source/texk/web2c/ac/web2c.ac	2013-08-09 16:25:17.307550842 +0900
-@@ -41,6 +41,7 @@
- [[pdftex], [yes], [yes], [pdfTeX],  [xpdf libpng]],
- [[luatex], [yes], [],    [luaTeX],  [poppler cairo libpng zziplib lua52]],
- [[mp],     [yes], [],    [MetaPost],[cairo libpng]],
-+[[pmp],    [yes], [],    [pMetaPost], [cairo libpng ptexenc]],
- [[xetex],  [yes], [yes], [XeTeX],   [poppler libpng freetype2 teckit harfbuzz]],
+--- source.orig/texk/web2c/ac/web2c.ac
++++ source/texk/web2c/ac/web2c.ac
+@@ -42,6 +42,7 @@
+ [[luatex],    [yes], [],    [LuaTeX],    [poppler cairo libpng zziplib lua52]],
+ [[luajittex], [yes], [],    [LuaJITTeX], [poppler cairo libpng zziplib luajit]],
+ [[mp],        [yes], [],    [MetaPost],  [cairo libpng]],
++[[pmp],       [yes], [],    [pMetaPost], [cairo libpng ptexenc]],
+ [[xetex],     [yes], [yes], [XeTeX],     [poppler libpng freetype2 teckit harfbuzz]],
  ])[]dnl
  m4_foreach([Kpse_Prog], [kpse_tex_progs],
-diff -udrN source.orig/texk/web2c/pmpostdir/am/pmpost.am source/texk/web2c/pmpostdir/am/pmpost.am
---- source.orig/texk/web2c/pmpostdir/am/pmpost.am	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/pmpostdir/am/pmpost.am	2013-08-09 16:25:17.307550842 +0900
+--- /dev/null
++++ source/texk/web2c/pmpostdir/am/pmpost.am
 @@ -0,0 +1,116 @@
 +## texk/web2c/pmpostdir/am/pmpost.am: Makefile fragment for pMetaPost.
 +
@@ -153,9 +164,8 @@ diff -udrN source.orig/texk/web2c/pmpostdir/am/pmpost.am source/texk/web2c/pmpos
 +$(pmpost_OBJECTS): $(nodist_pmpost_SOURCES)
 +
 +DISTCLEANFILES += $(nodist_pmpost_SOURCES)
-diff -udrN source.orig/texk/web2c/pmpostdir/jfm.ch source/texk/web2c/pmpostdir/jfm.ch
---- source.orig/texk/web2c/pmpostdir/jfm.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/pmpostdir/jfm.ch	2013-08-09 16:25:17.307550842 +0900
+--- /dev/null
++++ source/texk/web2c/pmpostdir/jfm.ch
 @@ -0,0 +1,104 @@
 +@x
 +#include <w2c/config.h>
@@ -261,9 +271,8 @@ diff -udrN source.orig/texk/web2c/pmpostdir/jfm.ch source/texk/web2c/pmpostdir/j
 +  if(fulln) mp_xfree(fulln);
 +}
 +@z
-diff -udrN source.orig/texk/web2c/pmpostdir/jmp.ch source/texk/web2c/pmpostdir/jmp.ch
---- source.orig/texk/web2c/pmpostdir/jmp.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/pmpostdir/jmp.ch	2013-08-09 16:25:17.307550842 +0900
+--- /dev/null
++++ source/texk/web2c/pmpostdir/jmp.ch
 @@ -0,0 +1,342 @@
 +% jMetaPost change file for MetaPost
 +%
@@ -280,15 +289,15 @@ diff -udrN source.orig/texk/web2c/pmpostdir/jmp.ch source/texk/web2c/pmpostdir/j
 +%
 +
 +@x
-+@d default_banner "This is MetaPost, Version 1.803" /* printed when \MP\ starts */
++@d default_banner "This is MetaPost, Version 1.902" /* printed when \MP\ starts */
 +@y
-+@d default_banner "This is pMetaPost, Version 1.803-0.04" /* printed when \MP\ starts */
++@d default_banner "This is pMetaPost, Version 1.902-0.04" /* printed when \MP\ starts */
 +@z
 +
 +@x
-+#define metapost_version "1.803"
++#define metapost_version "1.902"
 +@y
-+#define metapost_version "1.803-0.04"
++#define metapost_version "1.902-0.04"
 +@z
 +
 +@x
@@ -607,9 +616,8 @@ diff -udrN source.orig/texk/web2c/pmpostdir/jmp.ch source/texk/web2c/pmpostdir/j
 +}
 +@* Debugging.
 +@z
-diff -udrN source.orig/texk/web2c/pmpostdir/jmppsw.ch source/texk/web2c/pmpostdir/jmppsw.ch
---- source.orig/texk/web2c/pmpostdir/jmppsw.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/pmpostdir/jmppsw.ch	2013-08-09 16:25:17.307550842 +0900
+--- /dev/null
++++ source/texk/web2c/pmpostdir/jmppsw.ch
 @@ -0,0 +1,72 @@
 +%
 +%
@@ -683,15 +691,13 @@ diff -udrN source.orig/texk/web2c/pmpostdir/jmppsw.ch source/texk/web2c/pmpostdi
 +           mp_ps_string_out(mp, gr_text_p(p),gr_text_l(p));
 +        mp_ps_name_out(mp, mp->font_name[gr_font_n(p)],false);
 +@z
-diff -udrN source.orig/texk/web2c/pmpostdir/mpost.ch source/texk/web2c/pmpostdir/mpost.ch
---- source.orig/texk/web2c/pmpostdir/mpost.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/pmpostdir/mpost.ch	2013-08-09 16:25:17.307550842 +0900
+--- /dev/null
++++ source/texk/web2c/pmpostdir/mpost.ch
 @@ -0,0 +1,273 @@
 +@x
 +#include <kpathsea/kpathsea.h>
 +@y
 +#include <kpathsea/kpathsea.h>
-+#include <ptexenc/ptexenc.h>
 +char kanjioption[16];
 +@z
 +
@@ -705,7 +711,7 @@ diff -udrN source.orig/texk/web2c/pmpostdir/mpost.ch source/texk/web2c/pmpostdir
 +#endif
 +@y
 +@d TEX     "eptex"
-+@d TROFF   "gsoelim | geqn -Tps -d$$ | gtroff -Tps"
++@d TROFF   "soelim | eqn -Tps -d$$ | troff -Tps"
 +
 +@c
 +#ifndef MPXCOMMAND
@@ -777,13 +783,6 @@ diff -udrN source.orig/texk/web2c/pmpostdir/mpost.ch source/texk/web2c/pmpostdir
 +@z
 +
 +@x
-+  mpost_xfree (cnf_cmd);
-+@y
-+  if(cnf_cmd)
-+    mpost_xfree (cnf_cmd);
-+@z
-+
-+@x
 +      const char *banner = "% Written by dvitomp version ";
 +@y
 +      const char *banner = "% Written by pdvitomp version ";
@@ -832,9 +831,9 @@ diff -udrN source.orig/texk/web2c/pmpostdir/mpost.ch source/texk/web2c/pmpostdir
 +@z
 +
 +@x
-+  fprintf(stdout, "This is dvitomp %s" WEB2CVERSION "\n", s);
++  fprintf(stdout, "This is dvitomp %s" WEB2CVERSION " (%s)\n", s, kpathsea_version_string);
 +else
-+  fprintf(stdout, "This is MetaPost %s" WEB2CVERSION "\n", s);
++  fprintf(stdout, "This is MetaPost %s" WEB2CVERSION " (%s)\n", s, kpathsea_version_string);
 +mpost_xfree(s);
 +fprintf(stdout,
 +"\n"
@@ -854,9 +853,9 @@ diff -udrN source.orig/texk/web2c/pmpostdir/mpost.ch source/texk/web2c/pmpostdir
 +"  -numbersystem=STRING      set number system mode (STRING=scaled/double/binary/decimal)\n"
 +"  -jobname=STRING           set the job name to STRING\n"
 +@y
-+  fprintf(stdout, "This is pdvitomp %s" WEB2CVERSION "\n", s);
++  fprintf(stdout, "This is pdvitomp %s" WEB2CVERSION " (%s)\n", s, kpathsea_version_string);
 +else
-+  fprintf(stdout, "This is pMetaPost %s" WEB2CVERSION "\n", s);
++  fprintf(stdout, "This is pMetaPost %s" WEB2CVERSION " (%s)\n", s, kpathsea_version_string);
 +mpost_xfree(s);
 +fprintf(stdout,
 +"\n"
@@ -887,9 +886,9 @@ diff -udrN source.orig/texk/web2c/pmpostdir/mpost.ch source/texk/web2c/pmpostdir
 +@z
 +
 +@x
-+  fprintf(stdout, "This is dvitomp %s" WEB2CVERSION "\n", s);
++  fprintf(stdout, "This is dvitomp %s" WEB2CVERSION " (%s)\n", s, kpathsea_version_string);
 +else
-+  fprintf(stdout, "This is MetaPost %s" WEB2CVERSION "\n", s);
++  fprintf(stdout, "This is MetaPost %s" WEB2CVERSION " (%s)\n", s, kpathsea_version_string);
 +mpost_xfree(s);
 +fprintf(stdout,
 +"\n"
@@ -900,9 +899,9 @@ diff -udrN source.orig/texk/web2c/pmpostdir/mpost.ch source/texk/web2c/pmpostdir
 +fprintf(stdout,
 +"  -progname=STRING          set program name to STRING\n"
 +@y
-+  fprintf(stdout, "This is pdvitomp %s" WEB2CVERSION "\n", s);
++  fprintf(stdout, "This is pdvitomp %s" WEB2CVERSION " (%s)\n", s, kpathsea_version_string);
 +else
-+  fprintf(stdout, "This is pMetaPost %s" WEB2CVERSION "\n", s);
++  fprintf(stdout, "This is pMetaPost %s" WEB2CVERSION " (%s)\n", s, kpathsea_version_string);
 +mpost_xfree(s);
 +fprintf(stdout,
 +"\n"
@@ -916,20 +915,20 @@ diff -udrN source.orig/texk/web2c/pmpostdir/mpost.ch source/texk/web2c/pmpostdir
 +@z
 +
 +@x
-+  fprintf(stdout, "dvitomp (MetaPost) %s" WEB2CVERSION "\n", s);
++  fprintf(stdout, "dvitomp (MetaPost) %s" WEB2CVERSION " (%s)\n", s, kpathsea_version_string);
 +else
-+  fprintf(stdout, "MetaPost %s" WEB2CVERSION "\n", s);
++  fprintf(stdout, "MetaPost %s" WEB2CVERSION " (%s)\n", s, kpathsea_version_string);
 +@y
-+  fprintf(stdout, "pdvitomp (pMetaPost) %s" WEB2CVERSION "\n", s);
++  fprintf(stdout, "pdvitomp (pMetaPost) %s" WEB2CVERSION " (%s)\n", s, kpathsea_version_string);
 +else
-+  fprintf(stdout, "pMetaPost %s" WEB2CVERSION "\n", s);
++  fprintf(stdout, "pMetaPost %s" WEB2CVERSION " (%s)\n", s, kpathsea_version_string);
 +@z
 +
 +@x
-+"Author of the CWEB MetaPost: Taco Hoekwater.\n"
++"Author of the CWEB MetaPost: Taco Hoekwater.\n\n"
 +@y
 +"Author of the CWEB MetaPost: Taco Hoekwater.\n"
-+"Authors of pMetaPost: Michio Matsuyama, Hideyuki Suzuki.\n"
++"Authors of pMetaPost: Michio Matsuyama, Hideyuki Suzuki.\n\n"
 +@z
 +
 +@x
@@ -939,11 +938,10 @@ diff -udrN source.orig/texk/web2c/pmpostdir/mpost.ch source/texk/web2c/pmpostdir
 +@z
 +
 +@x
-+  options->print_found_names = (int)true;
-+  {
++  if (dvitomp_only) {
++    @<Read and set dvitomp command line options@>;
++  } else {
 +@y
-+  options->print_found_names = (int)true;
-+
 +  kanjioption[0] = '\0';
 +  enable_UPTEX (false);
 +#if defined(WIN32)
@@ -952,7 +950,16 @@ diff -udrN source.orig/texk/web2c/pmpostdir/mpost.ch source/texk/web2c/pmpostdir
 +  set_enc_string("utf8", "euc");
 +#endif
 +
-+  {
++  if (dvitomp_only) {
++    @<Read and set dvitomp command line options@>;
++  } else {
++#ifdef WIN32
++    options->mem_name =
++      strlwr(kpse_program_basename(argv[0]));
++#else
++    options->mem_name =
++      kpse_program_basename(argv[0]);
++#endif
 +@z
 +
 +@x
@@ -960,9 +967,8 @@ diff -udrN source.orig/texk/web2c/pmpostdir/mpost.ch source/texk/web2c/pmpostdir
 +@y
 +  if(putenv(xstrdup("engine=pmpost")))
 +@z
-diff -udrN source.orig/texk/web2c/pmpostdir/mpxout.ch source/texk/web2c/pmpostdir/mpxout.ch
---- source.orig/texk/web2c/pmpostdir/mpxout.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/pmpostdir/mpxout.ch	2013-08-09 16:25:17.307550842 +0900
+--- /dev/null
++++ source/texk/web2c/pmpostdir/mpxout.ch
 @@ -0,0 +1,8 @@
 +@x
 +#include <process.h>
@@ -972,9 +978,8 @@ diff -udrN source.orig/texk/web2c/pmpostdir/mpxout.ch source/texk/web2c/pmpostdi
 +typedef int boolean;
 +typedef int integer;
 +@z
-diff -udrN source.orig/texk/web2c/pmpostdir/pdvitomp.ch source/texk/web2c/pmpostdir/pdvitomp.ch
---- source.orig/texk/web2c/pmpostdir/pdvitomp.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/pmpostdir/pdvitomp.ch	2013-08-09 16:25:17.307550842 +0900
+--- /dev/null
++++ source/texk/web2c/pmpostdir/pdvitomp.ch
 @@ -0,0 +1,492 @@
 +@x
 +#include "avl.h"
@@ -1468,9 +1473,8 @@ diff -udrN source.orig/texk/web2c/pmpostdir/pdvitomp.ch source/texk/web2c/pmpost
 +  mpx->print_col++;
 +}
 +@z
-diff -udrN source.orig/texk/web2c/pmpostdir/psout.ch source/texk/web2c/pmpostdir/psout.ch
---- source.orig/texk/web2c/pmpostdir/psout.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/pmpostdir/psout.ch	2013-08-09 16:25:17.307550842 +0900
+--- /dev/null
++++ source/texk/web2c/pmpostdir/psout.ch
 @@ -0,0 +1,42 @@
 +@x
 +integer ps_offset;
@@ -1514,17 +1518,9 @@ diff -udrN source.orig/texk/web2c/pmpostdir/psout.ch source/texk/web2c/pmpostdir
 +    fm_read_info (mp);
 +  }
 +@z
-diff -udrN source.orig/texk/web2c/pmpostdir/svgout.ch source/texk/web2c/pmpostdir/svgout.ch
---- source.orig/texk/web2c/pmpostdir/svgout.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/pmpostdir/svgout.ch	2013-08-09 16:25:17.307550842 +0900
-@@ -0,0 +1,66 @@
-+@x
-+#include <math.h>
-+@y
-+#include <math.h>
-+#include <ptexenc/ptexenc.h>
-+@z
-+
+--- /dev/null
++++ source/texk/web2c/pmpostdir/svgout.ch
+@@ -0,0 +1,60 @@
 +@x 
 +@<Character |k| is not allowed in SVG output@>=
 + (k=='&')||(k=='>')||(k=='<')
@@ -1569,6 +1565,7 @@ diff -udrN source.orig/texk/web2c/pmpostdir/svgout.ch source/texk/web2c/pmpostdi
 +    l >>= 1;
 +    while (l-->0) {
 +         k =((int)*s++)*0x100; k += (int)*s++;
++         fprintf(stderr, "\n>>> %d\n", k); 
 +         append_string("&#");
 +         mp_svg_store_int(mp,toUCS(k));
 +         append_char(';');
