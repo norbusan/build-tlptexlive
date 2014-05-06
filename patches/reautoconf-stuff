@@ -1,6 +1,6 @@
 diff -urN -x autom4te.cache source/configure source-reautoconf/configure
---- source/configure	2014-05-06 17:50:11.291681891 +0900
-+++ source-reautoconf/configure	2014-05-06 17:51:20.431682709 +0900
+--- source/configure	2014-05-06 20:52:06.000000000 +0900
++++ source-reautoconf/configure	2014-05-06 20:52:36.271725929 +0900
 @@ -822,6 +822,8 @@
  enable_luatex
  enable_luajittex
@@ -59,8 +59,8 @@ diff -urN -x autom4te.cache source/configure source-reautoconf/configure
  if test "${enable_xetex+set}" = set; then :
    enableval=$enable_xetex;
 diff -urN -x autom4te.cache source/libs/configure source-reautoconf/libs/configure
---- source/libs/configure	2014-05-06 17:50:11.299681891 +0900
-+++ source-reautoconf/libs/configure	2014-05-06 17:51:25.655682771 +0900
+--- source/libs/configure	2014-05-06 20:52:06.000000000 +0900
++++ source-reautoconf/libs/configure	2014-05-06 20:52:41.627725993 +0900
 @@ -734,6 +734,8 @@
  enable_luatex
  enable_luajittex
@@ -118,8 +118,9 @@ diff -urN -x autom4te.cache source/libs/configure source-reautoconf/libs/configu
  # Check whether --enable-xetex was given.
  if test "${enable_xetex+set}" = set; then :
    enableval=$enable_xetex;
---- source/texk/configure	2014-05-06 17:50:11.303681892 +0900
-+++ source-reautoconf/texk/configure	2014-05-06 17:51:31.951682845 +0900
+diff -urN -x autom4te.cache source/texk/configure source-reautoconf/texk/configure
+--- source/texk/configure	2014-05-06 20:52:06.000000000 +0900
++++ source-reautoconf/texk/configure	2014-05-06 20:52:47.931726067 +0900
 @@ -734,6 +734,8 @@
  enable_luatex
  enable_luajittex
@@ -178,8 +179,8 @@ diff -urN -x autom4te.cache source/libs/configure source-reautoconf/libs/configu
  if test "${enable_xetex+set}" = set; then :
    enableval=$enable_xetex;
 diff -urN -x autom4te.cache source/texk/web2c/configure source-reautoconf/texk/web2c/configure
---- source/texk/web2c/configure	2014-05-06 17:50:11.379681892 +0900
-+++ source-reautoconf/texk/web2c/configure	2014-05-06 17:54:27.319684919 +0900
+--- source/texk/web2c/configure	2014-05-06 20:52:06.000000000 +0900
++++ source-reautoconf/texk/web2c/configure	2014-05-06 20:55:22.499727895 +0900
 @@ -744,6 +744,10 @@
  XETEX_SYNCTEX_TRUE
  XETEX_FALSE
@@ -323,8 +324,8 @@ diff -urN -x autom4te.cache source/texk/web2c/configure source-reautoconf/texk/w
    as_fn_error $? "conditional \"WEB\" was never defined.
  Usually this means the macro was only invoked conditionally." "$LINENO" 5
 diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk/web2c/Makefile.in
---- source/texk/web2c/Makefile.in	2014-05-06 17:50:11.355681892 +0900
-+++ source-reautoconf/texk/web2c/Makefile.in	2014-05-06 17:54:30.147684952 +0900
+--- source/texk/web2c/Makefile.in	2014-05-06 20:52:06.000000000 +0900
++++ source-reautoconf/texk/web2c/Makefile.in	2014-05-06 20:55:24.979727924 +0900
 @@ -79,12 +79,12 @@
  build_triplet = @build@
  host_triplet = @host@
@@ -1877,8 +1878,8 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk
  tfmin.c: ctangle$(EXEEXT) mplibdir/tfmin.w
  	$(mp_ctangle) tfmin.w
 diff -urN -x autom4te.cache source/utils/configure source-reautoconf/utils/configure
---- source/utils/configure	2014-05-06 17:50:11.383681892 +0900
-+++ source-reautoconf/utils/configure	2014-05-06 17:51:28.763682808 +0900
+--- source/utils/configure	2014-05-06 20:52:06.000000000 +0900
++++ source-reautoconf/utils/configure	2014-05-06 20:52:44.851726031 +0900
 @@ -734,6 +734,8 @@
  enable_luatex
  enable_luajittex
