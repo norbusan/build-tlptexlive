@@ -112,8 +112,9 @@ if [ $DO_NOPREP = 0 ] ; then
   cd $SOURCE
 
   # pxdvi
-  echo "creating pxdvi folder"
-  cp -pR texk/xdvik texk/pxdvik
+  # DISABLE for now, as patches are outdated
+  # echo "creating pxdvi folder"
+  # cp -pR texk/xdvik texk/pxdvik
 
 
   echo "applying patches"
@@ -184,9 +185,10 @@ if [ $DO_NOX = 1 ] ; then
   TL_CONFIGURE_ARGS="$TL_CONFIGURE_ARGS		\
   	--without-mf-x-toolkit	\
 	--without-x"
-else
-  TL_CONFIGURE_ARGS="$TL_CONFIGURE_ARGS		
-  	--enable-pxdvik"
+# DISABLE for now, as there are no updated patches
+# else
+#   TL_CONFIGURE_ARGS="$TL_CONFIGURE_ARGS		
+#   	--enable-pxdvik"
 fi
 
 if [ $DO_APPLE == 1 ] ; then
