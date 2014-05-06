@@ -5,6 +5,7 @@
 # 2012-11-07 update from HK fro pmpost and fixes for current svn sources
 # 2013-01-06 move patches to quilt, include reautoconf patch so that
 #            call to reautoconf is not necessary anymore
+# 2014-05-06 remove most stuff for other packages, only pmpost and upmpost
 #
 # on Debian, needs:
 # libx11-dev, libxaw7-dev, libfontconfig1-dev, bison, flex
@@ -158,28 +159,38 @@ if [ $DO_NOPREP = 0 ] ; then
 fi	# of $DO_NOPREP = 0
 
 
-TL_CONFIGURE_ARGS="	\
-	-C			\
-	--enable-texlive	\
+#
+# we need --enable-texlive otherwise building does not complete
+# since texlinks is not available
+TL_CONFIGURE_ARGS="-C \
 	--disable-all-pkgs	\
-	--disable-xdvipdfmx	\
-	--disable-xetex		\
-	--enable-ptex		\
-	--enable-eptex		\
-	--enable-uptex		\
-	--enable-euptex		\
-	--enable-omfonts	\
+	--enable-texlive	\
 	--enable-pmp		\
 	--enable-upmp		\
-	--enable-makejvf	\
-	--enable-dvipdfmx	\
-	--enable-dvipdfm-x	\
-	--enable-dvipsk		\
-	--enable-tetex		\
-	--enable-texk		\
-	--enable-web2c		\
-	--enable-mendexk	\
 	"
+	
+#TL_CONFIGURE_ARGS="	\
+#	-C			\
+#	--enable-texlive	\
+#	--disable-all-pkgs	\
+#	--disable-xdvipdfmx	\
+#	--disable-xetex		\
+#	--enable-ptex		\
+#	--enable-eptex		\
+#	--enable-uptex		\
+#	--enable-euptex		\
+#	--enable-omfonts	\
+#	--enable-pmp		\
+#	--enable-upmp		\
+#	--enable-makejvf	\
+#	--enable-dvipdfmx	\
+#	--enable-dvipdfm-x	\
+#	--enable-dvipsk		\
+#	--enable-tetex		\
+#	--enable-texk		\
+#	--enable-web2c		\
+#	--enable-mendexk	\
+#	"
 
 if [ $DO_NOX = 1 ] ; then
   TL_CONFIGURE_ARGS="$TL_CONFIGURE_ARGS		\
@@ -225,28 +236,34 @@ arch=`/bin/ls`
 #	*/pxdvi$EXT		\
 #	*/pxdvi-xaw$EXT		\
 	
+#zip -r $TARGET/binaries.zip 	\
+#	*/afm2tfm$EXT		\
+#	*/dvi2tty$EXT		\
+#	*/dvipdfmx$EXT		\
+#	*/dvips$EXT		\
+#	*/eptex$EXT		\
+#	*/euptex$EXT		\
+#	*/makejvf$EXT		\
+#	*/mendex$EXT		\
+#	*/pbibtex$EXT		\
+#	*/pdvitype$EXT		\
+#	*/pmpost$EXT		\
+#	*/ppltotf$EXT		\
+#	*/ptex$EXT		\
+#	*/ptftopl$EXT		\
+#	*/upbibtex$EXT		\
+#	*/updvitype$EXT		\
+#	*/upmpost$EXT		\
+#	*/uppltotf$EXT		\
+#	*/uptex$EXT		\
+#	*/uptftopl$EXT		\
+#	*/wovp2ovf$EXT		\
+
+
 zip -r $TARGET/binaries.zip 	\
-	*/afm2tfm$EXT		\
-	*/dvi2tty$EXT		\
-	*/dvipdfmx$EXT		\
-	*/dvips$EXT		\
-	*/eptex$EXT		\
-	*/euptex$EXT		\
-	*/makejvf$EXT		\
-	*/mendex$EXT		\
-	*/pbibtex$EXT		\
-	*/pdvitype$EXT		\
 	*/pmpost$EXT		\
-	*/ppltotf$EXT		\
-	*/ptex$EXT		\
-	*/ptftopl$EXT		\
-	*/upbibtex$EXT		\
-	*/updvitype$EXT		\
 	*/upmpost$EXT		\
-	*/uppltotf$EXT		\
-	*/uptex$EXT		\
-	*/uptftopl$EXT		\
-	*/wovp2ovf$EXT		\
+
 
 
 echo ""
