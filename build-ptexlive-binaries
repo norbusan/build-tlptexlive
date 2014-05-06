@@ -160,11 +160,27 @@ fi	# of $DO_NOPREP = 0
 
 
 #
-# we need --enable-texlive otherwise building does not complete
-# since texlinks is not available
 TL_CONFIGURE_ARGS="-C \
 	--disable-all-pkgs	\
 	--enable-texlive	\
+	--disable-linked-scripts	\
+	--enable-web2c		\
+	--disable-tex		\
+	--disable-etex		\
+	--disable-ptex		\
+	--disable-eptex		\
+	--disable-uptex		\
+	--disable-euptex	\
+	--disable-aleph		\
+	--disable-pdftex	\
+	--disable-luatex	\
+	--disable-luajittex	\
+	--disable-mp		\
+	--disable-xetex		\
+	--disable-web-progs	\
+	--disable-mf-nowin	\
+	--disable-mf		\
+	--disable-omfonts	\
 	--enable-pmp		\
 	--enable-upmp		\
 	"
@@ -186,8 +202,6 @@ TL_CONFIGURE_ARGS="-C \
 #	--enable-dvipdfmx	\
 #	--enable-dvipdfm-x	\
 #	--enable-dvipsk		\
-#	--enable-tetex		\
-#	--enable-texk		\
 #	--enable-web2c		\
 #	--enable-mendexk	\
 #	"
