@@ -148,9 +148,9 @@ diff -u -udrN source.pmorig/texk/web2c/upmpostdir/am/upmpost.am source/texk/web2
 +	@$(upmp_ctangle_sh) uppsout.w uppsout-tot.ch
 +uppsout-tangle: ctangle$(EXEEXT) mplibdir/psout.w uppsout-tot.ch tangle-sh
 +	@$(upmp_ctangle_sh) uppsout.w uppsout-tot.ch
-+uppsout-tot.ch: ctie$(EXEEXT) mplibdir/psout.w pmpostdir/psout.ch pmpostdir/jmppsw.ch upmpostdir/upjmppsw.ch
++uppsout-tot.ch: ctie$(EXEEXT) mplibdir/psout.w pmpostdir/jmppsw.ch upmpostdir/upjmppsw.ch
 +	cat $(srcdir)/mplibdir/psout.w | $(upmp_sed) > uppsout.w
-+	$(ctie) -c uppsout-tot.ch uppsout.w pmpostdir/psout.ch pmpostdir/jmppsw.ch upmpostdir/upjmppsw.ch
++	$(ctie) -c uppsout-tot.ch uppsout.w pmpostdir/jmppsw.ch upmpostdir/upjmppsw.ch
 +
 +$(upsvgout_c_h): upsvgout-tangle
 +	@$(upmp_ctangle_sh) upsvgout upsvgout-tot.ch
@@ -171,16 +171,16 @@ diff -u -udrN source.pmorig/texk/web2c/upmpostdir/am/upmpost.am source/texk/web2
 +	@$(upmp_ctangle_sh) upmpxout upmpxout-tot.ch
 +upmpxout-tangle: ctangle$(EXEEXT) mplibdir/mpxout.w upmpxout-tot.ch tangle-sh
 +	@$(upmp_ctangle_sh) upmpxout upmpxout-tot.ch
-+upmpxout-tot.ch: ctie$(EXEEXT) mplibdir/mpxout.w pmpostdir/mpxout.ch pmpostdir/pdvitomp.ch upmpostdir/updvitomp.ch
++upmpxout-tot.ch: ctie$(EXEEXT) mplibdir/mpxout.w pmpostdir/pdvitomp.ch upmpostdir/updvitomp.ch
 +	cat $(srcdir)/mplibdir/mpxout.w | $(upmp_sed) > upmpxout.w
-+	$(ctie) -c upmpxout-tot.ch upmpxout.w pmpostdir/mpxout.ch pmpostdir/pdvitomp.ch upmpostdir/updvitomp.ch
++	$(ctie) -c upmpxout-tot.ch upmpxout.w pmpostdir/pdvitomp.ch upmpostdir/updvitomp.ch
 +
 +## pMetaPost CWeb sources
 +upmpost_web = mplibdir/mpost.w mplibdir/mpxout.w
 +upmpost_web += mplibdir/mp.w mplibdir/psout.w mplibdir/svgout.w mplibdir/pngout.w
 +upmpost_web += mplibdir/mpmath.w mplibdir/mpmathdouble.w mplibdir/mpmathdecimal.w mplibdir/mpstrings.w mplibdir/tfmin.w
 +
-+$(upmpost_OBJECTS): $(nodist_upmpost_SOURCES)
++$(upmpost_OBJECTS): $(nodist_upmpost_SOURCES) $(KPATHSEA_DEPEND) $(CAIRO_DEPEND) $(PTEXENC_DEPEND) $(LIBPNG_DEPEND)
 +
 +DISTCLEANFILES += $(nodist_upmpost_SOURCES)
 diff -u -udrN source.pmorig/texk/web2c/upmpostdir/updvitomp.ch source/texk/web2c/upmpostdir/updvitomp.ch

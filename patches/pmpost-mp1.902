@@ -36,7 +36,7 @@ diff -u -udrN source.tlorig/texk/web2c/ac/web2c.ac source/texk/web2c/ac/web2c.ac
 diff -u -udrN source.tlorig/texk/web2c/pmpostdir/am/pmpost.am source/texk/web2c/pmpostdir/am/pmpost.am
 --- source.tlorig/texk/web2c/pmpostdir/am/pmpost.am	1970-01-01 09:00:00.000000000 +0900
 +++ source/texk/web2c/pmpostdir/am/pmpost.am	2014-05-05 18:15:08.307544403 +0900
-@@ -0,0 +1,125 @@
+@@ -0,0 +1,119 @@
 +## texk/web2c/pmpostdir/am/pmpost.am: Makefile fragment for pMetaPost.
 +
 +CTIE = ctie
@@ -128,12 +128,10 @@ diff -u -udrN source.tlorig/texk/web2c/pmpostdir/am/pmpost.am source/texk/web2c/
 +	@$(pmp_ctangle_sh) pmpstrings
 +
 +$(ppsout_c_h): ppsout-tangle
-+	@$(pmp_ctangle_sh) ppsout.w ppsout-tot.ch
-+ppsout-tangle: ctangle$(EXEEXT) mplibdir/psout.w ppsout-tot.ch tangle-sh
-+	@$(pmp_ctangle_sh) ppsout.w ppsout-tot.ch
-+ppsout-tot.ch: ctie$(EXEEXT) mplibdir/psout.w pmpostdir/psout.ch pmpostdir/jmppsw.ch
++	@$(pmp_ctangle_sh) ppsout.w jmppsw.ch
++ppsout-tangle: ctangle$(EXEEXT) mplibdir/psout.w tangle-sh
 +	cat $(srcdir)/mplibdir/psout.w | $(pmp_sed) > ppsout.w
-+	$(ctie) -c ppsout-tot.ch ppsout.w pmpostdir/psout.ch pmpostdir/jmppsw.ch
++	@$(pmp_ctangle_sh) ppsout.w jmppsw.ch
 +
 +$(psvgout_c_h): psvgout-tangle
 +	@$(pmp_ctangle_sh) psvgout svgout.ch
@@ -147,19 +145,17 @@ diff -u -udrN source.tlorig/texk/web2c/pmpostdir/am/pmpost.am source/texk/web2c/
 +	@$(pmp_ctangle_sh) ppngout
 +
 +$(pmpxout_c_h): pmpxout-tangle
-+	@$(pmp_ctangle_sh) pmpxout pmpxout-tot.ch
-+pmpxout-tangle: ctangle$(EXEEXT) mplibdir/mpxout.w pmpxout-tot.ch tangle-sh
-+	@$(pmp_ctangle_sh) pmpxout pmpxout-tot.ch
-+pmpxout-tot.ch: ctie$(EXEEXT) mplibdir/mpxout.w pmpostdir/mpxout.ch pmpostdir/pdvitomp.ch
++	@$(pmp_ctangle_sh) pmpxout pdvitomp.ch
++pmpxout-tangle: ctangle$(EXEEXT) mplibdir/mpxout.w tangle-sh
 +	cat $(srcdir)/mplibdir/mpxout.w | $(pmp_sed) > pmpxout.w
-+	$(ctie) -c pmpxout-tot.ch pmpxout.w pmpostdir/mpxout.ch pmpostdir/pdvitomp.ch
++	@$(pmp_ctangle_sh) pmpxout pdvitomp.ch
 +
 +## pMetaPost CWeb sources
 +pmpost_web = mplibdir/mpost.w mplibdir/mpxout.w
 +pmpost_web += mplibdir/mp.w mplibdir/psout.w mplibdir/svgout.w mplibdir/pngout.w
 +pmpost_web += mplibdir/mpmath.w mplibdir/mpmathdouble.w mplibdir/mpmathdecimal.w mplibdir/mpstrings.w mplibdir/tfmin.w
 +
-+$(pmpost_OBJECTS): $(nodist_pmpost_SOURCES)
++$(pmpost_OBJECTS): $(nodist_pmpost_SOURCES) $(KPATHSEA_DEPEND) $(CAIRO_DEPEND) $(PTEXENC_DEPEND) $(LIBPNG_DEPEND)
 +
 +DISTCLEANFILES += $(nodist_pmpost_SOURCES)
 diff -u -udrN source.tlorig/texk/web2c/pmpostdir/jfm.ch source/texk/web2c/pmpostdir/jfm.ch
@@ -970,18 +966,6 @@ diff -u -udrN source.tlorig/texk/web2c/pmpostdir/mpost.ch source/texk/web2c/pmpo
 +@y
 +  if(putenv(xstrdup("engine=pmpost")))
 +@z
-diff -u -udrN source.tlorig/texk/web2c/pmpostdir/mpxout.ch source/texk/web2c/pmpostdir/mpxout.ch
---- source.tlorig/texk/web2c/pmpostdir/mpxout.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/pmpostdir/mpxout.ch	2014-05-05 17:00:30.263684609 +0900
-@@ -0,0 +1,8 @@
-+@x
-+#include <process.h>
-+@y
-+#include <process.h>
-+#define R_OK 4
-+typedef int boolean;
-+typedef int integer;
-+@z
 diff -u -udrN source.tlorig/texk/web2c/pmpostdir/pdvitomp.ch source/texk/web2c/pmpostdir/pdvitomp.ch
 --- source.tlorig/texk/web2c/pmpostdir/pdvitomp.ch	1970-01-01 09:00:00.000000000 +0900
 +++ source/texk/web2c/pmpostdir/pdvitomp.ch	2014-05-05 17:00:30.263684609 +0900
@@ -1477,52 +1461,6 @@ diff -u -udrN source.tlorig/texk/web2c/pmpostdir/pdvitomp.ch source/texk/web2c/p
 +  putc2(Lo(c), mpx->mpxfile);
 +  mpx->print_col++;
 +}
-+@z
-diff -u -udrN source.tlorig/texk/web2c/pmpostdir/psout.ch source/texk/web2c/pmpostdir/psout.ch
---- source.tlorig/texk/web2c/pmpostdir/psout.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/pmpostdir/psout.ch	2014-05-05 17:00:30.263684609 +0900
-@@ -0,0 +1,42 @@
-+@x
-+integer ps_offset;
-+@y
-+integer ps_offset;
-+integer is_mapfile_read;
-+@z
-+
-+@x
-+mp->ps->ps_offset = 0;
-+@y
-+mp->ps->ps_offset = 0;
-+mp->ps->is_mapfile_read = 0;
-+@z
-+
-+@x
-+        mp->ps->fm_file = (mp->open_file)(mp, n, "r", mp_filetype_fontmap);
-+        if (!mp->ps->fm_file) {
-+@y
-+        mp->ps->fm_file = (mp->open_file)(mp, n, "r", mp_filetype_fontmap);
-+        if (!mp->ps->fm_file) {
-+            mp->ps->mitem->map_line = mp_xstrdup (mp,psf_tab_name);
-+            n = mp->ps->mitem->map_line;
-+            mp->ps->fm_file = (mp->open_file)(mp, n, "r", mp_filetype_fontmap);
-+        }
-+        if (!mp->ps->fm_file) {
-+@z
-+
-+@x
-+@d ps_tab_name "psfonts.map"  /* locates font name translation table */
-+@y
-+@d ps_tab_name "mpost.map"  /* locates font name translation table */
-+@d psf_tab_name "psfonts.map"  /* locates font name translation table */
-+@z
-+
-+@x
-+  fm_read_info (mp);
-+@y
-+  if (mp->ps->is_mapfile_read == 0) {
-+    mp->ps->is_mapfile_read++;
-+    fm_read_info (mp);
-+  }
 +@z
 diff -u -udrN source.tlorig/texk/web2c/pmpostdir/svgout.ch source/texk/web2c/pmpostdir/svgout.ch
 --- source.tlorig/texk/web2c/pmpostdir/svgout.ch	1970-01-01 09:00:00.000000000 +0900
