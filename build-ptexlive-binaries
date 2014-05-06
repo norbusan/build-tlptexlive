@@ -159,6 +159,7 @@ fi	# of $DO_NOPREP = 0
 
 
 TL_CONFIGURE_ARGS="	\
+	-C			\
 	--enable-texlive	\
 	--disable-all-pkgs	\
 	--disable-xdvipdfmx	\
@@ -178,7 +179,6 @@ TL_CONFIGURE_ARGS="	\
 	--enable-texk		\
 	--enable-web2c		\
 	--enable-mendexk	\
-	--enable-dvi2tty	\
 	"
 
 if [ $DO_NOX = 1 ] ; then

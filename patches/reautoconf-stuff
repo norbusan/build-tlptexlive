@@ -1,7 +1,7 @@
 diff -urN -x autom4te.cache source/configure source-reautoconf/configure
---- source/configure	2014-04-22 22:01:31.000000000 +0900
-+++ source-reautoconf/configure	2014-05-05 22:38:20.239049963 +0900
-@@ -823,6 +823,8 @@
+--- source/configure	2014-05-06 17:50:11.291681891 +0900
++++ source-reautoconf/configure	2014-05-06 17:51:20.431682709 +0900
+@@ -822,6 +822,8 @@
  enable_luatex
  enable_luajittex
  enable_mp
@@ -10,7 +10,7 @@ diff -urN -x autom4te.cache source/configure source-reautoconf/configure
  enable_xetex
  enable_xetex_synctex
  enable_mf
-@@ -1629,6 +1631,8 @@
+@@ -1627,6 +1629,8 @@
    --disable-luatex          do not compile and install LuaTeX
    --disable-luajittex       do not compile and install LuaJITTeX
    --disable-mp              do not compile and install MetaPost
@@ -19,7 +19,7 @@ diff -urN -x autom4te.cache source/configure source-reautoconf/configure
    --disable-xetex           do not compile and install XeTeX
    --disable-xetex-synctex     build XeTeX without SyncTeX support
    --disable-mf              do not build METAFONT
-@@ -4602,6 +4606,38 @@
+@@ -4582,6 +4586,38 @@
    need_cairo=yes
    need_libpng=yes
  }
@@ -59,9 +59,9 @@ diff -urN -x autom4te.cache source/configure source-reautoconf/configure
  if test "${enable_xetex+set}" = set; then :
    enableval=$enable_xetex;
 diff -urN -x autom4te.cache source/libs/configure source-reautoconf/libs/configure
---- source/libs/configure	2014-04-22 22:01:31.000000000 +0900
-+++ source-reautoconf/libs/configure	2014-05-05 22:38:25.919049785 +0900
-@@ -735,6 +735,8 @@
+--- source/libs/configure	2014-05-06 17:50:11.299681891 +0900
++++ source-reautoconf/libs/configure	2014-05-06 17:51:25.655682771 +0900
+@@ -734,6 +734,8 @@
  enable_luatex
  enable_luajittex
  enable_mp
@@ -70,7 +70,7 @@ diff -urN -x autom4te.cache source/libs/configure source-reautoconf/libs/configu
  enable_xetex
  enable_xetex_synctex
  enable_mf
-@@ -1535,6 +1537,8 @@
+@@ -1533,6 +1535,8 @@
    --disable-luatex          do not compile and install LuaTeX
    --disable-luajittex       do not compile and install LuaJITTeX
    --disable-mp              do not compile and install MetaPost
@@ -79,7 +79,7 @@ diff -urN -x autom4te.cache source/libs/configure source-reautoconf/libs/configu
    --disable-xetex           do not compile and install XeTeX
    --disable-xetex-synctex     build XeTeX without SyncTeX support
    --disable-mf              do not build METAFONT
-@@ -3852,6 +3856,38 @@
+@@ -3832,6 +3836,38 @@
    need_cairo=yes
    need_libpng=yes
  }
@@ -118,10 +118,9 @@ diff -urN -x autom4te.cache source/libs/configure source-reautoconf/libs/configu
  # Check whether --enable-xetex was given.
  if test "${enable_xetex+set}" = set; then :
    enableval=$enable_xetex;
-diff -urN -x autom4te.cache source/texk/configure source-reautoconf/texk/configure
---- source/texk/configure	2014-04-22 22:01:31.000000000 +0900
-+++ source-reautoconf/texk/configure	2014-05-05 22:38:32.503049579 +0900
-@@ -735,6 +735,8 @@
+--- source/texk/configure	2014-05-06 17:50:11.303681892 +0900
++++ source-reautoconf/texk/configure	2014-05-06 17:51:31.951682845 +0900
+@@ -734,6 +734,8 @@
  enable_luatex
  enable_luajittex
  enable_mp
@@ -130,7 +129,7 @@ diff -urN -x autom4te.cache source/texk/configure source-reautoconf/texk/configu
  enable_xetex
  enable_xetex_synctex
  enable_mf
-@@ -1548,6 +1550,8 @@
+@@ -1546,6 +1548,8 @@
    --disable-luatex          do not compile and install LuaTeX
    --disable-luajittex       do not compile and install LuaJITTeX
    --disable-mp              do not compile and install MetaPost
@@ -139,7 +138,7 @@ diff -urN -x autom4te.cache source/texk/configure source-reautoconf/texk/configu
    --disable-xetex           do not compile and install XeTeX
    --disable-xetex-synctex     build XeTeX without SyncTeX support
    --disable-mf              do not build METAFONT
-@@ -3865,6 +3869,38 @@
+@@ -3845,6 +3849,38 @@
    need_cairo=yes
    need_libpng=yes
  }
@@ -178,23 +177,154 @@ diff -urN -x autom4te.cache source/texk/configure source-reautoconf/texk/configu
  # Check whether --enable-xetex was given.
  if test "${enable_xetex+set}" = set; then :
    enableval=$enable_xetex;
-diff -urN -x autom4te.cache source/texk/kpathsea/Makefile.in source-reautoconf/texk/kpathsea/Makefile.in
---- source/texk/kpathsea/Makefile.in	2014-05-03 13:40:22.000000000 +0900
-+++ source-reautoconf/texk/kpathsea/Makefile.in	2014-05-05 22:41:15.659044471 +0900
-@@ -109,8 +109,8 @@
- DIST_COMMON = $(top_srcdir)/../../am/bin_links.am \
- 	$(srcdir)/../../am/rebuild.am $(srcdir)/Makefile.in \
- 	$(srcdir)/Makefile.am $(top_srcdir)/configure \
--	$(am__configure_deps) $(srcdir)/c-auto.in strcasecmp.c \
--	strtol.c putenv.c strstr.c $(dist_noinst_SCRIPTS) \
-+	$(am__configure_deps) $(srcdir)/c-auto.in strtol.c \
-+	strcasecmp.c strstr.c putenv.c $(dist_noinst_SCRIPTS) \
- 	$(dist_web2c_SCRIPTS) $(top_srcdir)/../../build-aux/depcomp \
- 	$(dist_noinst_DATA) $(dist_web2c_DATA) $(kpseinclude_HEADERS) \
- 	$(noinst_HEADERS) $(top_srcdir)/../../build-aux/test-driver \
+diff -urN -x autom4te.cache source/texk/web2c/configure source-reautoconf/texk/web2c/configure
+--- source/texk/web2c/configure	2014-05-06 17:50:11.379681892 +0900
++++ source-reautoconf/texk/web2c/configure	2014-05-06 17:54:27.319684919 +0900
+@@ -744,6 +744,10 @@
+ XETEX_SYNCTEX_TRUE
+ XETEX_FALSE
+ XETEX_TRUE
++UPMP_FALSE
++UPMP_TRUE
++PMP_FALSE
++PMP_TRUE
+ MP_FALSE
+ MP_TRUE
+ LUAJITTEX_FALSE
+@@ -976,6 +980,8 @@
+ enable_luatex
+ enable_luajittex
+ enable_mp
++enable_pmp
++enable_upmp
+ enable_xetex
+ enable_xetex_synctex
+ enable_mf
+@@ -1700,6 +1706,8 @@
+   --disable-luatex        do not compile and install LuaTeX
+   --disable-luajittex     do not compile and install LuaJITTeX
+   --disable-mp            do not compile and install MetaPost
++  --disable-pmp           do not compile and install pMetaPost
++  --disable-upmp          do not compile and install upMetaPost
+   --disable-xetex         do not compile and install XeTeX
+   --disable-xetex-synctex   build XeTeX without SyncTeX support
+   --disable-mf            do not build METAFONT
+@@ -18148,6 +18157,38 @@
+   need_cairo=yes
+   need_libpng=yes
+ }
++# Check whether --enable-pmp was given.
++if test "${enable_pmp+set}" = set; then :
++  enableval=$enable_pmp;
++fi
++case $enable_pmp in #(
++  yes | no) :
++     ;; #(
++  *) :
++    enable_pmp=yes ;;
++esac
++
++test "x$enable_web2c:$enable_pmp" = xyes:yes && {
++  need_cairo=yes
++  need_libpng=yes
++  need_ptexenc=yes
++}
++# Check whether --enable-upmp was given.
++if test "${enable_upmp+set}" = set; then :
++  enableval=$enable_upmp;
++fi
++case $enable_upmp in #(
++  yes | no) :
++     ;; #(
++  *) :
++    enable_upmp=yes ;;
++esac
++
++test "x$enable_web2c:$enable_upmp" = xyes:yes && {
++  need_cairo=yes
++  need_libpng=yes
++  need_ptexenc=yes
++}
+ # Check whether --enable-xetex was given.
+ if test "${enable_xetex+set}" = set; then :
+   enableval=$enable_xetex;
+@@ -19468,6 +19509,20 @@
+   MP_TRUE='#'
+   MP_FALSE=
+ fi
++ if test "x$enable_pmp" = xyes; then
++  PMP_TRUE=
++  PMP_FALSE='#'
++else
++  PMP_TRUE='#'
++  PMP_FALSE=
++fi
++ if test "x$enable_upmp" = xyes; then
++  UPMP_TRUE=
++  UPMP_FALSE='#'
++else
++  UPMP_TRUE='#'
++  UPMP_FALSE=
++fi
+  if test "x$enable_xetex" = xyes; then
+   XETEX_TRUE=
+   XETEX_FALSE='#'
+@@ -20356,6 +20411,22 @@
+   MP_FALSE=
+ fi
+ 
++ if test "x$enable_pmp" != xno; then
++  PMP_TRUE=
++  PMP_FALSE='#'
++else
++  PMP_TRUE='#'
++  PMP_FALSE=
++fi
++
++ if test "x$enable_upmp" != xno; then
++  UPMP_TRUE=
++  UPMP_FALSE='#'
++else
++  UPMP_TRUE='#'
++  UPMP_FALSE=
++fi
++
+ 
+  if test "x$enable_web_progs" != xno; then
+   WEB_TRUE=
+@@ -24273,6 +24344,14 @@
+   as_fn_error $? "conditional \"MP\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
++if test -z "${PMP_TRUE}" && test -z "${PMP_FALSE}"; then
++  as_fn_error $? "conditional \"PMP\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
++if test -z "${UPMP_TRUE}" && test -z "${UPMP_FALSE}"; then
++  as_fn_error $? "conditional \"UPMP\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
+ if test -z "${XETEX_TRUE}" && test -z "${XETEX_FALSE}"; then
+   as_fn_error $? "conditional \"XETEX\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+@@ -24305,6 +24384,14 @@
+   as_fn_error $? "conditional \"MP\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
++if test -z "${PMP_TRUE}" && test -z "${PMP_FALSE}"; then
++  as_fn_error $? "conditional \"PMP\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
++if test -z "${UPMP_TRUE}" && test -z "${UPMP_FALSE}"; then
++  as_fn_error $? "conditional \"UPMP\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
+ if test -z "${WEB_TRUE}" && test -z "${WEB_FALSE}"; then
+   as_fn_error $? "conditional \"WEB\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk/web2c/Makefile.in
---- source/texk/web2c/Makefile.in	2014-03-22 06:37:30.000000000 +0900
-+++ source-reautoconf/texk/web2c/Makefile.in	2014-05-05 22:41:47.759043466 +0900
+--- source/texk/web2c/Makefile.in	2014-05-06 17:50:11.355681892 +0900
++++ source-reautoconf/texk/web2c/Makefile.in	2014-05-06 17:54:30.147684952 +0900
 @@ -79,12 +79,12 @@
  build_triplet = @build@
  host_triplet = @host@
@@ -1746,155 +1876,10 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk
  # Creating one file: just one rule
  tfmin.c: ctangle$(EXEEXT) mplibdir/tfmin.w
  	$(mp_ctangle) tfmin.w
-diff -urN -x autom4te.cache source/texk/web2c/configure source-reautoconf/texk/web2c/configure
---- source/texk/web2c/configure	2014-04-22 22:01:31.000000000 +0900
-+++ source-reautoconf/texk/web2c/configure	2014-05-05 22:41:45.083043550 +0900
-@@ -744,6 +744,10 @@
- XETEX_SYNCTEX_TRUE
- XETEX_FALSE
- XETEX_TRUE
-+UPMP_FALSE
-+UPMP_TRUE
-+PMP_FALSE
-+PMP_TRUE
- MP_FALSE
- MP_TRUE
- LUAJITTEX_FALSE
-@@ -976,6 +980,8 @@
- enable_luatex
- enable_luajittex
- enable_mp
-+enable_pmp
-+enable_upmp
- enable_xetex
- enable_xetex_synctex
- enable_mf
-@@ -1700,6 +1706,8 @@
-   --disable-luatex        do not compile and install LuaTeX
-   --disable-luajittex     do not compile and install LuaJITTeX
-   --disable-mp            do not compile and install MetaPost
-+  --disable-pmp           do not compile and install pMetaPost
-+  --disable-upmp          do not compile and install upMetaPost
-   --disable-xetex         do not compile and install XeTeX
-   --disable-xetex-synctex   build XeTeX without SyncTeX support
-   --disable-mf            do not build METAFONT
-@@ -18148,6 +18156,38 @@
-   need_cairo=yes
-   need_libpng=yes
- }
-+# Check whether --enable-pmp was given.
-+if test "${enable_pmp+set}" = set; then :
-+  enableval=$enable_pmp;
-+fi
-+case $enable_pmp in #(
-+  yes | no) :
-+     ;; #(
-+  *) :
-+    enable_pmp=yes ;;
-+esac
-+
-+test "x$enable_web2c:$enable_pmp" = xyes:yes && {
-+  need_cairo=yes
-+  need_libpng=yes
-+  need_ptexenc=yes
-+}
-+# Check whether --enable-upmp was given.
-+if test "${enable_upmp+set}" = set; then :
-+  enableval=$enable_upmp;
-+fi
-+case $enable_upmp in #(
-+  yes | no) :
-+     ;; #(
-+  *) :
-+    enable_upmp=yes ;;
-+esac
-+
-+test "x$enable_web2c:$enable_upmp" = xyes:yes && {
-+  need_cairo=yes
-+  need_libpng=yes
-+  need_ptexenc=yes
-+}
- # Check whether --enable-xetex was given.
- if test "${enable_xetex+set}" = set; then :
-   enableval=$enable_xetex;
-@@ -19468,6 +19508,20 @@
-   MP_TRUE='#'
-   MP_FALSE=
- fi
-+ if test "x$enable_pmp" = xyes; then
-+  PMP_TRUE=
-+  PMP_FALSE='#'
-+else
-+  PMP_TRUE='#'
-+  PMP_FALSE=
-+fi
-+ if test "x$enable_upmp" = xyes; then
-+  UPMP_TRUE=
-+  UPMP_FALSE='#'
-+else
-+  UPMP_TRUE='#'
-+  UPMP_FALSE=
-+fi
-  if test "x$enable_xetex" = xyes; then
-   XETEX_TRUE=
-   XETEX_FALSE='#'
-@@ -20356,6 +20410,22 @@
-   MP_FALSE=
- fi
- 
-+ if test "x$enable_pmp" != xno; then
-+  PMP_TRUE=
-+  PMP_FALSE='#'
-+else
-+  PMP_TRUE='#'
-+  PMP_FALSE=
-+fi
-+
-+ if test "x$enable_upmp" != xno; then
-+  UPMP_TRUE=
-+  UPMP_FALSE='#'
-+else
-+  UPMP_TRUE='#'
-+  UPMP_FALSE=
-+fi
-+
- 
-  if test "x$enable_web_progs" != xno; then
-   WEB_TRUE=
-@@ -24273,6 +24343,14 @@
-   as_fn_error $? "conditional \"MP\" was never defined.
- Usually this means the macro was only invoked conditionally." "$LINENO" 5
- fi
-+if test -z "${PMP_TRUE}" && test -z "${PMP_FALSE}"; then
-+  as_fn_error $? "conditional \"PMP\" was never defined.
-+Usually this means the macro was only invoked conditionally." "$LINENO" 5
-+fi
-+if test -z "${UPMP_TRUE}" && test -z "${UPMP_FALSE}"; then
-+  as_fn_error $? "conditional \"UPMP\" was never defined.
-+Usually this means the macro was only invoked conditionally." "$LINENO" 5
-+fi
- if test -z "${XETEX_TRUE}" && test -z "${XETEX_FALSE}"; then
-   as_fn_error $? "conditional \"XETEX\" was never defined.
- Usually this means the macro was only invoked conditionally." "$LINENO" 5
-@@ -24305,6 +24383,14 @@
-   as_fn_error $? "conditional \"MP\" was never defined.
- Usually this means the macro was only invoked conditionally." "$LINENO" 5
- fi
-+if test -z "${PMP_TRUE}" && test -z "${PMP_FALSE}"; then
-+  as_fn_error $? "conditional \"PMP\" was never defined.
-+Usually this means the macro was only invoked conditionally." "$LINENO" 5
-+fi
-+if test -z "${UPMP_TRUE}" && test -z "${UPMP_FALSE}"; then
-+  as_fn_error $? "conditional \"UPMP\" was never defined.
-+Usually this means the macro was only invoked conditionally." "$LINENO" 5
-+fi
- if test -z "${WEB_TRUE}" && test -z "${WEB_FALSE}"; then
-   as_fn_error $? "conditional \"WEB\" was never defined.
- Usually this means the macro was only invoked conditionally." "$LINENO" 5
 diff -urN -x autom4te.cache source/utils/configure source-reautoconf/utils/configure
---- source/utils/configure	2014-04-22 22:01:31.000000000 +0900
-+++ source-reautoconf/utils/configure	2014-05-05 22:38:29.211049682 +0900
-@@ -735,6 +735,8 @@
+--- source/utils/configure	2014-05-06 17:50:11.383681892 +0900
++++ source-reautoconf/utils/configure	2014-05-06 17:51:28.763682808 +0900
+@@ -734,6 +734,8 @@
  enable_luatex
  enable_luajittex
  enable_mp
@@ -1903,7 +1888,7 @@ diff -urN -x autom4te.cache source/utils/configure source-reautoconf/utils/confi
  enable_xetex
  enable_xetex_synctex
  enable_mf
-@@ -1528,6 +1530,8 @@
+@@ -1525,6 +1527,8 @@
    --disable-luatex          do not compile and install LuaTeX
    --disable-luajittex       do not compile and install LuaJITTeX
    --disable-mp              do not compile and install MetaPost
@@ -1912,7 +1897,7 @@ diff -urN -x autom4te.cache source/utils/configure source-reautoconf/utils/confi
    --disable-xetex           do not compile and install XeTeX
    --disable-xetex-synctex     build XeTeX without SyncTeX support
    --disable-mf              do not build METAFONT
-@@ -3845,6 +3849,38 @@
+@@ -3824,6 +3828,38 @@
    need_cairo=yes
    need_libpng=yes
  }
