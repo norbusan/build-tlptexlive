@@ -1,6 +1,6 @@
 diff -urN -x autom4te.cache source/configure source-reautoconf/configure
 --- source/configure	2014-05-06 23:09:24.000000000 +0900
-+++ source-reautoconf/configure	2014-05-07 08:55:58.688925933 +0900
++++ source-reautoconf/configure	2014-05-07 10:29:23.728719825 +0900
 @@ -822,6 +822,8 @@
  enable_luatex
  enable_luajittex
@@ -60,7 +60,7 @@ diff -urN -x autom4te.cache source/configure source-reautoconf/configure
    enableval=$enable_xetex;
 diff -urN -x autom4te.cache source/libs/configure source-reautoconf/libs/configure
 --- source/libs/configure	2014-05-06 23:09:24.000000000 +0900
-+++ source-reautoconf/libs/configure	2014-05-07 08:56:05.980962092 +0900
++++ source-reautoconf/libs/configure	2014-05-07 10:29:30.548753643 +0900
 @@ -734,6 +734,8 @@
  enable_luatex
  enable_luajittex
@@ -120,7 +120,7 @@ diff -urN -x autom4te.cache source/libs/configure source-reautoconf/libs/configu
    enableval=$enable_xetex;
 diff -urN -x autom4te.cache source/texk/configure source-reautoconf/texk/configure
 --- source/texk/configure	2014-05-06 23:09:24.000000000 +0900
-+++ source-reautoconf/texk/configure	2014-05-07 08:56:13.416998966 +0900
++++ source-reautoconf/texk/configure	2014-05-07 10:29:38.524793194 +0900
 @@ -734,6 +734,8 @@
  enable_luatex
  enable_luajittex
@@ -178,23 +178,9 @@ diff -urN -x autom4te.cache source/texk/configure source-reautoconf/texk/configu
  # Check whether --enable-xetex was given.
  if test "${enable_xetex+set}" = set; then :
    enableval=$enable_xetex;
-diff -urN -x autom4te.cache source/texk/kpathsea/Makefile.in source-reautoconf/texk/kpathsea/Makefile.in
---- source/texk/kpathsea/Makefile.in	2014-05-06 07:47:50.000000000 +0900
-+++ source-reautoconf/texk/kpathsea/Makefile.in	2014-05-07 08:59:36.394005474 +0900
-@@ -109,8 +109,8 @@
- DIST_COMMON = $(top_srcdir)/../../am/bin_links.am \
- 	$(srcdir)/../../am/rebuild.am $(srcdir)/Makefile.in \
- 	$(srcdir)/Makefile.am $(top_srcdir)/configure \
--	$(am__configure_deps) $(srcdir)/c-auto.in strstr.c \
--	strcasecmp.c strtol.c putenv.c $(dist_noinst_SCRIPTS) \
-+	$(am__configure_deps) $(srcdir)/c-auto.in strtol.c strstr.c \
-+	strcasecmp.c putenv.c $(dist_noinst_SCRIPTS) \
- 	$(dist_web2c_SCRIPTS) $(top_srcdir)/../../build-aux/depcomp \
- 	$(dist_noinst_DATA) $(dist_web2c_DATA) $(kpseinclude_HEADERS) \
- 	$(noinst_HEADERS) $(top_srcdir)/../../build-aux/test-driver \
 diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk/web2c/Makefile.in
 --- source/texk/web2c/Makefile.in	2014-03-22 06:37:30.000000000 +0900
-+++ source-reautoconf/texk/web2c/Makefile.in	2014-05-07 09:00:15.878201266 +0900
++++ source-reautoconf/texk/web2c/Makefile.in	2014-05-07 10:33:24.001911275 +0900
 @@ -79,12 +79,12 @@
  build_triplet = @build@
  host_triplet = @host@
@@ -748,7 +734,15 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk
  TEST_SUITE_LOG = test-suite.log
  TEST_EXTENSIONS = @EXEEXT@ .test
  LOG_DRIVER = $(SHELL) $(top_srcdir)/../../build-aux/test-driver
-@@ -2245,12 +2296,13 @@
+@@ -1777,6 +1828,7 @@
+ CPPFLAGS = @CPPFLAGS@
+ CTANGLE = @CTANGLE@
+ CTANGLEBOOT = @CTANGLEBOOT@
++CTIE = @CTIE@
+ CXX = @CXX@
+ CXXCPP = @CXXCPP@
+ CXXDEPMODE = @CXXDEPMODE@
+@@ -2245,12 +2297,13 @@
  	$(nodist_libmf_a_SOURCES) mf-final.ch mf-web2c mf.p mf.pool \
  	mf-tangle $(nodist_mpost_SOURCES) mpxout-tangle mptrap.diffs \
  	ptmr.mpx tests/xptmr.mpx tests/xstory.mpx \
@@ -768,7 +762,7 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk
  	$(pweb_programs:=-web2c) $(pweb_programs:=.web) \
  	$(nodist_ptex_SOURCES) ptex.web ptex.ch ptex-web2c ptex.p \
  	ptex.pool ptex-tangle ptests/nissya_bib.* ptests/xexampl.aux \
-@@ -2293,16 +2345,17 @@
+@@ -2293,16 +2346,17 @@
  	aleph.pool aleph-tangle
  CLEANFILES = 
  TRIPTRAP_CLEAN = $(am__append_9) $(am__append_17) $(am__append_26) \
@@ -794,7 +788,7 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk
  NEVER_DIST = `find . -name .svn` cwebdir/cweave.log cwebdir/cweave.trs \
  	ctiedir/ctie.log ctiedir/ctie.trs tiedir/tie.log \
  	tiedir/tie.trs
-@@ -2405,18 +2458,18 @@
+@@ -2405,18 +2459,18 @@
  initex_CPPFLAGS = -DEXEPROG=\"tex.exe\"
  nodist_initex_SOURCES = callexe.c
  initex_LDADD = 
@@ -817,11 +811,10 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk
  tex_ch_srcs = \
  	tex.web \
  	tex.ch \
-@@ -2475,6 +2528,80 @@
+@@ -2475,6 +2529,79 @@
  mpxout_c_h = mpxout.c mpxout.h
  mpost_web = mplibdir/mpost.w mplibdir/mpxout.w
  mp_tests = mplibdir/dvitomp.test mplibdir/mptraptest
-+CTIE = ctie
 +ctie = $(ctie_silent)CWEBINPUTS=.:$(srcdir):$(srcdir)/pmpostdir:$(srcdir)/upmpostdir $(buildenv) $(CTIE)
 +ctie_silent = $(ctie_silent_$(V))
 +ctie_silent_ = $(ctie_silent_$(AM_DEFAULT_VERBOSITY))
@@ -1756,8 +1749,16 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk
  	$(mp_ctangle) tfmin.w
 diff -urN -x autom4te.cache source/texk/web2c/configure source-reautoconf/texk/web2c/configure
 --- source/texk/web2c/configure	2014-04-22 22:01:31.000000000 +0900
-+++ source-reautoconf/texk/web2c/configure	2014-05-07 09:00:12.934186667 +0900
-@@ -744,6 +744,10 @@
++++ source-reautoconf/texk/web2c/configure	2014-05-07 10:33:20.961896200 +0900
+@@ -639,6 +639,7 @@
+ LIBOBJS
+ subdirs
+ OTANGLE
++CTIE
+ TIE
+ CTANGLE
+ CTANGLEBOOT
+@@ -744,6 +745,10 @@
  XETEX_SYNCTEX_TRUE
  XETEX_FALSE
  XETEX_TRUE
@@ -1768,7 +1769,7 @@ diff -urN -x autom4te.cache source/texk/web2c/configure source-reautoconf/texk/w
  MP_FALSE
  MP_TRUE
  LUAJITTEX_FALSE
-@@ -976,6 +980,8 @@
+@@ -976,6 +981,8 @@
  enable_luatex
  enable_luajittex
  enable_mp
@@ -1777,7 +1778,7 @@ diff -urN -x autom4te.cache source/texk/web2c/configure source-reautoconf/texk/w
  enable_xetex
  enable_xetex_synctex
  enable_mf
-@@ -1700,6 +1706,8 @@
+@@ -1700,6 +1707,8 @@
    --disable-luatex        do not compile and install LuaTeX
    --disable-luajittex     do not compile and install LuaJITTeX
    --disable-mp            do not compile and install MetaPost
@@ -1786,7 +1787,7 @@ diff -urN -x autom4te.cache source/texk/web2c/configure source-reautoconf/texk/w
    --disable-xetex         do not compile and install XeTeX
    --disable-xetex-synctex   build XeTeX without SyncTeX support
    --disable-mf            do not build METAFONT
-@@ -18148,6 +18156,38 @@
+@@ -18148,6 +18157,38 @@
    need_cairo=yes
    need_libpng=yes
  }
@@ -1825,7 +1826,7 @@ diff -urN -x autom4te.cache source/texk/web2c/configure source-reautoconf/texk/w
  # Check whether --enable-xetex was given.
  if test "${enable_xetex+set}" = set; then :
    enableval=$enable_xetex;
-@@ -19468,6 +19508,20 @@
+@@ -19468,6 +19509,20 @@
    MP_TRUE='#'
    MP_FALSE=
  fi
@@ -1846,7 +1847,7 @@ diff -urN -x autom4te.cache source/texk/web2c/configure source-reautoconf/texk/w
   if test "x$enable_xetex" = xyes; then
    XETEX_TRUE=
    XETEX_FALSE='#'
-@@ -20356,6 +20410,22 @@
+@@ -20356,6 +20411,22 @@
    MP_FALSE=
  fi
  
@@ -1869,7 +1870,63 @@ diff -urN -x autom4te.cache source/texk/web2c/configure source-reautoconf/texk/w
  
   if test "x$enable_web_progs" != xno; then
    WEB_TRUE=
-@@ -24273,6 +24343,14 @@
+@@ -23926,6 +23997,55 @@
+ fi
+ 
+ if test "x$cross_compiling" = xyes; then :
++  # Extract the first word of "ctie", so it can be a program name with args.
++set dummy ctie; ac_word=$2
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
++$as_echo_n "checking for $ac_word... " >&6; }
++if ${ac_cv_path_CTIE+:} false; then :
++  $as_echo_n "(cached) " >&6
++else
++  case $CTIE in
++  [\\/]* | ?:[\\/]*)
++  ac_cv_path_CTIE="$CTIE" # Let the user override the test with a path.
++  ;;
++  *)
++  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
++for as_dir in $PATH
++do
++  IFS=$as_save_IFS
++  test -z "$as_dir" && as_dir=.
++    for ac_exec_ext in '' $ac_executable_extensions; do
++  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++    ac_cv_path_CTIE="$as_dir/$ac_word$ac_exec_ext"
++    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
++    break 2
++  fi
++done
++  done
++IFS=$as_save_IFS
++
++  ;;
++esac
++fi
++CTIE=$ac_cv_path_CTIE
++if test -n "$CTIE"; then
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CTIE" >&5
++$as_echo "$CTIE" >&6; }
++else
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++fi
++
++
++if test -z "${CTIE}"; then :
++  as_fn_error $? "ctie was not found but is required when cross-compiling.
++  Install ctie or set \$CTIE to the full pathname." "$LINENO" 5
++fi
++else
++  CTIE=./ctie
++fi
++
++if test "x$cross_compiling" = xyes; then :
+   # Extract the first word of "otangle", so it can be a program name with args.
+ set dummy otangle; ac_word=$2
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+@@ -24273,6 +24393,14 @@
    as_fn_error $? "conditional \"MP\" was never defined.
  Usually this means the macro was only invoked conditionally." "$LINENO" 5
  fi
@@ -1884,7 +1941,7 @@ diff -urN -x autom4te.cache source/texk/web2c/configure source-reautoconf/texk/w
  if test -z "${XETEX_TRUE}" && test -z "${XETEX_FALSE}"; then
    as_fn_error $? "conditional \"XETEX\" was never defined.
  Usually this means the macro was only invoked conditionally." "$LINENO" 5
-@@ -24305,6 +24383,14 @@
+@@ -24305,6 +24433,14 @@
    as_fn_error $? "conditional \"MP\" was never defined.
  Usually this means the macro was only invoked conditionally." "$LINENO" 5
  fi
@@ -1899,9 +1956,86 @@ diff -urN -x autom4te.cache source/texk/web2c/configure source-reautoconf/texk/w
  if test -z "${WEB_TRUE}" && test -z "${WEB_FALSE}"; then
    as_fn_error $? "conditional \"WEB\" was never defined.
  Usually this means the macro was only invoked conditionally." "$LINENO" 5
+diff -urN -x autom4te.cache source/texk/web2c/doc/Makefile.in source-reautoconf/texk/web2c/doc/Makefile.in
+--- source/texk/web2c/doc/Makefile.in	2014-03-15 17:13:07.000000000 +0900
++++ source-reautoconf/texk/web2c/doc/Makefile.in	2014-05-07 10:33:24.061911573 +0900
+@@ -234,6 +234,7 @@
+ CPPFLAGS = @CPPFLAGS@
+ CTANGLE = @CTANGLE@
+ CTANGLEBOOT = @CTANGLEBOOT@
++CTIE = @CTIE@
+ CXX = @CXX@
+ CXXCPP = @CXXCPP@
+ CXXDEPMODE = @CXXDEPMODE@
+diff -urN -x autom4te.cache source/texk/web2c/lib/Makefile.in source-reautoconf/texk/web2c/lib/Makefile.in
+--- source/texk/web2c/lib/Makefile.in	2014-03-15 17:13:07.000000000 +0900
++++ source-reautoconf/texk/web2c/lib/Makefile.in	2014-05-07 10:33:24.113911830 +0900
+@@ -230,6 +230,7 @@
+ CPPFLAGS = @CPPFLAGS@
+ CTANGLE = @CTANGLE@
+ CTANGLEBOOT = @CTANGLEBOOT@
++CTIE = @CTIE@
+ CXX = @CXX@
+ CXXCPP = @CXXCPP@
+ CXXDEPMODE = @CXXDEPMODE@
+diff -urN -x autom4te.cache source/texk/web2c/man/Makefile.in source-reautoconf/texk/web2c/man/Makefile.in
+--- source/texk/web2c/man/Makefile.in	2014-05-05 16:53:38.000000000 +0900
++++ source-reautoconf/texk/web2c/man/Makefile.in	2014-05-07 10:33:24.157912049 +0900
+@@ -211,6 +211,7 @@
+ CPPFLAGS = @CPPFLAGS@
+ CTANGLE = @CTANGLE@
+ CTANGLEBOOT = @CTANGLEBOOT@
++CTIE = @CTIE@
+ CXX = @CXX@
+ CXXCPP = @CXXCPP@
+ CXXDEPMODE = @CXXDEPMODE@
+diff -urN -x autom4te.cache source/texk/web2c/omegafonts/Makefile.in source-reautoconf/texk/web2c/omegafonts/Makefile.in
+--- source/texk/web2c/omegafonts/Makefile.in	2014-03-15 17:13:07.000000000 +0900
++++ source-reautoconf/texk/web2c/omegafonts/Makefile.in	2014-05-07 10:33:24.221912366 +0900
+@@ -456,6 +456,7 @@
+ CPPFLAGS = @CPPFLAGS@
+ CTANGLE = @CTANGLE@
+ CTANGLEBOOT = @CTANGLEBOOT@
++CTIE = @CTIE@
+ CXX = @CXX@
+ CXXCPP = @CXXCPP@
+ CXXDEPMODE = @CXXDEPMODE@
+diff -urN -x autom4te.cache source/texk/web2c/otps/Makefile.in source-reautoconf/texk/web2c/otps/Makefile.in
+--- source/texk/web2c/otps/Makefile.in	2014-03-15 17:13:07.000000000 +0900
++++ source-reautoconf/texk/web2c/otps/Makefile.in	2014-05-07 10:33:24.285912683 +0900
+@@ -495,6 +495,7 @@
+ CPPFLAGS = @CPPFLAGS@
+ CTANGLE = @CTANGLE@
+ CTANGLEBOOT = @CTANGLEBOOT@
++CTIE = @CTIE@
+ CXX = @CXX@
+ CXXCPP = @CXXCPP@
+ CXXDEPMODE = @CXXDEPMODE@
+diff -urN -x autom4te.cache source/texk/web2c/otps/win32/Makefile.in source-reautoconf/texk/web2c/otps/win32/Makefile.in
+--- source/texk/web2c/otps/win32/Makefile.in	2014-03-15 17:13:07.000000000 +0900
++++ source-reautoconf/texk/web2c/otps/win32/Makefile.in	2014-05-07 10:33:24.333912921 +0900
+@@ -218,6 +218,7 @@
+ CPPFLAGS = @CPPFLAGS@
+ CTANGLE = @CTANGLE@
+ CTANGLEBOOT = @CTANGLEBOOT@
++CTIE = @CTIE@
+ CXX = @CXX@
+ CXXCPP = @CXXCPP@
+ CXXDEPMODE = @CXXDEPMODE@
+diff -urN -x autom4te.cache source/texk/web2c/window/Makefile.in source-reautoconf/texk/web2c/window/Makefile.in
+--- source/texk/web2c/window/Makefile.in	2014-03-15 17:13:07.000000000 +0900
++++ source-reautoconf/texk/web2c/window/Makefile.in	2014-05-07 10:33:24.381913159 +0900
+@@ -228,6 +228,7 @@
+ CPPFLAGS = @CPPFLAGS@
+ CTANGLE = @CTANGLE@
+ CTANGLEBOOT = @CTANGLEBOOT@
++CTIE = @CTIE@
+ CXX = @CXX@
+ CXXCPP = @CXXCPP@
+ CXXDEPMODE = @CXXDEPMODE@
 diff -urN -x autom4te.cache source/utils/configure source-reautoconf/utils/configure
 --- source/utils/configure	2014-05-06 23:09:24.000000000 +0900
-+++ source-reautoconf/utils/configure	2014-05-07 08:56:09.844981253 +0900
++++ source-reautoconf/utils/configure	2014-05-07 10:29:34.552773498 +0900
 @@ -734,6 +734,8 @@
  enable_luatex
  enable_luajittex

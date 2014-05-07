@@ -36,10 +36,9 @@ diff -u -udrN source.tlorig/texk/web2c/ac/web2c.ac source/texk/web2c/ac/web2c.ac
 diff -u -udrN source.tlorig/texk/web2c/pmpostdir/am/pmpost.am source/texk/web2c/pmpostdir/am/pmpost.am
 --- source.tlorig/texk/web2c/pmpostdir/am/pmpost.am	1970-01-01 09:00:00.000000000 +0900
 +++ source/texk/web2c/pmpostdir/am/pmpost.am	2014-05-05 18:15:08.307544403 +0900
-@@ -0,0 +1,119 @@
+@@ -0,0 +1,118 @@
 +## texk/web2c/pmpostdir/am/pmpost.am: Makefile fragment for pMetaPost.
 +
-+CTIE = ctie
 +ctie = $(ctie_silent)CWEBINPUTS=.:$(srcdir):$(srcdir)/pmpostdir:$(srcdir)/upmpostdir $(buildenv) $(CTIE)
 +ctie_silent = $(ctie_silent_$(V))
 +ctie_silent_ = $(ctie_silent_$(AM_DEFAULT_VERBOSITY))
