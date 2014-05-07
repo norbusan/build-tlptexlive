@@ -1,6 +1,6 @@
 diff -urN -x autom4te.cache source/configure source-reautoconf/configure
---- source/configure	2014-05-06 20:52:06.000000000 +0900
-+++ source-reautoconf/configure	2014-05-06 20:52:36.271725929 +0900
+--- source/configure	2014-05-06 23:09:24.000000000 +0900
++++ source-reautoconf/configure	2014-05-07 08:55:58.688925933 +0900
 @@ -822,6 +822,8 @@
  enable_luatex
  enable_luajittex
@@ -59,8 +59,8 @@ diff -urN -x autom4te.cache source/configure source-reautoconf/configure
  if test "${enable_xetex+set}" = set; then :
    enableval=$enable_xetex;
 diff -urN -x autom4te.cache source/libs/configure source-reautoconf/libs/configure
---- source/libs/configure	2014-05-06 20:52:06.000000000 +0900
-+++ source-reautoconf/libs/configure	2014-05-06 20:52:41.627725993 +0900
+--- source/libs/configure	2014-05-06 23:09:24.000000000 +0900
++++ source-reautoconf/libs/configure	2014-05-07 08:56:05.980962092 +0900
 @@ -734,6 +734,8 @@
  enable_luatex
  enable_luajittex
@@ -119,8 +119,8 @@ diff -urN -x autom4te.cache source/libs/configure source-reautoconf/libs/configu
  if test "${enable_xetex+set}" = set; then :
    enableval=$enable_xetex;
 diff -urN -x autom4te.cache source/texk/configure source-reautoconf/texk/configure
---- source/texk/configure	2014-05-06 20:52:06.000000000 +0900
-+++ source-reautoconf/texk/configure	2014-05-06 20:52:47.931726067 +0900
+--- source/texk/configure	2014-05-06 23:09:24.000000000 +0900
++++ source-reautoconf/texk/configure	2014-05-07 08:56:13.416998966 +0900
 @@ -734,6 +734,8 @@
  enable_luatex
  enable_luajittex
@@ -178,154 +178,23 @@ diff -urN -x autom4te.cache source/texk/configure source-reautoconf/texk/configu
  # Check whether --enable-xetex was given.
  if test "${enable_xetex+set}" = set; then :
    enableval=$enable_xetex;
-diff -urN -x autom4te.cache source/texk/web2c/configure source-reautoconf/texk/web2c/configure
---- source/texk/web2c/configure	2014-05-06 20:52:06.000000000 +0900
-+++ source-reautoconf/texk/web2c/configure	2014-05-06 20:55:22.499727895 +0900
-@@ -744,6 +744,10 @@
- XETEX_SYNCTEX_TRUE
- XETEX_FALSE
- XETEX_TRUE
-+UPMP_FALSE
-+UPMP_TRUE
-+PMP_FALSE
-+PMP_TRUE
- MP_FALSE
- MP_TRUE
- LUAJITTEX_FALSE
-@@ -976,6 +980,8 @@
- enable_luatex
- enable_luajittex
- enable_mp
-+enable_pmp
-+enable_upmp
- enable_xetex
- enable_xetex_synctex
- enable_mf
-@@ -1700,6 +1706,8 @@
-   --disable-luatex        do not compile and install LuaTeX
-   --disable-luajittex     do not compile and install LuaJITTeX
-   --disable-mp            do not compile and install MetaPost
-+  --disable-pmp           do not compile and install pMetaPost
-+  --disable-upmp          do not compile and install upMetaPost
-   --disable-xetex         do not compile and install XeTeX
-   --disable-xetex-synctex   build XeTeX without SyncTeX support
-   --disable-mf            do not build METAFONT
-@@ -18148,6 +18157,38 @@
-   need_cairo=yes
-   need_libpng=yes
- }
-+# Check whether --enable-pmp was given.
-+if test "${enable_pmp+set}" = set; then :
-+  enableval=$enable_pmp;
-+fi
-+case $enable_pmp in #(
-+  yes | no) :
-+     ;; #(
-+  *) :
-+    enable_pmp=yes ;;
-+esac
-+
-+test "x$enable_web2c:$enable_pmp" = xyes:yes && {
-+  need_cairo=yes
-+  need_libpng=yes
-+  need_ptexenc=yes
-+}
-+# Check whether --enable-upmp was given.
-+if test "${enable_upmp+set}" = set; then :
-+  enableval=$enable_upmp;
-+fi
-+case $enable_upmp in #(
-+  yes | no) :
-+     ;; #(
-+  *) :
-+    enable_upmp=yes ;;
-+esac
-+
-+test "x$enable_web2c:$enable_upmp" = xyes:yes && {
-+  need_cairo=yes
-+  need_libpng=yes
-+  need_ptexenc=yes
-+}
- # Check whether --enable-xetex was given.
- if test "${enable_xetex+set}" = set; then :
-   enableval=$enable_xetex;
-@@ -19468,6 +19509,20 @@
-   MP_TRUE='#'
-   MP_FALSE=
- fi
-+ if test "x$enable_pmp" = xyes; then
-+  PMP_TRUE=
-+  PMP_FALSE='#'
-+else
-+  PMP_TRUE='#'
-+  PMP_FALSE=
-+fi
-+ if test "x$enable_upmp" = xyes; then
-+  UPMP_TRUE=
-+  UPMP_FALSE='#'
-+else
-+  UPMP_TRUE='#'
-+  UPMP_FALSE=
-+fi
-  if test "x$enable_xetex" = xyes; then
-   XETEX_TRUE=
-   XETEX_FALSE='#'
-@@ -20356,6 +20411,22 @@
-   MP_FALSE=
- fi
- 
-+ if test "x$enable_pmp" != xno; then
-+  PMP_TRUE=
-+  PMP_FALSE='#'
-+else
-+  PMP_TRUE='#'
-+  PMP_FALSE=
-+fi
-+
-+ if test "x$enable_upmp" != xno; then
-+  UPMP_TRUE=
-+  UPMP_FALSE='#'
-+else
-+  UPMP_TRUE='#'
-+  UPMP_FALSE=
-+fi
-+
- 
-  if test "x$enable_web_progs" != xno; then
-   WEB_TRUE=
-@@ -24273,6 +24344,14 @@
-   as_fn_error $? "conditional \"MP\" was never defined.
- Usually this means the macro was only invoked conditionally." "$LINENO" 5
- fi
-+if test -z "${PMP_TRUE}" && test -z "${PMP_FALSE}"; then
-+  as_fn_error $? "conditional \"PMP\" was never defined.
-+Usually this means the macro was only invoked conditionally." "$LINENO" 5
-+fi
-+if test -z "${UPMP_TRUE}" && test -z "${UPMP_FALSE}"; then
-+  as_fn_error $? "conditional \"UPMP\" was never defined.
-+Usually this means the macro was only invoked conditionally." "$LINENO" 5
-+fi
- if test -z "${XETEX_TRUE}" && test -z "${XETEX_FALSE}"; then
-   as_fn_error $? "conditional \"XETEX\" was never defined.
- Usually this means the macro was only invoked conditionally." "$LINENO" 5
-@@ -24305,6 +24384,14 @@
-   as_fn_error $? "conditional \"MP\" was never defined.
- Usually this means the macro was only invoked conditionally." "$LINENO" 5
- fi
-+if test -z "${PMP_TRUE}" && test -z "${PMP_FALSE}"; then
-+  as_fn_error $? "conditional \"PMP\" was never defined.
-+Usually this means the macro was only invoked conditionally." "$LINENO" 5
-+fi
-+if test -z "${UPMP_TRUE}" && test -z "${UPMP_FALSE}"; then
-+  as_fn_error $? "conditional \"UPMP\" was never defined.
-+Usually this means the macro was only invoked conditionally." "$LINENO" 5
-+fi
- if test -z "${WEB_TRUE}" && test -z "${WEB_FALSE}"; then
-   as_fn_error $? "conditional \"WEB\" was never defined.
- Usually this means the macro was only invoked conditionally." "$LINENO" 5
+diff -urN -x autom4te.cache source/texk/kpathsea/Makefile.in source-reautoconf/texk/kpathsea/Makefile.in
+--- source/texk/kpathsea/Makefile.in	2014-05-06 07:47:50.000000000 +0900
++++ source-reautoconf/texk/kpathsea/Makefile.in	2014-05-07 08:59:36.394005474 +0900
+@@ -109,8 +109,8 @@
+ DIST_COMMON = $(top_srcdir)/../../am/bin_links.am \
+ 	$(srcdir)/../../am/rebuild.am $(srcdir)/Makefile.in \
+ 	$(srcdir)/Makefile.am $(top_srcdir)/configure \
+-	$(am__configure_deps) $(srcdir)/c-auto.in strstr.c \
+-	strcasecmp.c strtol.c putenv.c $(dist_noinst_SCRIPTS) \
++	$(am__configure_deps) $(srcdir)/c-auto.in strtol.c strstr.c \
++	strcasecmp.c putenv.c $(dist_noinst_SCRIPTS) \
+ 	$(dist_web2c_SCRIPTS) $(top_srcdir)/../../build-aux/depcomp \
+ 	$(dist_noinst_DATA) $(dist_web2c_DATA) $(kpseinclude_HEADERS) \
+ 	$(noinst_HEADERS) $(top_srcdir)/../../build-aux/test-driver \
 diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk/web2c/Makefile.in
---- source/texk/web2c/Makefile.in	2014-05-06 20:52:06.000000000 +0900
-+++ source-reautoconf/texk/web2c/Makefile.in	2014-05-06 20:55:24.979727924 +0900
+--- source/texk/web2c/Makefile.in	2014-03-22 06:37:30.000000000 +0900
++++ source-reautoconf/texk/web2c/Makefile.in	2014-05-07 09:00:15.878201266 +0900
 @@ -79,12 +79,12 @@
  build_triplet = @build@
  host_triplet = @host@
@@ -879,14 +748,26 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk
  TEST_SUITE_LOG = test-suite.log
  TEST_EXTENSIONS = @EXEEXT@ .test
  LOG_DRIVER = $(SHELL) $(top_srcdir)/../../build-aux/test-driver
-@@ -2245,6 +2296,7 @@
+@@ -2245,12 +2296,13 @@
  	$(nodist_libmf_a_SOURCES) mf-final.ch mf-web2c mf.p mf.pool \
  	mf-tangle $(nodist_mpost_SOURCES) mpxout-tangle mptrap.diffs \
  	ptmr.mpx tests/xptmr.mpx tests/xstory.mpx \
-+	$(nodist_pmpost_SOURCES) $(nodist_upmpost_SOURCES) \
- 	$(nodist_libmplib_a_SOURCES) mp-tangle mpmath-tangle \
- 	mpmathdecimal-tangle mpmathdouble-tangle mpstrings-tangle \
- 	psout-tangle svgout-tangle pngout-tangle \
+-	$(nodist_libmplib_a_SOURCES) mp-tangle mpmath-tangle \
+-	mpmathdecimal-tangle mpmathdouble-tangle mpstrings-tangle \
+-	psout-tangle svgout-tangle pngout-tangle \
+-	$(nodist_etex_SOURCES) etex.web etex.ch etex-web2c etex.p \
+-	etex.pool etex-tangle etrip.diffs ewprob.log ewprob.tex \
+-	$(pweb_programs:=.c) $(pweb_programs:=.h) $(pweb_programs:=.p) \
++	$(nodist_upmpost_SOURCES) $(nodist_libmplib_a_SOURCES) \
++	mp-tangle mpmath-tangle mpmathdecimal-tangle \
++	mpmathdouble-tangle mpstrings-tangle psout-tangle \
++	svgout-tangle pngout-tangle $(nodist_etex_SOURCES) etex.web \
++	etex.ch etex-web2c etex.p etex.pool etex-tangle etrip.diffs \
++	ewprob.log ewprob.tex $(pweb_programs:=.c) \
++	$(pweb_programs:=.h) $(pweb_programs:=.p) \
+ 	$(pweb_programs:=-web2c) $(pweb_programs:=.web) \
+ 	$(nodist_ptex_SOURCES) ptex.web ptex.ch ptex-web2c ptex.p \
+ 	ptex.pool ptex-tangle ptests/nissya_bib.* ptests/xexampl.aux \
 @@ -2293,16 +2345,17 @@
  	aleph.pool aleph-tangle
  CLEANFILES = 
@@ -1719,7 +1600,7 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk
  uppltotf-uppltotf.o: uppltotf.c
  @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uppltotf_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT uppltotf-uppltotf.o -MD -MP -MF $(DEPDIR)/uppltotf-uppltotf.Tpo -c -o uppltotf-uppltotf.o `test -f 'uppltotf.c' || echo '$(srcdir)/'`uppltotf.c
  @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/uppltotf-uppltotf.Tpo $(DEPDIR)/uppltotf-uppltotf.Po
-@@ -14114,6 +14681,157 @@
+@@ -14114,6 +14681,153 @@
  mptrap-clean:
  	rm -rf mptrapdir
  
@@ -1765,12 +1646,10 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk
 +	@$(pmp_ctangle_sh) pmpstrings
 +
 +$(ppsout_c_h): ppsout-tangle
-+	@$(pmp_ctangle_sh) ppsout.w ppsout-tot.ch
-+ppsout-tangle: ctangle$(EXEEXT) mplibdir/psout.w ppsout-tot.ch tangle-sh
-+	@$(pmp_ctangle_sh) ppsout.w ppsout-tot.ch
-+ppsout-tot.ch: ctie$(EXEEXT) mplibdir/psout.w pmpostdir/psout.ch pmpostdir/jmppsw.ch
++	@$(pmp_ctangle_sh) ppsout.w jmppsw.ch
++ppsout-tangle: ctangle$(EXEEXT) mplibdir/psout.w tangle-sh
 +	cat $(srcdir)/mplibdir/psout.w | $(pmp_sed) > ppsout.w
-+	$(ctie) -c ppsout-tot.ch ppsout.w pmpostdir/psout.ch pmpostdir/jmppsw.ch
++	@$(pmp_ctangle_sh) ppsout.w jmppsw.ch
 +
 +$(psvgout_c_h): psvgout-tangle
 +	@$(pmp_ctangle_sh) psvgout svgout.ch
@@ -1784,14 +1663,12 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk
 +	@$(pmp_ctangle_sh) ppngout
 +
 +$(pmpxout_c_h): pmpxout-tangle
-+	@$(pmp_ctangle_sh) pmpxout pmpxout-tot.ch
-+pmpxout-tangle: ctangle$(EXEEXT) mplibdir/mpxout.w pmpxout-tot.ch tangle-sh
-+	@$(pmp_ctangle_sh) pmpxout pmpxout-tot.ch
-+pmpxout-tot.ch: ctie$(EXEEXT) mplibdir/mpxout.w pmpostdir/mpxout.ch pmpostdir/pdvitomp.ch
++	@$(pmp_ctangle_sh) pmpxout pdvitomp.ch
++pmpxout-tangle: ctangle$(EXEEXT) mplibdir/mpxout.w tangle-sh
 +	cat $(srcdir)/mplibdir/mpxout.w | $(pmp_sed) > pmpxout.w
-+	$(ctie) -c pmpxout-tot.ch pmpxout.w pmpostdir/mpxout.ch pmpostdir/pdvitomp.ch
++	@$(pmp_ctangle_sh) pmpxout pdvitomp.ch
 +
-+$(pmpost_OBJECTS): $(nodist_pmpost_SOURCES)
++$(pmpost_OBJECTS): $(nodist_pmpost_SOURCES) $(KPATHSEA_DEPEND) $(CAIRO_DEPEND) $(PTEXENC_DEPEND) $(LIBPNG_DEPEND)
 +
 +.PHONY: install-upmpost-links uninstall-upmpost-links
 +
@@ -1845,9 +1722,9 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk
 +	@$(upmp_ctangle_sh) uppsout.w uppsout-tot.ch
 +uppsout-tangle: ctangle$(EXEEXT) mplibdir/psout.w uppsout-tot.ch tangle-sh
 +	@$(upmp_ctangle_sh) uppsout.w uppsout-tot.ch
-+uppsout-tot.ch: ctie$(EXEEXT) mplibdir/psout.w pmpostdir/psout.ch pmpostdir/jmppsw.ch upmpostdir/upjmppsw.ch
++uppsout-tot.ch: ctie$(EXEEXT) mplibdir/psout.w pmpostdir/jmppsw.ch upmpostdir/upjmppsw.ch
 +	cat $(srcdir)/mplibdir/psout.w | $(upmp_sed) > uppsout.w
-+	$(ctie) -c uppsout-tot.ch uppsout.w pmpostdir/psout.ch pmpostdir/jmppsw.ch upmpostdir/upjmppsw.ch
++	$(ctie) -c uppsout-tot.ch uppsout.w pmpostdir/jmppsw.ch upmpostdir/upjmppsw.ch
 +
 +$(upsvgout_c_h): upsvgout-tangle
 +	@$(upmp_ctangle_sh) upsvgout upsvgout-tot.ch
@@ -1868,18 +1745,163 @@ diff -urN -x autom4te.cache source/texk/web2c/Makefile.in source-reautoconf/texk
 +	@$(upmp_ctangle_sh) upmpxout upmpxout-tot.ch
 +upmpxout-tangle: ctangle$(EXEEXT) mplibdir/mpxout.w upmpxout-tot.ch tangle-sh
 +	@$(upmp_ctangle_sh) upmpxout upmpxout-tot.ch
-+upmpxout-tot.ch: ctie$(EXEEXT) mplibdir/mpxout.w pmpostdir/mpxout.ch pmpostdir/pdvitomp.ch upmpostdir/updvitomp.ch
++upmpxout-tot.ch: ctie$(EXEEXT) mplibdir/mpxout.w pmpostdir/pdvitomp.ch upmpostdir/updvitomp.ch
 +	cat $(srcdir)/mplibdir/mpxout.w | $(upmp_sed) > upmpxout.w
-+	$(ctie) -c upmpxout-tot.ch upmpxout.w pmpostdir/mpxout.ch pmpostdir/pdvitomp.ch upmpostdir/updvitomp.ch
++	$(ctie) -c upmpxout-tot.ch upmpxout.w pmpostdir/pdvitomp.ch upmpostdir/updvitomp.ch
 +
-+$(upmpost_OBJECTS): $(nodist_upmpost_SOURCES)
++$(upmpost_OBJECTS): $(nodist_upmpost_SOURCES) $(KPATHSEA_DEPEND) $(CAIRO_DEPEND) $(PTEXENC_DEPEND) $(LIBPNG_DEPEND)
 +
  # Creating one file: just one rule
  tfmin.c: ctangle$(EXEEXT) mplibdir/tfmin.w
  	$(mp_ctangle) tfmin.w
+diff -urN -x autom4te.cache source/texk/web2c/configure source-reautoconf/texk/web2c/configure
+--- source/texk/web2c/configure	2014-04-22 22:01:31.000000000 +0900
++++ source-reautoconf/texk/web2c/configure	2014-05-07 09:00:12.934186667 +0900
+@@ -744,6 +744,10 @@
+ XETEX_SYNCTEX_TRUE
+ XETEX_FALSE
+ XETEX_TRUE
++UPMP_FALSE
++UPMP_TRUE
++PMP_FALSE
++PMP_TRUE
+ MP_FALSE
+ MP_TRUE
+ LUAJITTEX_FALSE
+@@ -976,6 +980,8 @@
+ enable_luatex
+ enable_luajittex
+ enable_mp
++enable_pmp
++enable_upmp
+ enable_xetex
+ enable_xetex_synctex
+ enable_mf
+@@ -1700,6 +1706,8 @@
+   --disable-luatex        do not compile and install LuaTeX
+   --disable-luajittex     do not compile and install LuaJITTeX
+   --disable-mp            do not compile and install MetaPost
++  --disable-pmp           do not compile and install pMetaPost
++  --disable-upmp          do not compile and install upMetaPost
+   --disable-xetex         do not compile and install XeTeX
+   --disable-xetex-synctex   build XeTeX without SyncTeX support
+   --disable-mf            do not build METAFONT
+@@ -18148,6 +18156,38 @@
+   need_cairo=yes
+   need_libpng=yes
+ }
++# Check whether --enable-pmp was given.
++if test "${enable_pmp+set}" = set; then :
++  enableval=$enable_pmp;
++fi
++case $enable_pmp in #(
++  yes | no) :
++     ;; #(
++  *) :
++    enable_pmp=yes ;;
++esac
++
++test "x$enable_web2c:$enable_pmp" = xyes:yes && {
++  need_cairo=yes
++  need_libpng=yes
++  need_ptexenc=yes
++}
++# Check whether --enable-upmp was given.
++if test "${enable_upmp+set}" = set; then :
++  enableval=$enable_upmp;
++fi
++case $enable_upmp in #(
++  yes | no) :
++     ;; #(
++  *) :
++    enable_upmp=yes ;;
++esac
++
++test "x$enable_web2c:$enable_upmp" = xyes:yes && {
++  need_cairo=yes
++  need_libpng=yes
++  need_ptexenc=yes
++}
+ # Check whether --enable-xetex was given.
+ if test "${enable_xetex+set}" = set; then :
+   enableval=$enable_xetex;
+@@ -19468,6 +19508,20 @@
+   MP_TRUE='#'
+   MP_FALSE=
+ fi
++ if test "x$enable_pmp" = xyes; then
++  PMP_TRUE=
++  PMP_FALSE='#'
++else
++  PMP_TRUE='#'
++  PMP_FALSE=
++fi
++ if test "x$enable_upmp" = xyes; then
++  UPMP_TRUE=
++  UPMP_FALSE='#'
++else
++  UPMP_TRUE='#'
++  UPMP_FALSE=
++fi
+  if test "x$enable_xetex" = xyes; then
+   XETEX_TRUE=
+   XETEX_FALSE='#'
+@@ -20356,6 +20410,22 @@
+   MP_FALSE=
+ fi
+ 
++ if test "x$enable_pmp" != xno; then
++  PMP_TRUE=
++  PMP_FALSE='#'
++else
++  PMP_TRUE='#'
++  PMP_FALSE=
++fi
++
++ if test "x$enable_upmp" != xno; then
++  UPMP_TRUE=
++  UPMP_FALSE='#'
++else
++  UPMP_TRUE='#'
++  UPMP_FALSE=
++fi
++
+ 
+  if test "x$enable_web_progs" != xno; then
+   WEB_TRUE=
+@@ -24273,6 +24343,14 @@
+   as_fn_error $? "conditional \"MP\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
++if test -z "${PMP_TRUE}" && test -z "${PMP_FALSE}"; then
++  as_fn_error $? "conditional \"PMP\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
++if test -z "${UPMP_TRUE}" && test -z "${UPMP_FALSE}"; then
++  as_fn_error $? "conditional \"UPMP\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
+ if test -z "${XETEX_TRUE}" && test -z "${XETEX_FALSE}"; then
+   as_fn_error $? "conditional \"XETEX\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+@@ -24305,6 +24383,14 @@
+   as_fn_error $? "conditional \"MP\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
++if test -z "${PMP_TRUE}" && test -z "${PMP_FALSE}"; then
++  as_fn_error $? "conditional \"PMP\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
++if test -z "${UPMP_TRUE}" && test -z "${UPMP_FALSE}"; then
++  as_fn_error $? "conditional \"UPMP\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
+ if test -z "${WEB_TRUE}" && test -z "${WEB_FALSE}"; then
+   as_fn_error $? "conditional \"WEB\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 diff -urN -x autom4te.cache source/utils/configure source-reautoconf/utils/configure
---- source/utils/configure	2014-05-06 20:52:06.000000000 +0900
-+++ source-reautoconf/utils/configure	2014-05-06 20:52:44.851726031 +0900
+--- source/utils/configure	2014-05-06 23:09:24.000000000 +0900
++++ source-reautoconf/utils/configure	2014-05-07 08:56:09.844981253 +0900
 @@ -734,6 +734,8 @@
  enable_luatex
  enable_luajittex
