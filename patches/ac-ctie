@@ -1,7 +1,8 @@
-diff -udrN source.orig/texk/web2c/configure.ac source/texk/web2c/configure.ac 
---- source.orig/texk/web2c/configure.ac	2013-08-17 17:10:53.000000000 +0900
-+++ source/texk/web2c/configure.ac	2013-08-17 17:25:46.000000000 +0900
-@@ -336,6 +336,7 @@
+Index: texlive-bin/texk/web2c/configure.ac
+===================================================================
+--- texlive-bin.orig/texk/web2c/configure.ac
++++ texlive-bin/texk/web2c/configure.ac
+@@ -352,6 +352,7 @@ KPSE_CROSS_PATH_PROG([TANGLE],      [tan
  KPSE_CROSS_PATH_PROG([CTANGLEBOOT], [ctangle],   [./ctangleboot])
  KPSE_CROSS_PATH_PROG([CTANGLE],     [ctangle],   [./ctangle])
  KPSE_CROSS_PATH_PROG([TIE],         [tie],       [./tie])
@@ -9,3 +10,20 @@ diff -udrN source.orig/texk/web2c/configure.ac source/texk/web2c/configure.ac
  dnl Required for Aleph and XeTeX
  KPSE_CROSS_PATH_PROG([OTANGLE],     [otangle],   [./otangle])
  
+Index: texlive-bin/texk/web2c/Makefile.am
+===================================================================
+--- texlive-bin.orig/texk/web2c/Makefile.am
++++ texlive-bin/texk/web2c/Makefile.am
+@@ -138,6 +138,12 @@ tie_silent = $(tie_silent_@AM_V@)
+ tie_silent_ = $(tie_silent_@AM_DEFAULT_V@)
+ tie_silent_0 = @echo "  TIE     " $@; $(SHELL) ./silent-sh $@ #
+ tie_silent_1 =
++#
++ctie = $(buildenv) $(CTIE)
++ctie_silent = $(ctie_silent_@AM_V@)
++ctie_silent_ = $(cie_silent_@AM_DEFAULT_V@)
++ctie_silent_0 = @echo "  CTIE    " $@; $(SHELL) ./silent-sh $@ #
++ctie_silent_1 =
+ 
+ # Calling tangle & Co. via tangle-sh (several output files)
+ texmf_tangle = WEBINPUTS=.:$(srcdir) AM_V_P=$(AM_V_P) $(SHELL) ./tangle-sh $@ $(TANGLE)

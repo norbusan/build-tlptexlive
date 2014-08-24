@@ -1,7 +1,8 @@
-diff -u -udrN source.pmorig/texk/kpathsea/texmf.cnf source/texk/kpathsea/texmf.cnf
---- source.pmorig/texk/kpathsea/texmf.cnf	2014-05-05 18:44:17.459489638 +0900
-+++ source/texk/kpathsea/texmf.cnf	2014-05-05 18:45:16.599487786 +0900
-@@ -217,10 +217,11 @@
+Index: texlive-bin/texk/kpathsea/texmf.cnf
+===================================================================
+--- texlive-bin.orig/texk/kpathsea/texmf.cnf
++++ texlive-bin/texk/kpathsea/texmf.cnf
+@@ -217,10 +217,11 @@ TEXINPUTS.platex        = .;$TEXMF/tex/{
  TEXINPUTS.eptex         = .;$TEXMF/tex/{ptex,plain,generic,}//
  TEX.pmpost = eptex
  
@@ -14,10 +15,11 @@ diff -u -udrN source.pmorig/texk/kpathsea/texmf.cnf source/texk/kpathsea/texmf.c
  
  % pBibTeX bibliographies and style files.
  BIBINPUTS.pbibtex       = .;$TEXMF/{pbibtex,bibtex}/bib//
-diff -u -udrN source.pmorig/texk/web2c/Makefile.am source/texk/web2c/Makefile.am
---- source.pmorig/texk/web2c/Makefile.am	2014-05-05 18:44:17.399489640 +0900
-+++ source/texk/web2c/Makefile.am	2014-05-05 18:45:16.599487786 +0900
-@@ -181,8 +181,9 @@
+Index: texlive-bin/texk/web2c/Makefile.am
+===================================================================
+--- texlive-bin.orig/texk/web2c/Makefile.am
++++ texlive-bin/texk/web2c/Makefile.am
+@@ -185,8 +185,9 @@ include $(srcdir)/am/texmf.am
  ## MetaPost
  include $(srcdir)/mplibdir/am/mplib.am
  
@@ -28,47 +30,38 @@ diff -u -udrN source.pmorig/texk/web2c/Makefile.am source/texk/web2c/Makefile.am
  
  ## libmplib, used by MetaPost and luaTeX
  include $(srcdir)/mplibdir/am/libmplib.am
-diff -u -udrN source.pmorig/texk/web2c/ac/web2c.ac source/texk/web2c/ac/web2c.ac
---- source.pmorig/texk/web2c/ac/web2c.ac	2014-05-05 18:44:17.419489639 +0900
-+++ source/texk/web2c/ac/web2c.ac	2014-05-05 18:45:16.599487786 +0900
-@@ -43,6 +43,7 @@
- [[luajittex], [yes], [],    [LuaJITTeX], [poppler cairo libpng zziplib luajit]],
- [[mp],        [yes], [],    [MetaPost],  [cairo libpng]],
- [[pmp],       [yes], [],    [pMetaPost], [cairo libpng ptexenc]],
-+[[upmp],      [yes], [],    [upMetaPost],[cairo libpng ptexenc]],
+Index: texlive-bin/texk/web2c/ac/web2c.ac
+===================================================================
+--- texlive-bin.orig/texk/web2c/ac/web2c.ac
++++ texlive-bin/texk/web2c/ac/web2c.ac
+@@ -39,6 +39,7 @@ m4_define([kpse_tex_progs], [dnl
+ [[luajittex], [yes], [],    [LuaJITTeX], [poppler mpfr cairo libpng zziplib luajit]],
+ [[mp],        [yes], [],    [MetaPost],  [mpfr cairo libpng]],
+ [[pmp],       [yes], [],    [pMetaPost], [mpfr cairo libpng ptexenc]],
++[[upmp],      [yes], [],    [upMetaPost],[mpfr cairo libpng ptexenc]],
  [[xetex],     [yes], [yes], [XeTeX],     [poppler libpng freetype2 teckit harfbuzz]],
  ])[]dnl
  m4_foreach([Kpse_Prog], [kpse_tex_progs],
-diff -u -udrN source.pmorig/texk/web2c/configure.ac source/texk/web2c/configure.ac
---- source.pmorig/texk/web2c/configure.ac	2014-05-05 18:44:17.415489639 +0900
-+++ source/texk/web2c/configure.ac	2014-05-05 18:45:16.599487786 +0900
-@@ -206,6 +206,8 @@
-                      [KPSE_MFWIN_DEFINE(Kpse_Win)])])[]dnl
- 
- AM_CONDITIONAL([MP], [test "x$enable_mp" != xno])
-+AM_CONDITIONAL([PMP], [test "x$enable_pmp" != xno])
-+AM_CONDITIONAL([UPMP], [test "x$enable_upmp" != xno])
- 
- AM_CONDITIONAL([WEB], [test "x$enable_web_progs" != xno])
- 
-diff -u -udrN source.pmorig/texk/web2c/upmpostdir/am/upmpost.am source/texk/web2c/upmpostdir/am/upmpost.am
---- source.pmorig/texk/web2c/upmpostdir/am/upmpost.am	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/upmpostdir/am/upmpost.am	2014-05-05 18:47:22.519483844 +0900
-@@ -0,0 +1,128 @@
+Index: texlive-bin/texk/web2c/upmpostdir/am/upmpost.am
+===================================================================
+--- /dev/null
++++ texlive-bin/texk/web2c/upmpostdir/am/upmpost.am
+@@ -0,0 +1,149 @@
 +## texk/web2c/upmpostdir/am/upmpost.am: Makefile fragment for upMetaPost.
 +
 +if UPMP
 +bin_PROGRAMS += upmpost
 +bin_links += upmpost$(EXEEXT):updvitomp
 +endif UPMP
-+EXTRA_PROGRAMS +=upmpost
++EXTRA_PROGRAMS += upmpost
 +
-+upmpost_CPPFLAGS = $(CAIRO_INCLUDES) $(PIXMAN_INCLUDES) $(AM_CPPFLAGS) $(ZLIB_INCLUDES) $(LIBPNG_INCLUDES) -I$(srcdir)/mplibdir  -I$(srcdir)/pmpostdir -I$(srcdir)/upmpostdir $(PTEXENC_INCLUDES)
-+upmpost_LDADD = $(KPATHSEA_LIBS) $(CAIRO_LIBS) $(PIXMAN_LIBS) $(LIBPNG_LIBS) $(ZLIB_LIBS) -lm $(PTEXENC_LIBS)
++upmpost_CPPFLAGS = $(CAIRO_INCLUDES) $(PIXMAN_INCLUDES) $(AM_CPPFLAGS) $(ZLIB_INCLUDES) $(LIBPNG_INCLUDES) -I$(srcdir)/mplibdir  -I$(srcdir)/pmpostdir -I$(srcdir)/upmpostdir $(PTEXENC_INCLUDES) $(MPFR_INCLUDES) $(GMP_INCLUDES)
++upmpost_LDADD = $(KPATHSEA_LIBS) $(CAIRO_LIBS) $(PIXMAN_LIBS) $(LIBPNG_LIBS) $(ZLIB_LIBS) -lm $(PTEXENC_LIBS) $(MPFR_LIBS) $(GMP_LIBS)
 +
 +
 +.PHONY: install-upmpost-links uninstall-upmpost-links
 +
++upmp_ctie = $(ctie_silent)CWEBINPUTS=.:$(srcdir)/pmpostdir:$(srcdir)/upmpostdir $(ctie)
 +# Creating one file: just one rule
 +upmp_ctangle = $(ctangle_silent)CWEBINPUTS=.:$(srcdir)/pmpostdir:$(srcdir)/upmpostdir $(ctangle)
 +# Creating several files: need stamp file and two rules with identical recipes
@@ -77,11 +70,12 @@ diff -u -udrN source.pmorig/texk/web2c/upmpostdir/am/upmpost.am source/texk/web2
 +## upMetaPost C sources
 +upmpost_SOURCES = mplibdir/avl.h mplibdir/avl.c mplibdir/decNumber.c mplibdir/decNumber.h \
 +	mplibdir/decNumberLocal.h mplibdir/decContext.h mplibdir/decContext.c
-+nodist_upmpost_SOURCES = uptfmin.c $(upmp_c_h) $(upmpmath_c_h) $(upmpmathdecimal_c_h) \
++nodist_upmpost_SOURCES = uptfmin.c $(upmp_c_h) $(upmpmath_c_h) $(upmpmathdecimal_c_h) $(upmpmathbinary_c_h) \
 +$(upmpmathdouble_c_h) $(uppsout_c_h) $(upsvgout_c_h) $(uppngout_c_h) $(upmpstrings_c_h) upmpost.c  $(upmpxout_c_h)
 +upmp_c_h =  upmp.c upmplib.h upmpmp.h
 +upmpmath_c_h = upmpmath.h upmpmath.c
 +upmpmathdecimal_c_h = upmpmathdecimal.h upmpmathdecimal.c
++upmpmathbinary_c_h = upmpmathbinary.h upmpmathbinary.c
 +upmpmathdouble_c_h = upmpmathdouble.h upmpmathdouble.c
 +upmpstrings_c_h = upmpstrings.h upmpstrings.c
 +uppsout_c_h = upmppsout.h uppsout.c upmplibps.h
@@ -90,102 +84,122 @@ diff -u -udrN source.pmorig/texk/web2c/upmpostdir/am/upmpost.am source/texk/web2
 +upmpxout_c_h = upmpxout.c upmpxout.h
 +
 +# sed script
-+upmp_sed_main = "s/mpxout\\.h/upmpxout.h/;s/mpmp\\.h/upmpmp.h/;s/mplib\\.h/upmplib.h/;s/mpstrings\\.h/upmpstrings.h/"
-+upmp_sed_math = "s/mpmath\\.h/upmpmath.h/;s/mpmathdecimal\\.h/upmpmathdecimal.h/;s/mpmathdouble\\.h/upmpmathdouble.h/"
-+upmp_sed_ps   = "s/mplibps\\.h/upmplibps.h/;s/mppsout\\.h/upmppsout.h/"
-+upmp_sed_svg  = "s/mplibsvg\\.h/upmplibsvg.h/;s/mpsvgout\\.h/upmpsvgout.h/"
-+upmp_sed_png  = "s/mplibpng\\.h/upmplibpng.h/;s/mppngout\\.h/upmppngout.h/"
-+upmp_sed = sed -e $(upmp_sed_main) -e $(upmp_sed_math) -e $(upmp_sed_ps) -e $(upmp_sed_svg) -e $(upmp_sed_png)
++upmp_sed_main = 's/mpxout\.h/upmpxout.h/;s/mpmp\.h/upmpmp.h/;s/mplib\.h/upmplib.h/;s/mpstrings\.h/upmpstrings.h/'
++upmp_sed_math = 's/mpmath\.h/upmpmath.h/;s/mpmathdecimal\.h/upmpmathdecimal.h/;s/mpmathdouble\.h/upmpmathdouble.h/'
++upmp_sed_math_a = 's/mpmathbinary\.h/upmpmathbinary.h/'
++upmp_sed_ps   = 's/mplibps\.h/upmplibps.h/;s/mppsout\.h/upmppsout.h/'
++upmp_sed_svg  = 's/mplibsvg\.h/upmplibsvg.h/;s/mpsvgout\.h/upmpsvgout.h/'
++upmp_sed_png  = 's/mplibpng\.h/upmplibpng.h/;s/mppngout\.h/upmppngout.h/'
++upmp_sed = sed -e $(upmp_sed_main) -e $(upmp_sed_math) -e $(upmp_sed_math_a) -e $(upmp_sed_ps) -e $(upmp_sed_svg) -e $(upmp_sed_png)
 +
 +# Creating one file: just one rule
-+uptfmin.c: ctangle$(EXEEXT) mplibdir/tfmin.w uptfmin-tot.ch
-+	$(upmp_ctangle) uptfmin.w uptfmin-tot.ch
-+uptfmin-tot.ch: ctie$(EXEEXT) mplibdir/tfmin.w pmpostdir/jfm.ch upmpostdir/upjfm.ch
-+	cat $(srcdir)/mplibdir/tfmin.w | $(upmp_sed) > uptfmin.w
-+	$(ctie) -c uptfmin-tot.ch uptfmin.w pmpostdir/jfm.ch upmpostdir/upjfm.ch
++uptfmin.w: mplibdir/tfmin.w
++	$(upmp_sed) $(srcdir)/mplibdir/tfmin.w > uptfmin.w
++uptfmin-tot.ch: ctie$(EXEEXT) uptfmin.w pmpostdir/jfm.ch upmpostdir/upjfm.ch
++	$(upmp_ctie) -c uptfmin-tot.ch uptfmin.w jfm.ch upjfm.ch
++uptfmin.c: ctangle$(EXEEXT) uptfmin.w uptfmin-tot.ch
++	$(upmp_ctangle) uptfmin uptfmin-tot.ch
 +
-+upmpost.c: ctangle$(EXEEXT) mplibdir/mpost.w upmpost-tot.ch
-+	$(upmp_ctangle) upmpost.w upmpost-tot.ch
-+upmpost-tot.ch: ctie$(EXEEXT) mplibdir/mpost.w pmpostdir/mpost.ch upmpostdir/upmpost.ch
-+	cat $(srcdir)/mplibdir/mpost.w | $(upmp_sed) > upmpost.w
-+	$(ctie) -c upmpost-tot.ch upmpost.w pmpostdir/mpost.ch upmpostdir/upmpost.ch
++upmpost.w: mplibdir/mpost.w
++	$(upmp_sed) $(srcdir)/mplibdir/mpost.w > upmpost.w
++upmpost-tot.ch: ctie$(EXEEXT) upmpost.w pmpostdir/mpost.ch upmpostdir/upmpost.ch
++	$(upmp_ctie) -c upmpost-tot.ch upmpost.w mpost.ch upmpost.ch
++upmpost.c: ctangle$(EXEEXT) upmpost.w upmpost-tot.ch
++	$(upmp_ctangle) upmpost upmpost-tot.ch
 +
 +
 +# Creating several files: need stamp file and two rules with identical recipes
++upmp.w: mplibdir/mp.w
++	$(upmp_sed) $(srcdir)/mplibdir/mp.w > upmp.w
++upmp-tot.ch: ctie$(EXEEXT) upmp.w pmpostdir/jmp.ch upmpostdir/upjmp.ch
++	$(upmp_ctie) -c upmp-tot.ch upmp jmp.ch upjmp.ch
 +$(upmp_c_h): upmp-tangle
-+	@$(upmp_ctangle_sh) upmp.w upmp-tot.ch
-+upmp-tangle: ctangle$(EXEEXT) mplibdir/mp.w upmp-tot.ch tangle-sh
-+	@$(upmp_ctangle_sh) upmp.w upmp-tot.ch
-+upmp-tot.ch: ctie$(EXEEXT) mplibdir/mp.w pmpostdir/jmp.ch upmpostdir/upjmp.ch
-+	cat $(srcdir)/mplibdir/mp.w | $(upmp_sed) > upmp.w
-+	$(ctie) -c upmp-tot.ch upmp.w pmpostdir/jmp.ch upmpostdir/upjmp.ch
++	@$(upmp_ctangle_sh) upmp upmp-tot.ch
++upmp-tangle: ctangle$(EXEEXT) upmp.w upmp-tot.ch tangle-sh
++	@$(upmp_ctangle_sh) upmp upmp-tot.ch
 +
++upmpmath.w: mplibdir/mpmath.w
++	$(upmp_sed) $(srcdir)/mplibdir/mpmath.w > upmpmath.w
 +$(upmpmath_c_h): upmpmath-tangle
 +	@$(upmp_ctangle_sh) upmpmath
-+upmpmath-tangle: ctangle$(EXEEXT) mplibdir/mpmath.w tangle-sh
-+	cat $(srcdir)/mplibdir/mpmath.w | $(upmp_sed) > upmpmath.w
++upmpmath-tangle: ctangle$(EXEEXT) upmpmath.w tangle-sh
 +	@$(upmp_ctangle_sh) upmpmath
 +
++upmpmathdecimal.w: mplibdir/mpmathdecimal.w
++	$(upmp_sed) $(srcdir)/mplibdir/mpmathdecimal.w > upmpmathdecimal.w
 +$(upmpmathdecimal_c_h): upmpmathdecimal-tangle
 +	@$(upmp_ctangle_sh) upmpmathdecimal
-+upmpmathdecimal-tangle: ctangle$(EXEEXT) mplibdir/mpmathdecimal.w tangle-sh
-+	cat $(srcdir)/mplibdir/mpmathdecimal.w | $(upmp_sed) > upmpmathdecimal.w
++upmpmathdecimal-tangle: ctangle$(EXEEXT) upmpmathdecimal.w tangle-sh
 +	@$(upmp_ctangle_sh) upmpmathdecimal
 +
++upmpmathbinary.w: mplibdir/mpmathbinary.w
++	$(upmp_sed) $(srcdir)/mplibdir/mpmathbinary.w > upmpmathbinary.w
++$(upmpmathbinary_c_h): upmpmathbinary-tangle
++	@$(upmp_ctangle_sh) upmpmathbinary
++upmpmathbinary-tangle: ctangle$(EXEEXT) upmpmathbinary.w tangle-sh
++	@$(upmp_ctangle_sh) upmpmathbinary
++
++upmpmathdouble.w: mplibdir/mpmathdouble.w
++	$(upmp_sed) $(srcdir)/mplibdir/mpmathdouble.w > upmpmathdouble.w
 +$(upmpmathdouble_c_h): upmpmathdouble-tangle
 +	@$(upmp_ctangle_sh) upmpmathdouble
-+upmpmathdouble-tangle: ctangle$(EXEEXT) mplibdir/mpmathdouble.w tangle-sh
-+	cat $(srcdir)/mplibdir/mpmathdouble.w | $(upmp_sed) > upmpmathdouble.w
++upmpmathdouble-tangle: ctangle$(EXEEXT) upmpmathdouble.w tangle-sh
 +	@$(upmp_ctangle_sh) upmpmathdouble
 +
++upmpstrings.w: mplibdir/mpstrings.w
++	$(upmp_sed) $(srcdir)/mplibdir/mpstrings.w > upmpstrings.w
 +$(upmpstrings_c_h): upmpstrings-tangle
 +	@$(upmp_ctangle_sh) upmpstrings
-+upmpstrings-tangle: ctangle$(EXEEXT) mplibdir/mpstrings.w tangle-sh
-+	cat $(srcdir)/mplibdir/mpstrings.w | $(upmp_sed) > upmpstrings.w
++upmpstrings-tangle: ctangle$(EXEEXT) upmpstrings.w tangle-sh
 +	@$(upmp_ctangle_sh) upmpstrings
 +
++uppsout.w: mplibdir/psout.w
++	$(upmp_sed) $(srcdir)/mplibdir/psout.w > uppsout.w
++uppsout-tot.ch: ctie$(EXEEXT) uppsout.w pmpostdir/jmppsw.ch upmpostdir/upjmppsw.ch
++	$(upmp_ctie) -c uppsout-tot.ch uppsout.w jmppsw.ch upjmppsw.ch
 +$(uppsout_c_h): uppsout-tangle
-+	@$(upmp_ctangle_sh) uppsout.w uppsout-tot.ch
-+uppsout-tangle: ctangle$(EXEEXT) mplibdir/psout.w uppsout-tot.ch tangle-sh
-+	@$(upmp_ctangle_sh) uppsout.w uppsout-tot.ch
-+uppsout-tot.ch: ctie$(EXEEXT) mplibdir/psout.w pmpostdir/jmppsw.ch upmpostdir/upjmppsw.ch
-+	cat $(srcdir)/mplibdir/psout.w | $(upmp_sed) > uppsout.w
-+	$(ctie) -c uppsout-tot.ch uppsout.w pmpostdir/jmppsw.ch upmpostdir/upjmppsw.ch
++	@$(upmp_ctangle_sh) uppsout uppsout-tot.ch
++uppsout-tangle: ctangle$(EXEEXT) uppsout.w uppsout-tot.ch tangle-sh
++	@$(upmp_ctangle_sh) uppsout uppsout-tot.ch
 +
++upsvgout.w: mplibdir/svgout.w
++	$(upmp_sed) $(srcdir)/mplibdir/svgout.w > upsvgout.w
++upsvgout-tot.ch: ctie$(EXEEXT) upsvgout.w pmpostdir/svgout.ch upmpostdir/upsvgout.ch
++	$(upmp_ctie) -c upsvgout-tot.ch upsvgout.w svgout.ch upsvgout.ch
 +$(upsvgout_c_h): upsvgout-tangle
 +	@$(upmp_ctangle_sh) upsvgout upsvgout-tot.ch
-+upsvgout-tangle: ctangle$(EXEEXT) mplibdir/svgout.w upsvgout-tot.ch tangle-sh
-+	cat $(srcdir)/mplibdir/svgout.w | $(upmp_sed) > upsvgout.w
++upsvgout-tangle: ctangle$(EXEEXT) upsvgout.w upsvgout-tot.ch tangle-sh
 +	@$(upmp_ctangle_sh) upsvgout upsvgout-tot.ch
-+upsvgout-tot.ch: ctie$(EXEEXT) mplibdir/svgout.w pmpostdir/svgout.ch upmpostdir/upsvgout.ch
-+	cat $(srcdir)/mplibdir/svgout.w | $(upmp_sed) > upsvgout.w
-+	$(ctie) -c upsvgout-tot.ch upsvgout.w pmpostdir/svgout.ch upmpostdir/upsvgout.ch
 +
++uppngout.w: mplibdir/pngout.w
++	$(upmp_sed) $(srcdir)/mplibdir/pngout.w > uppngout.w
 +$(uppngout_c_h): uppngout-tangle
 +	@$(upmp_ctangle_sh) uppngout
-+uppngout-tangle: ctangle$(EXEEXT) mplibdir/pngout.w tangle-sh
-+	cat $(srcdir)/mplibdir/pngout.w | $(upmp_sed) > uppngout.w
++uppngout-tangle: ctangle$(EXEEXT) uppngout.w tangle-sh
 +	@$(upmp_ctangle_sh) uppngout
 +
++upmpxout.w: mplibdir/mpxout.w
++	$(upmp_sed) $(srcdir)/mplibdir/mpxout.w > upmpxout.w
++upmpxout-tot.ch: ctie$(EXEEXT) upmpxout.w pmpostdir/pdvitomp.ch upmpostdir/updvitomp.ch
++	$(upmp_ctie) -c upmpxout-tot.ch upmpxout.w pdvitomp.ch updvitomp.ch
 +$(upmpxout_c_h): upmpxout-tangle
 +	@$(upmp_ctangle_sh) upmpxout upmpxout-tot.ch
-+upmpxout-tangle: ctangle$(EXEEXT) mplibdir/mpxout.w upmpxout-tot.ch tangle-sh
++upmpxout-tangle: ctangle$(EXEEXT) upmpxout.w upmpxout-tot.ch tangle-sh
 +	@$(upmp_ctangle_sh) upmpxout upmpxout-tot.ch
-+upmpxout-tot.ch: ctie$(EXEEXT) mplibdir/mpxout.w pmpostdir/pdvitomp.ch upmpostdir/updvitomp.ch
-+	cat $(srcdir)/mplibdir/mpxout.w | $(upmp_sed) > upmpxout.w
-+	$(ctie) -c upmpxout-tot.ch upmpxout.w pmpostdir/pdvitomp.ch upmpostdir/updvitomp.ch
 +
 +## pMetaPost CWeb sources
 +upmpost_web = mplibdir/mpost.w mplibdir/mpxout.w
 +upmpost_web += mplibdir/mp.w mplibdir/psout.w mplibdir/svgout.w mplibdir/pngout.w
-+upmpost_web += mplibdir/mpmath.w mplibdir/mpmathdouble.w mplibdir/mpmathdecimal.w mplibdir/mpstrings.w mplibdir/tfmin.w
++upmpost_web += mplibdir/mpmath.w mplibdir/mpmathbinary.w  mplibdir/mpmathdouble.w
++upmpost_web += mplibdir/mpmathdecimal.w mplibdir/mpstrings.w mplibdir/tfmin.w
 +
-+$(upmpost_OBJECTS): $(nodist_upmpost_SOURCES) $(KPATHSEA_DEPEND) $(CAIRO_DEPEND) $(PTEXENC_DEPEND) $(LIBPNG_DEPEND)
++$(upmpost_OBJECTS): $(nodist_upmpost_SOURCES) $(KPATHSEA_DEPEND) $(CAIRO_DEPEND) $(MPFR_DEPEND) $(PTEXENC_DEPEND) $(LIBPNG_DEPEND)
 +
 +DISTCLEANFILES += $(nodist_upmpost_SOURCES)
-diff -u -udrN source.pmorig/texk/web2c/upmpostdir/updvitomp.ch source/texk/web2c/upmpostdir/updvitomp.ch
---- source.pmorig/texk/web2c/upmpostdir/updvitomp.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/upmpostdir/updvitomp.ch	2014-05-05 21:39:49.927159870 +0900
+Index: texlive-bin/texk/web2c/upmpostdir/updvitomp.ch
+===================================================================
+--- /dev/null
++++ texlive-bin/texk/web2c/upmpostdir/updvitomp.ch
 @@ -0,0 +1,63 @@
 +@x
 +@d virtual_space 1000000 /* maximum total bytes of typesetting commands for virtual fonts */
@@ -250,9 +264,10 @@ diff -u -udrN source.pmorig/texk/web2c/upmpostdir/updvitomp.ch source/texk/web2c
 +  }
 +  putc2(BYTE4(c), mpx->mpxfile);
 +@z
-diff -u -udrN source.pmorig/texk/web2c/upmpostdir/upjfm.ch source/texk/web2c/upmpostdir/upjfm.ch
---- source.pmorig/texk/web2c/upmpostdir/upjfm.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/upmpostdir/upjfm.ch	2014-05-05 19:06:58.195447034 +0900
+Index: texlive-bin/texk/web2c/upmpostdir/upjfm.ch
+===================================================================
+--- /dev/null
++++ texlive-bin/texk/web2c/upmpostdir/upjfm.ch
 @@ -0,0 +1,12 @@
 +%
 +% routine to process JFM file format
@@ -266,22 +281,23 @@ diff -u -udrN source.pmorig/texk/web2c/upmpostdir/upjfm.ch source/texk/web2c/upm
 +  tfget; (A)=(A)*0400+tfbyte;
 +}
 +@z
-diff -u -udrN source.pmorig/texk/web2c/upmpostdir/upjmp.ch source/texk/web2c/upmpostdir/upjmp.ch
---- source.pmorig/texk/web2c/upmpostdir/upjmp.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/upmpostdir/upjmp.ch	2014-05-05 21:45:36.891149007 +0900
+Index: texlive-bin/texk/web2c/upmpostdir/upjmp.ch
+===================================================================
+--- /dev/null
++++ texlive-bin/texk/web2c/upmpostdir/upjmp.ch
 @@ -0,0 +1,39 @@
 +% upMetaPost change file for MetaPost
 +%
 +@x
-+@d default_banner "This is pMetaPost, Version 1.902-0.04" /* printed when \MP\ starts */
++@d default_banner "This is pMetaPost, Version 1.999-0.04" /* printed when \MP\ starts */
 +@y
-+@d default_banner "This is upMetaPost, Version 1.902-0.04-u1.11" /* printed when \MP\ starts */
++@d default_banner "This is upMetaPost, Version 1.999-0.04-u1.11" /* printed when \MP\ starts */
 +@z
 +
 +@x
-+#define metapost_version "1.902-0.04"
++#define metapost_version "1.999-0.04"
 +@y
-+#define metapost_version "1.902-0.04-u1.11"
++#define metapost_version "1.999-0.04-u1.11"
 +@z
 +
 +%
@@ -309,9 +325,10 @@ diff -u -udrN source.pmorig/texk/web2c/upmpostdir/upjmp.ch source/texk/web2c/upm
 +      }
 +      cc=char_mp_info(f,mp_lookup_ctype(mp, f, cx));
 +@z
-diff -u -udrN source.pmorig/texk/web2c/upmpostdir/upjmppsw.ch source/texk/web2c/upmpostdir/upjmppsw.ch
---- source.pmorig/texk/web2c/upmpostdir/upjmppsw.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/upmpostdir/upjmppsw.ch	2014-05-05 21:50:07.227140542 +0900
+Index: texlive-bin/texk/web2c/upmpostdir/upjmppsw.ch
+===================================================================
+--- /dev/null
++++ texlive-bin/texk/web2c/upmpostdir/upjmppsw.ch
 @@ -0,0 +1,64 @@
 +%
 +%
@@ -377,9 +394,10 @@ diff -u -udrN source.pmorig/texk/web2c/upmpostdir/upjmppsw.ch source/texk/web2c/
 +@y
 +  mp_ps_print_nl(mp, "%%Creator: MetaPost (upTeX version) ");
 +@z
-diff -u -udrN source.pmorig/texk/web2c/upmpostdir/upmpost.ch source/texk/web2c/upmpostdir/upmpost.ch
---- source.pmorig/texk/web2c/upmpostdir/upmpost.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/upmpostdir/upmpost.ch	2014-05-05 21:52:40.131135755 +0900
+Index: texlive-bin/texk/web2c/upmpostdir/upmpost.ch
+===================================================================
+--- /dev/null
++++ texlive-bin/texk/web2c/upmpostdir/upmpost.ch
 @@ -0,0 +1,133 @@
 +@x
 +@d TEX     "eptex"
@@ -514,9 +532,10 @@ diff -u -udrN source.pmorig/texk/web2c/upmpostdir/upmpost.ch source/texk/web2c/u
 +@y
 +  if(putenv(xstrdup("engine=upmpost")))
 +@z
-diff -u -udrN source.pmorig/texk/web2c/upmpostdir/upsvgout.ch source/texk/web2c/upmpostdir/upsvgout.ch
---- source.pmorig/texk/web2c/upmpostdir/upsvgout.ch	1970-01-01 09:00:00.000000000 +0900
-+++ source/texk/web2c/upmpostdir/upsvgout.ch	2014-05-05 18:45:16.603487786 +0900
+Index: texlive-bin/texk/web2c/upmpostdir/upsvgout.ch
+===================================================================
+--- /dev/null
++++ texlive-bin/texk/web2c/upmpostdir/upsvgout.ch
 @@ -0,0 +1,38 @@
 +@x
 +#include <ptexenc/ptexenc.h>
