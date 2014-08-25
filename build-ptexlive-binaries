@@ -183,6 +183,7 @@ TL_CONFIGURE_ARGS="-C \
 	--disable-omfonts	\
 	--enable-pmp		\
 	--enable-upmp		\
+	--enable-dvipdfm-x	\
 	"
 	
 #TL_CONFIGURE_ARGS="	\
@@ -275,6 +276,7 @@ arch=`/bin/ls`
 
 
 zip -r $TARGET/binaries.zip 	\
+	*/dvipdfmx*$EXT		\
 	*/pmpost$EXT		\
 	*/upmpost$EXT		\
 
