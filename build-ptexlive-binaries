@@ -64,36 +64,33 @@ gmake   --version > /dev/null 2>&1 && MAKE=gmake ||:
 
 if [ $DO_APPLE == 1 ] ; then
   #
-  # set an old Xcode root directory (e.g. /Developer, /Xcode3)
-  U_XCODEROOT=${BUILD_XCODEROOT:-/Xcode3}
-  #
   # set build arch
   U_ARCH=${BUILD_ARCH:-x86_64}
   U_RELEASE=`uname -r`
-  #
-  U_CC=${BUILD_CC:-gcc-4.2}
-  U_CXX=${BUILD_CXX:-g++-4.2}
   case $U_ARCH in 
-      x86_64)
-	 CC=$U_CC
-	 CXX=$U_CXX
+      x86_64) # compile 10.6+ binaries on OS X 10.9
+         MACOSX_DEPLOYMENT_TARGET='10.6'
+         U_SDK=/Xcode4/SDKs/MacOSX${MACOSX_DEPLOYMENT_TARGET}.sdk
+	 CC=/Xcode4/usr/bin/gcc-4.2
+	 CXX=/Xcode4/usr/bin/g++-4.2
          ;;
-      i686|ppc)
-         U_SDK=10.6
-         SDK=${U_XCODEROOT}/SDKs/MacOSX${U_SDK}.sdk
-
-	 CC=${U_XCODEROOT}/usr/bin/gcc-4.2
-	 CXX=${U_XCODEROOT}/usr/bin/g++-4.2
-         CFLAGS="-isysroot ${SDK} -arch ${U_ARCH} -mmacosx-version-min=10.5"
-         LDFLAGS="-isysroot ${SDK} -Wl,-syslibroot,${SDK} -arch ${U_ARCH} -mmacosx-version-min=10.5"
-         CXXFLAGS=$CFLAGS
+      i686|ppc) # cross-compile 10.5+ binaries on OS X 10.9
+         MACOSX_DEPLOYMENT_TARGET='10.5'
+         U_SDK=/Xcode3/SDKs/MacOSX${MACOSX_DEPLOYMENT_TARGET}.sdk
+	 CC=/Xcode3/usr/bin/gcc-4.2
+	 CXX=/Xcode3/usr/bin/g++-4.2
          ;;
       *)
          exit 1
          ;;
   esac
-  export CC CXX CFLAGS CXXFLAGS LDFLAGS
+  CFLAGS="-O2 -isysroot ${U_SDK} -arch ${U_ARCH} -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}"
+  LDFLAGS="-isysroot ${U_SDK} -Wl,-syslibroot,${U_SDK} -arch ${U_ARCH} -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}"
+  CXXFLAGS="${CFLAGS}"
+
+  export MACOSX_DEPLOYMENT_TARGET CC CXX CFLAGS CXXFLAGS LDFLAGS
   cat<<EOF
+MACOSX_DEPLOYMENT_TARGET:	$MACOSX_DEPLOYMENT_TARGET
 CC:		$CC
 CXX:		$CXX
 CFLAGS:		$CFLAGS
