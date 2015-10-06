@@ -1,0 +1,258 @@
+diff --git a/texk/web2c/luatexdir/font/luatexfont.h b/texk/web2c/luatexdir/font/luatexfont.h
+index d9ff3ea..fba411a 100644
+--- a/texk/web2c/luatexdir/font/luatexfont.h
++++ b/texk/web2c/luatexdir/font/luatexfont.h
+@@ -174,11 +174,12 @@ void t1_free(void);
+ extern int t1_length1, t1_length2, t1_length3;
+ 
+ /* writetype2.c */
+-void writetype2(PDF, fd_entry *);
++boolean writetype2(PDF, fd_entry *);
+ extern unsigned long cidtogid_obj;
+ pdf_obj *pdf_new_stream(void);
+ void pdf_add_stream(pdf_obj * stream, unsigned char *buf, long len);
+ void pdf_release_obj(pdf_obj * stream);
++unsigned long ttc_read_offset(sfnt * sfont, int ttc_idx);
+ 
+ /* subfont.c */
+ void sfd_free(void);
+diff --git a/texk/web2c/luatexdir/font/writefont.w b/texk/web2c/luatexdir/font/writefont.w
+index b5eb8ae..bbe2524 100644
+--- a/texk/web2c/luatexdir/font/writefont.w
++++ b/texk/web2c/luatexdir/font/writefont.w
+@@ -428,17 +428,20 @@ static void write_fontfile(PDF pdf, fd_entry * fd)
+     /* by using the regular code for this and assigning indices and tounicodes */
+     /* to the character blobs, but for the moment we keep the current approach */
+     if (is_cidkeyed(fd->fm)) {
+-        if (is_opentype(fd->fm))
++        if (is_opentype(fd->fm)) {
+             writetype0(pdf, fd);
+-        else if (is_truetype(fd->fm))
+-            writetype2(pdf, fd);
+-        else if (is_type1(fd->fm))
+-            writetype1w(pdf, fd);
+-        else
+-            assert(0);
++	} else if (is_truetype(fd->fm)) {
++            if (!writetype2(pdf, fd)) { 
++                writetype0(pdf,fd);
++	        fd->fm->type |= F_OTF; fd->fm->type ^= F_TRUETYPE;
++            }
++	} else if (is_type1(fd->fm))
++	    writetype1w(pdf, fd);
++	else
++	    assert(0);
+     } else {
+-        if (is_type1(fd->fm))
+-            writet1(pdf, fd);
++	if (is_type1(fd->fm))
++	    writet1(pdf, fd);
+         else if (is_truetype(fd->fm))
+             writettf(pdf, fd);
+         else if (is_opentype(fd->fm))
+diff --git a/texk/web2c/luatexdir/font/writettf.h b/texk/web2c/luatexdir/font/writettf.h
+index 552148a..482c1d1 100644
+--- a/texk/web2c/luatexdir/font/writettf.h
++++ b/texk/web2c/luatexdir/font/writettf.h
+@@ -152,6 +152,7 @@ extern dirtab_entry *dir_tab;
+ extern dirtab_entry *ttf_name_lookup(const char *s, boolean required);
+ extern dirtab_entry *ttf_seek_tab(const char *name, TTF_LONG offset);
+ 
++extern void otc_read_tabdir(int index);
+ extern void ttf_read_tabdir(void);
+ extern void ttf_read_head(void);
+ extern void ttf_read_hhea(void);
+diff --git a/texk/web2c/luatexdir/font/writettf.w b/texk/web2c/luatexdir/font/writettf.w
+index dd87c98..091f815 100644
+--- a/texk/web2c/luatexdir/font/writettf.w
++++ b/texk/web2c/luatexdir/font/writettf.w
+@@ -510,9 +510,10 @@ static void ttf_ncopy(PDF pdf, int n)
+ dirtab_entry *ttf_name_lookup(const char *s, boolean required)
+ {
+     dirtab_entry *tab;
+-    for (tab = dir_tab; tab - dir_tab < ntabs; tab++)
++    for (tab = dir_tab; tab - dir_tab < ntabs; tab++) {
+         if (strncmp(tab->tag, s, 4) == 0)
+             break;
++    }
+     if (tab - dir_tab == ntabs) {
+         if (required)
+             luatex_fail("can't find table `%s'", s);
+@@ -836,6 +837,29 @@ static void ttf_read_loca(void)
+             glyph->offset = get_ushort() << 1;
+ }
+ 
++void otc_read_tabdir(int index)
++{
++    unsigned long i, num, rem;
++    dirtab_entry *tab;
++    ttf_skip(TTF_FIXED_SIZE);   /* ignore TTCTag 'ttcf' */
++    ttf_skip(TTF_ULONG_SIZE);   /* ignorethe version number */
++    num = get_ulong();
++    for (i = 0; i < num; i++)  {
++        if (i==index) rem = get_ulong(); else ttf_skip(TTF_ULONG_SIZE);
++    }
++    ttf_skip(rem - TTF_FIXED_SIZE - (num+2)*TTF_ULONG_SIZE);
++    ttf_skip(TTF_FIXED_SIZE);   /* ignore the sfnt number */
++    dir_tab = xtalloc(ntabs = get_ushort(), dirtab_entry);
++    ttf_skip(3 * TTF_USHORT_SIZE);
++    for (tab = dir_tab; tab - dir_tab < ntabs; tab++) {
++        for (i = 0; i < 4; i++)
++            tab->tag[i] = get_char();
++        tab->checksum = get_ulong();
++        tab->offset = get_ulong();
++        tab->length = get_ulong();
++    }
++}
++
+ void ttf_read_tabdir(void)
+ {
+     int i;
+diff --git a/texk/web2c/luatexdir/font/writetype0.w b/texk/web2c/luatexdir/font/writetype0.w
+index b88ee81..82301a2 100644
+--- a/texk/web2c/luatexdir/font/writetype0.w
++++ b/texk/web2c/luatexdir/font/writetype0.w
+@@ -25,6 +25,7 @@
+ #include "font/writecff.h"
+ 
+ @ @c
++extern unsigned char *ttf_buffer;
+ void writetype0(PDF pdf, fd_entry * fd)
+ {
+     int callback_id;
+@@ -32,13 +33,14 @@ void writetype0(PDF pdf, fd_entry * fd)
+     long i;
+     dirtab_entry *tab;
+     cff_font *cff;
++    sfnt *sfont;
+ 
+     dir_tab = NULL;
+     glyph_tab = NULL;
+ 
+     fd_cur = fd;                /* |fd_cur| is global inside \.{writettf.w} */
+     assert(fd_cur->fm != NULL);
+-    assert(is_opentype(fd_cur->fm));
++    assert(is_opentype(fd_cur->fm) || is_truetype(fd_cur->fm));
+     assert(is_included(fd_cur->fm));
+ 
+     ttf_curbyte = 0;
+@@ -46,8 +48,12 @@ void writetype0(PDF pdf, fd_entry * fd)
+     cur_file_name =
+         luatex_find_file(fd_cur->fm->ff_name, find_opentype_file_callback);
+     if (cur_file_name == NULL) {
+-        luatex_fail("cannot find OpenType font file for reading (%s)",
+-                    fd_cur->fm->ff_name);
++        cur_file_name =
++            luatex_find_file(fd_cur->fm->ff_name, find_truetype_file_callback);
++        if (cur_file_name == NULL) {
++            luatex_fail("cannot find OpenType font file for reading (%s)",
++                        fd_cur->fm->ff_name);
++        }
+     }
+     callback_id = callback_defined(read_opentype_file_callback);
+     if (callback_id > 0) {
+@@ -69,12 +75,22 @@ void writetype0(PDF pdf, fd_entry * fd)
+ 
+     fd_cur->ff_found = true;
+ 
++    sfont = sfnt_open(ttf_buffer, ttf_size);
++    if (sfont->type == SFNT_TYPE_TTC)
++        i = ff_get_ttc_index(fd->fm->ff_name, fd->fm->ps_name);
++	
++
+     if (is_subsetted(fd_cur->fm)) {
+         report_start_file(filetype_subset, cur_file_name);
+     } else {
+         report_start_file(filetype_font, cur_file_name);
+     }
+-    ttf_read_tabdir();
++
++
++    if (sfont->type == SFNT_TYPE_TTC) otc_read_tabdir(i);
++    else ttf_read_tabdir();
++    sfnt_close(sfont);
++
+     /* read font parameters */
+     if (ttf_name_lookup("head", false) != NULL)
+         ttf_read_head();
+diff --git a/texk/web2c/luatexdir/font/writetype2.w b/texk/web2c/luatexdir/font/writetype2.w
+index 2098701..f218d0f 100644
+--- a/texk/web2c/luatexdir/font/writetype2.w
++++ b/texk/web2c/luatexdir/font/writetype2.w
+@@ -30,7 +30,7 @@
+ 
+ @ forward declaration
+ @c
+-void make_tt_subset(PDF pdf, fd_entry * fd, unsigned char *buff, int buflen);
++boolean make_tt_subset(PDF pdf, fd_entry * fd, unsigned char *buff, int buflen);
+ 
+ @ @c
+ unsigned long cidtogid_obj = 0;
+@@ -134,10 +134,11 @@ void pdf_release_obj(pdf_obj * stream)
+ 
+ @ The main function.
+ @c
+-void writetype2(PDF pdf, fd_entry * fd)
++boolean writetype2(PDF pdf, fd_entry * fd)
+ {
+     int callback_id;
+     int file_opened = 0;
++    boolean ret;
+ 
+     glyph_tab = NULL;
+ 
+@@ -178,7 +179,7 @@ void writetype2(PDF pdf, fd_entry * fd)
+     
+     /* here is the real work */
+ 
+-    make_tt_subset(pdf, fd, ttf_buffer, ttf_size);
++    ret = make_tt_subset(pdf, fd, ttf_buffer, ttf_size);
+ #if 0
+     xfree (dir_tab);
+ #endif
+@@ -188,6 +189,7 @@ void writetype2(PDF pdf, fd_entry * fd)
+      else 
+         report_stop_file(filetype_font);
+     cur_file_name = NULL;
++    return ret;
+ }
+ 
+ @ PDF viewer applications use following tables (CIDFontType 2)
+@@ -232,7 +234,7 @@ static struct {
+ };
+ 
+ 
+-static unsigned long ttc_read_offset(sfnt * sfont, int ttc_idx)
++unsigned long ttc_read_offset(sfnt * sfont, int ttc_idx)
+ {
+     //ULONG version;
+     unsigned long offset = 0;
+@@ -255,7 +257,7 @@ static unsigned long ttc_read_offset(sfnt * sfont, int ttc_idx)
+ @ Creating the subset.
+ @c
+ extern int cidset;
+-void make_tt_subset(PDF pdf, fd_entry * fd, unsigned char *buff, int buflen)
++boolean make_tt_subset(PDF pdf, fd_entry * fd, unsigned char *buff, int buflen)
+ {
+ 
+     long i, cid;
+@@ -287,6 +289,12 @@ void make_tt_subset(PDF pdf, fd_entry * fd, unsigned char *buff, int buflen)
+         fprintf(stderr, "Could not parse the ttf directory.\n");
+         uexit(1);
+     }
++
++    if (sfont->type == SFNT_TYPE_TTC && sfnt_find_table_pos(sfont, "CFF ")) {
++        sfnt_close(sfont);
++	return false;
++    }
++
+     if (is_subsetted(fd->fm)) {
+         /* rebuild the glyph tables and create a fresh cidmap */
+         glyphs = tt_build_init();
+@@ -436,5 +444,5 @@ void make_tt_subset(PDF pdf, fd_entry * fd, unsigned char *buff, int buflen)
+ 
+     xfree(used_chars);
+     sfnt_close(sfont);
+-    return;
++    return true;
+ }

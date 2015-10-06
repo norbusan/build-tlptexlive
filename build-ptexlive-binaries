@@ -6,6 +6,8 @@
 # 2013-01-06 move patches to quilt, include reautoconf patch so that
 #            call to reautoconf is not necessary anymore
 # 2014-05-06 remove most stuff for other packages, only pmpost and upmpost
+# 2015-10-06 build for 2015 with luatex and dvipdfmx to be used also
+#            in tlptexlive2013
 #
 # on Debian, needs:
 # libx11-dev, libxaw7-dev, libfontconfig1-dev, bison, flex
@@ -170,7 +172,7 @@ TL_CONFIGURE_ARGS="-C \
 	--disable-euptex	\
 	--disable-aleph		\
 	--disable-pdftex	\
-	--disable-luatex	\
+	--enable-luatex		\
 	--disable-luajittex	\
 	--disable-mp		\
 	--disable-xetex		\
@@ -178,8 +180,8 @@ TL_CONFIGURE_ARGS="-C \
 	--disable-mf-nowin	\
 	--disable-mf		\
 	--disable-omfonts	\
-	--enable-pmp		\
-	--enable-upmp		\
+	--disable-pmp		\
+	--disable-upmp		\
 	--enable-dvipdfm-x	\
 	"
 	
@@ -270,12 +272,13 @@ arch=`/bin/ls`
 #	*/uptex$EXT		\
 #	*/uptftopl$EXT		\
 #	*/wovp2ovf$EXT		\
+#	*/pmpost$EXT		\
+#	*/upmpost$EXT		\
 
 
 zip -r $TARGET/binaries.zip 	\
 	*/dvipdfmx*$EXT		\
-	*/pmpost$EXT		\
-	*/upmpost$EXT		\
+	*/luatex*$EXT		\
 
 
 
